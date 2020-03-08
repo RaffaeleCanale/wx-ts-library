@@ -1,6 +1,6 @@
 {
   "name": "@canale/logger",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A simple, minimalistic logger",
   "author": "Canale <raffaelecanale@gmail.com>",
   "license": "MIT",
@@ -16,5 +16,5 @@
     "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "gitHead": "a13e4edc4f612df4080cd464f3306742a22796f5"
+  "gitHead": "2cfcce43a5c6dfbd8cc175fdd55d28d24ec1ad44"
 }
