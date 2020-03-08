@@ -1,0 +1,22 @@
+{
+  "name": "@canale/logger",
+  "version": "0.0.1",
+  "description": "A simple, minimalistic logger",
+  "author": "Canale <raffaelecanale@gmail.com>",
+  "license": "MIT",
+  "main": "lib/Logger.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
