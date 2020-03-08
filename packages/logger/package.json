@@ -1,6 +1,6 @@
 {
   "name": "@canale/logger",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A simple, minimalistic logger",
   "author": "Canale <raffaelecanale@gmail.com>",
   "license": "MIT",
@@ -12,12 +12,9 @@
   "files": [
     "lib"
   ],
-  "publishConfig": {
-    "registry": "https://registry.yarnpkg.com"
-  },
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "gitHead": "a607e31d6f41d311ae54be02b526b5faa1551f2f"
+  "gitHead": "a13e4edc4f612df4080cd464f3306742a22796f5"
 }
