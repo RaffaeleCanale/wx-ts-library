@@ -1,5 +1,5 @@
 import RouteBuilder from './RouteBuilder';
-import { Route } from '.';
+import { Route } from '../../_shared/api';
 
 export default class RoutesBuilder {
 
