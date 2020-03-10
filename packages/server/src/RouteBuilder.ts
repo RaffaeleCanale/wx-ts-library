@@ -1,4 +1,4 @@
-import { Route, Middleware, Handler, EndpointHandler } from '../../_shared/api';
+import { Route, Middleware, Handler, EndpointHandler } from './_shared/api';
 
 type EndpointHandlerBuilder = Handler | [Middleware, Handler] | [Middleware, Middleware, Handler] | [Middleware, Middleware, Middleware, Handler]
 

@@ -1,4 +1,4 @@
-type Request = {
+export type Request = {
     path: string;
     body: any;
     params: { [name: string]: string };

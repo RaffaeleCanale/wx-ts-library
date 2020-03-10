@@ -10,7 +10,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getLogger } from '@canale/logger';
 import { AddressInfo } from 'net';
-import { Middleware, Request, Route, EndpointHandler, Handler } from '../../_shared/api';
+import { Middleware, Request, Route, EndpointHandler, Handler } from './_shared/api';
 
 export interface ServerOptions {
     port: number;
