@@ -10,7 +10,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getLogger } from '@canale/logger';
 import { AddressInfo } from 'net';
-import { Middleware, Request, Route, EndpointHandler, Handler } from './_shared/api';
+import { Middleware, Request, Route, EndpointHandler, Handler, SendFile } from './_shared/api';
 
 export interface ServerOptions {
     port: number;
@@ -72,7 +72,12 @@ export default class Server {
     private wrapHandler(handler: Handler): RequestHandler {
         return (req: ExpressRequest, res: Response, next: NextFunction): void => {
             handler(requestAdapter(req))
-                .then((response) => res.status(200).send(response))
+                .then((response) => {
+                    if (response instanceof SendFile) {
+                        res.status(200).sendFile(response.filePath);
+                    }
+                    res.status(200).send(response);
+                })
                 .catch((error) => this.handleError(error, res));
         };
     }

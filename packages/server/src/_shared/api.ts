@@ -1,13 +1,23 @@
+export interface CustomResponse {}
+
+export class SendFile implements CustomResponse {
+    filePath: string;
+
+    constructor(filePath: string) {
+        this.filePath = filePath;
+    }
+}
+
 export type Request = {
     path: string;
     body: any;
     params: { [name: string]: string };
     query: { [name: string]: string };
     headers: { [name: string]: string };
-};
+}
 
 export type Middleware = (request: Request) => Promise<void>;
-export type Handler = (request: Request) => Promise<any>;
+export type Handler = (request: Request) => Promise<any | CustomResponse>;
 export type EndpointHandler = {
     middlewares: Middleware[];
     handler: Handler;
