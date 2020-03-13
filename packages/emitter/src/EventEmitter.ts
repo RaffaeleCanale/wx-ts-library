@@ -1,34 +1,47 @@
 import isEqual from 'lodash.isequal';
 
-function triggerListener<K>(listener: Listener<K>, parameter?: any): PromiseLike<void> | void {
-    return listener.callback.apply(listener.context, parameter);
-}
+type callback<P> = (parameter: P) => PromiseLike<void> | void;
 
-type callback = (parameter?: any) => PromiseLike<void> | void;
-
-interface Listener<K> {
-    id: K;
-    callback: callback;
+interface Listener<Events, K extends keyof Events> {
+    id: number;
+    key: K;
+    callback: callback<Events[K]>;
     context?: object;
 }
 
-export default class EventEmitter<K> {
+interface ListenerReference {
+    remove: () => void;
+}
 
-    protected listeners: Listener<K>[] = [];
+export default class EventEmitter<Events> {
 
-    on(id: K, callback: callback, context?: object): void {
-        this.listeners.push({ id, callback, context });
+    private listeners: Listener<Events, any>[] = [];
+    private idGenerator = 0;
+
+    on<K extends keyof Events>(key: K, callback: callback<Events[K]>, context?: object): ListenerReference {
+        // eslint-disable-next-line no-plusplus
+        const id = ++this.idGenerator;
+        this.listeners.push({
+            id,
+            key,
+            callback,
+            context,
+        });
+        return {
+            remove: () => {
+                this.removeListener(id);
+            },
+        };
     }
 
-    emit(id: K, parameter?: any): Promise<PromiseSettledResult<any>[]> {
+    emit<K extends keyof Events>(key: K, parameter: Events[K]): Promise<PromiseSettledResult<any>[]> {
         const promises = this.listeners
-            .filter((listener) => isEqual(id, listener.id))
-            .map((listener) => triggerListener(listener, parameter));
+            .filter((listener) => isEqual(key, listener.key))
+            .map((listener) => listener.callback.call(listener.context, parameter));
         return Promise.allSettled(promises);
     }
 
-    off(callback: (parameter: any) => any): void {
-        this.listeners = this.listeners.filter((l): boolean => l.callback === callback);
+    private removeListener(id: number): void {
+        this.listeners = this.listeners.filter((listener) => listener.id !== id);
     }
-
 }
