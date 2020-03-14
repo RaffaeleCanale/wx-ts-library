@@ -73,7 +73,8 @@ export default class Server {
         return (req: ExpressRequest, res: Response, next: NextFunction): void => {
             handler(requestAdapter(req))
                 .then((response) => {
-                    if (response instanceof SendFile) {
+                    // eslint-disable-next-line no-underscore-dangle
+                    if (response && response.__responseType === 'send_file') {
                         res.status(200).sendFile(response.filePath);
                     }
                     res.status(200).send(response);

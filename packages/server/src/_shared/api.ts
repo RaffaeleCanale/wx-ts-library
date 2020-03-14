@@ -1,6 +1,7 @@
 export interface CustomResponse {}
 
 export class SendFile implements CustomResponse {
+    __responseType = 'send_file';
     filePath: string;
 
     constructor(filePath: string) {

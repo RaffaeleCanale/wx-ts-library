@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "build":  "bash ./prepare.sh && lerna run build",
+        "build": "bash ./prepare.sh && lerna run build",
         "publish": "lerna run build && lerna publish"
     },
     "devDependencies": {
