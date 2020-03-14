@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@canale/emitter@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@canale/emitter/-/emitter-0.0.7.tgz#2c72c56916d276d6dfd58da8fd127fff063d8ecf"
-  integrity sha512-EIpMmVug7zgW29suF3BexKbKYYasEDGWJrtxD4h79ISfumhOSWcxKjw6FTjCYvbOvbULJL/2t4j3AR/52Vr6qA==
+"@canale/emitter@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@canale/emitter/-/emitter-1.0.0.tgz#25b3acb5c1045c190bdc8f42b39bc1370514f23a"
+  integrity sha512-FkFdAYpoWZn8cvVItBKilOQcPGx3LwckelEm82CGdpAIR+oEw8x57KxxY4HG2WKiZgjyYHFoiZ4UGjKD0UUwRQ==
   dependencies:
     lodash.isequal "^4.5.0"
 
-"@canale/logger@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-0.0.7.tgz#0ffe2cab7623f7636e09d440439b79c17b945f13"
-  integrity sha512-YshK0izHLvETG0Ii7DfafghVHlk1s2kw+YWO5W5dPRdeVsG86vdnaRfmPlfQkfyTl+JiQek3OIqIV87ur2bg1Q==
+"@canale/logger@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-0.1.0.tgz#731633679e6ee7247d8a04d42fbc1e28c2ff3d17"
+  integrity sha512-IkDFp9suKU7I8W5IySUy9pqxrczECNldy/CfRaeeQUQSctgWSWzBO7OC6lqJDGTjfNYFYAh8AgoxLpvOElbd9A==
 
 "@types/node@*":
   version "13.9.0"

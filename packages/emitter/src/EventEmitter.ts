@@ -1,11 +1,11 @@
 import isEqual from 'lodash.isequal';
 
-type callback<P> = (parameter: P) => PromiseLike<void> | void;
+type callback = (parameter?: any) => PromiseLike<void> | void;
 
-interface Listener<Events, K extends keyof Events> {
+interface Listener<K> {
     id: number;
     key: K;
-    callback: callback<Events[K]>;
+    callback: callback;
     context?: object;
 }
 
@@ -13,12 +13,12 @@ interface ListenerReference {
     remove: () => void;
 }
 
-export default class EventEmitter<Events> {
+export default class EventEmitter<K> {
 
-    private listeners: Listener<Events, any>[] = [];
+    private listeners: Listener<K>[] = [];
     private idGenerator = 0;
 
-    on<K extends keyof Events>(key: K, callback: callback<Events[K]>, context?: object): ListenerReference {
+    on(key: K, callback: callback, context?: object): ListenerReference {
         // eslint-disable-next-line no-plusplus
         const id = ++this.idGenerator;
         this.listeners.push({
@@ -34,7 +34,7 @@ export default class EventEmitter<Events> {
         };
     }
 
-    emit<K extends keyof Events>(key: K, parameter: Events[K]): Promise<PromiseSettledResult<any>[]> {
+    emit(key: K, parameter?: any): Promise<PromiseSettledResult<any>[]> {
         const promises = this.listeners
             .filter((listener) => isEqual(key, listener.key))
             .map((listener) => listener.callback.call(listener.context, parameter));
