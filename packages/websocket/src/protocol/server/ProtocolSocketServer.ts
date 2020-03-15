@@ -1,10 +1,8 @@
 import Logger from '@canale/logger';
 import WS from 'ws';
 
-import { ProtocolMessageHandler } from '..';
-import ProtocolSocket from '../ProtocolSocket';
+import ProtocolSocket, { ProtocolSocketHandler, ProtocolMessageHandler } from '../ProtocolSocket';
 import MultiChannelHandler from './MultiChannelHandler';
-import { ProtocolServerHandler } from '.';
 import WebSocket from '../../WebSocket';
 
 export interface ProtocolSocketServerOptions {
@@ -12,6 +10,9 @@ export interface ProtocolSocketServerOptions {
     requestTimeout?: number;
 }
 
+export interface ProtocolServerHandler extends ProtocolSocketHandler {
+    onSocketConnected(socket: ProtocolSocket): void;
+}
 
 export default class ProtocolSocketServer {
 

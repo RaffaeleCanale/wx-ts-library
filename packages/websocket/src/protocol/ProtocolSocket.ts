@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { ProtocolSocketHandler } from '.';
 import WebSocket, { SOCKET_EVENTS } from '../WebSocket';
 import PendingRequest from '../utils/PendingRequest';
 
@@ -17,6 +16,15 @@ export interface ProtocolMessage {
     channelId: string;
     type: TYPES;
     content: any;
+}
+
+export interface ProtocolMessageHandler {
+    fulfillRequest(message: any, channelId: string, socket: ProtocolSocket): Promise<any>;
+    onMessage(message: any, channelId: string, socket: ProtocolSocket): void;
+}
+
+export interface ProtocolSocketHandler extends ProtocolMessageHandler {
+    onError(error: Error, socket: ProtocolSocket): void;
 }
 
 export interface ProtocolSocketOptions {

@@ -1,9 +1,8 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
 import Logger from '@canale/logger';
-import { ProtocolServerHandler } from '.';
-import ProtocolSocket from '../ProtocolSocket';
-import { ProtocolMessageHandler, ProtocolSocketHandler } from '..';
+import { ProtocolServerHandler } from './ProtocolSocketServer';
+import ProtocolSocket, { ProtocolMessageHandler, ProtocolSocketHandler } from '../ProtocolSocket';
 
 function getAddress(socket: ProtocolSocket): string {
     // @ts-ignore

@@ -1,6 +1,5 @@
-import AbstractProtocolSocket from '../ProtocolSocket';
+import AbstractProtocolSocket, { ProtocolMessageHandler } from '../ProtocolSocket';
 import { Route, Request, Middleware } from '../../_shared/api';
-import { ProtocolMessageHandler } from '..';
 
 interface ApiMessage {
     path: string;
