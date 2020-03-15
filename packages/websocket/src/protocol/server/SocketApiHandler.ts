@@ -1,6 +1,6 @@
-import ProtocolSocketHandler from '../ProtocolSocketHandler';
-import AbstractProtocolSocket from '../socket/AbstractProtocolSocket';
+import AbstractProtocolSocket from '../ProtocolSocket';
 import { Route, Request, Middleware } from '../../_shared/api';
+import { ProtocolMessageHandler } from '..';
 
 interface ApiMessage {
     path: string;
@@ -36,7 +36,7 @@ function parsePathParams(pathDefinition: string, actualPath: string): { [param: 
     return params;
 }
 
-export default class SocketApiHandler implements ProtocolSocketHandler {
+export default class SocketApiHandler implements ProtocolMessageHandler {
 
     private routes: Route[];
     private middlewares: Middleware[];
@@ -46,7 +46,7 @@ export default class SocketApiHandler implements ProtocolSocketHandler {
         this.middlewares = middlewares || [];
     }
 
-    async fulfillRequest(message: any, socket: AbstractProtocolSocket): Promise<any> {
+    async fulfillRequest(message: any, channelId: string, socket: AbstractProtocolSocket): Promise<any> {
         const {
             path,
             method,
@@ -84,8 +84,8 @@ export default class SocketApiHandler implements ProtocolSocketHandler {
         return endpoint.handler(request);
     }
 
-    onMessage(message: any, socket: AbstractProtocolSocket): void {
-        this.fulfillRequest(message, socket);
+    onMessage(message: any, channelId: string, socket: AbstractProtocolSocket): void {
+        this.fulfillRequest(message, channelId, socket);
     }
 
     private findRouteFor(path: string): { route?: Route; params: { [param: string]: string } } {

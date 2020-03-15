@@ -1,13 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import ProtocolSocketHandler from '../ProtocolSocketHandler';
-import AbstractSocket, { SOCKET_EVENTS } from '../../AbstractSocket';
-import PendingRequest from '../PendingRequest';
+import { ProtocolSocketHandler } from '.';
+import WebSocket, { SOCKET_EVENTS } from '../WebSocket';
+import PendingRequest from '../utils/PendingRequest';
 
 const DEFAULT_TIMEOUT = 10000;
 
 export enum TYPES {
-    HANDSHAKE = 'handshake',
     REQUEST = 'request',
     RESPONSE = 'response',
     MESSAGE = 'message',
@@ -15,23 +14,28 @@ export enum TYPES {
 
 export interface ProtocolMessage {
     id: string;
+    channelId: string;
     type: TYPES;
     content: any;
 }
 
-export interface AbstractProtocolSocketOptions {
+export interface ProtocolSocketOptions {
     timeout?: number;
 }
 
-export default abstract class AbstractProtocolSocket {
+export default class ProtocolSocket {
 
-    protected socket: AbstractSocket;
-    protected timeout: number;
+    private readonly socket: WebSocket;
 
     private pendingRequests: { [id: string]: PendingRequest<any> } = {};
     private handler: ProtocolSocketHandler;
+    private timeout: number;
 
-    constructor(socket: AbstractSocket, handler: ProtocolSocketHandler, options: AbstractProtocolSocketOptions = {}) {
+    constructor(
+        socket: WebSocket,
+        handler: ProtocolSocketHandler,
+        options: ProtocolSocketOptions = {},
+    ) {
         this.handler = handler;
         this.socket = socket;
         this.timeout = options.timeout || DEFAULT_TIMEOUT;
@@ -39,21 +43,16 @@ export default abstract class AbstractProtocolSocket {
         this.socket.on(SOCKET_EVENTS.MESSAGE, (message): void => this.onProtocolMessage(message));
     }
 
-    abstract get channelId(): string;
-
-    setHandler(handler: ProtocolSocketHandler): void {
-        this.handler = handler;
-    }
-
-    sendMessage(message: any): Promise<any> {
+    sendMessage(channelId: string, message: any): Promise<any> {
         return this.sendProtocolMessage({
             id: uuidv4(),
+            channelId,
             type: TYPES.MESSAGE,
             content: message,
         });
     }
 
-    async sendRequest(message: any): Promise<any> {
+    async sendRequest(channelId: string, message: any): Promise<any> {
         const request = new PendingRequest(this.timeout);
         const id = uuidv4();
 
@@ -64,6 +63,7 @@ export default abstract class AbstractProtocolSocket {
 
         await this.sendProtocolMessage({
             id,
+            channelId,
             type: TYPES.REQUEST,
             content: message,
         });
@@ -76,53 +76,35 @@ export default abstract class AbstractProtocolSocket {
             const message = this.validateMessage(rawMessage);
 
             switch (message.type) {
-                case TYPES.HANDSHAKE:
-                    if (this.isHandshaked()) {
-                        throw new Error('Multiple handshakes received');
-                    }
-                    this.handleHandshake(message);
-                    break;
                 case TYPES.MESSAGE:
-                    if (!this.isHandshaked()) {
-                        throw new Error('Received message, but handshake was not completed');
-                    }
                     this.handleMessage(message);
                     break;
                 case TYPES.REQUEST:
-                    if (!this.isHandshaked()) {
-                        throw new Error('Received request, but handshake was not completed');
-                    }
                     this.handleRequest(message);
                     break;
                 case TYPES.RESPONSE:
-                    if (!this.isHandshaked()) {
-                        throw new Error('Received response, but handshake was not completed');
-                    }
                     this.handleResponse(message);
                     break;
                 default:
                     break;
             }
         } catch (error) {
-            this.socket.logger.error(error.message);
+            this.handler.onError(error, this);
         }
     }
 
-    protected abstract handleHandshake(message: ProtocolMessage): void;
-
-    protected abstract isHandshaked(): boolean;
-
-    protected handleMessage(message: ProtocolMessage): void {
-        this.handler.onMessage(message.content, this);
+    private handleMessage(message: ProtocolMessage): void {
+        this.handler.onMessage(message.content, message.channelId, this);
     }
 
-    protected async handleRequest(message: ProtocolMessage): Promise<void> {
+    private async handleRequest(message: ProtocolMessage): Promise<void> {
         let result;
         try {
-            result = await this.handler.fulfillRequest(message.content, this);
+            result = await this.handler.fulfillRequest(message.content, message.channelId, this);
         } catch (error) {
             await this.sendProtocolMessage({
                 id: message.id,
+                channelId: message.channelId,
                 type: TYPES.RESPONSE,
                 content: { error: error.message },
             });
@@ -130,12 +112,13 @@ export default abstract class AbstractProtocolSocket {
 
         await this.sendProtocolMessage({
             id: message.id,
+            channelId: message.channelId,
             type: TYPES.RESPONSE,
             content: { result },
         });
     }
 
-    protected handleResponse(message: ProtocolMessage): void {
+    private handleResponse(message: ProtocolMessage): void {
         const request = this.pendingRequests[message.id];
         if (!request) {
             throw new Error(`No request found for response: ${message.id}`);
@@ -148,7 +131,7 @@ export default abstract class AbstractProtocolSocket {
         }
     }
 
-    protected sendProtocolMessage(message: ProtocolMessage): Promise<void> {
+    private sendProtocolMessage(message: ProtocolMessage): Promise<void> {
         return this.socket.send(message);
     }
 
