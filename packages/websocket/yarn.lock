@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@canale/emitter@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@canale/emitter/-/emitter-0.1.0.tgz#b23b0b7c0c3017ae70f9ee83851189e81562ebb1"
-  integrity sha512-GqYohWXGLuOxxK8HF3AYLzzEwm1zT0V57xA8aZHycSosBuiHX+7qPUlYMaOZhMOI436Nrx94MEzjAhLh+mOFVQ==
+"@canale/emitter@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@canale/emitter/-/emitter-2.0.1.tgz#9769ae76a055c8a218c3caa26cff2a324218e661"
+  integrity sha512-AdPo0Ii5SAQyUVmcJ+AaHqJOWd1+qgZvx31X36bHLyQZgXbzKCLEBc+mGjaRaIWyN6Gm6cYshoWJg6GUoIoJLg==
   dependencies:
     lodash.isequal "^4.5.0"
 

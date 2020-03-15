@@ -29,7 +29,7 @@
     "url": "https://github.com/RaffaeleCanale/wx-ts-library/issues"
   },
   "dependencies": {
-    "@canale/emitter": "^0.1.0",
+    "@canale/emitter": "^2.0.1",
     "@canale/logger": "^2.0.1",
     "uuid": "^7.0.2",
     "ws": "^7.2.2"
