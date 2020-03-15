@@ -40,6 +40,13 @@ export default class ReconnectWebSocket extends EventEmitter<SOCKET_EVENTS> {
         }
     }
 
+    send(message: any): Promise<void> {
+        if (!this.isConnected) {
+            return Promise.reject('Socket is not connected');
+        }
+        return this.ws!.send(message);
+    }
+
     private scheduleReconnect(): void {
         if (this.reconnectTimeout) {
             return;
