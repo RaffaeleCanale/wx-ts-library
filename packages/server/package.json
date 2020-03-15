@@ -21,6 +21,7 @@
     "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
   },
   "scripts": {
+    "clean": "rm -rf lib/",
     "build": "tsc --build",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
