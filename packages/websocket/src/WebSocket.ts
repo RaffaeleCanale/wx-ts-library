@@ -25,8 +25,6 @@ export enum SOCKET_EVENTS {
     CLOSE = 'close',
 }
 
-type errorCallback = (error: number) => void
-
 export default class WebSocket extends EventEmitter<SOCKET_EVENTS> {
 
     protected ws?: WS;

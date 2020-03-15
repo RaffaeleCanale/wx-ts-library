@@ -1,9 +1,10 @@
 import WS from 'ws';
-
 import WebSocket, { SOCKET_EVENTS } from './WebSocket';
 
-function connectWs(address: string): Promise<WS> {
-    const ws = new WS(address);
+type WebSocketImpl = { new(address: string): WS };
+
+function connectWs(address: string, WebSocketImpl: WebSocketImpl): Promise<WS> {
+    const ws = new WebSocketImpl(address);
     return new Promise((resolve, reject) => {
         ws.on('error', reject);
         ws.on('close', reject);
@@ -15,15 +16,18 @@ function connectWs(address: string): Promise<WS> {
     });
 }
 
+
 export default class ReconnectWebSocket extends WebSocket {
 
+    private WebSocketImpl: WebSocketImpl;
     private address: string
     private reconnectCounter = 0;
     private reconnectTimeout?: NodeJS.Timeout;
 
-    constructor(address: string) {
+    constructor(address: string, WebSocketImpl: WebSocketImpl) {
         super();
         this.address = address;
+        this.WebSocketImpl = WebSocketImpl;
     }
 
     async connect(): Promise<void> {
@@ -32,7 +36,7 @@ export default class ReconnectWebSocket extends WebSocket {
             this.reconnectTimeout = undefined;
         }
 
-        this.ws = await connectWs(this.address);
+        this.ws = await connectWs(this.address, this.WebSocketImpl);
         const onError = (error: number): void => {
             this.disconnect(error);
             this.scheduleReconnect();
