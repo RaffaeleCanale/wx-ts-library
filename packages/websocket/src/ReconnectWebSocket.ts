@@ -1,33 +1,23 @@
-import WS from 'ws';
-import WebSocket, { SOCKET_EVENTS } from './WebSocket';
+import EventEmitter from '@canale/emitter';
+import WebSocketWrapper, { SOCKET_EVENTS, WebSocketImpl } from './WebSocketWrapper';
 
-type WebSocketImpl = { new(address: string): WS };
+export default class ReconnectWebSocket extends EventEmitter<SOCKET_EVENTS> {
 
-function connectWs(address: string, WebSocketImpl: WebSocketImpl): Promise<WS> {
-    const ws = new WebSocketImpl(address);
-    return new Promise((resolve, reject) => {
-        ws.on('error', reject);
-        ws.on('close', reject);
-        ws.once('open', (): void => {
-            ws.off('error', reject);
-            ws.off('close', reject);
-            resolve(ws);
-        });
-    });
-}
-
-
-export default class ReconnectWebSocket extends WebSocket {
-
-    private WebSocketImpl: WebSocketImpl;
-    private address: string
+    private readonly WebSocketImpl: WebSocketImpl;
+    private readonly address: string
     private reconnectCounter = 0;
     private reconnectTimeout?: NodeJS.Timeout;
+
+    private ws?: WebSocketWrapper;
 
     constructor(address: string, WebSocketImpl: WebSocketImpl) {
         super();
         this.address = address;
         this.WebSocketImpl = WebSocketImpl;
+    }
+
+    get isConnected(): boolean {
+        return !!this.ws && this.ws.isConnected;
     }
 
     async connect(): Promise<void> {
@@ -36,17 +26,18 @@ export default class ReconnectWebSocket extends WebSocket {
             this.reconnectTimeout = undefined;
         }
 
-        this.ws = await connectWs(this.address, this.WebSocketImpl);
-        const onError = (error: number): void => {
-            this.disconnect(error);
+        try {
+            this.ws = await WebSocketWrapper.connect(this.address, this.WebSocketImpl);
+            this.ws.on(SOCKET_EVENTS.MESSAGE, (...args): Promise<any> => this.emit(SOCKET_EVENTS.MESSAGE, ...args));
+            this.ws.on(SOCKET_EVENTS.CLOSE, (...args): Promise<any> => {
+                this.ws = undefined;
+                this.scheduleReconnect();
+                return this.emit(SOCKET_EVENTS.CLOSE, ...args);
+            });
+            this.emit(SOCKET_EVENTS.CONNECT);
+        } catch (error) {
             this.scheduleReconnect();
-        };
-        this.ws.on('error', onError);
-        this.ws.on('close', onError);
-        this.ws.on('message', (data: string): void => {
-            this.emit(SOCKET_EVENTS.MESSAGE, JSON.parse(data));
-        });
-        this.emit(SOCKET_EVENTS.CONNECT);
+        }
     }
 
     private scheduleReconnect(): void {

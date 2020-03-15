@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import WebSocket, { SOCKET_EVENTS } from '../WebSocket';
+import WebSocketWrapper, { SOCKET_EVENTS } from '../WebSocketWrapper';
 import PendingRequest from '../utils/PendingRequest';
 
 const DEFAULT_TIMEOUT = 10000;
@@ -33,14 +33,14 @@ export interface ProtocolSocketOptions {
 
 export default class ProtocolSocket {
 
-    private readonly socket: WebSocket;
+    private readonly socket: WebSocketWrapper;
 
     private pendingRequests: { [id: string]: PendingRequest<any> } = {};
     private handler: ProtocolSocketHandler;
     private timeout: number;
 
     constructor(
-        socket: WebSocket,
+        socket: WebSocketWrapper,
         handler: ProtocolSocketHandler,
         options: ProtocolSocketOptions = {},
     ) {

@@ -9,10 +9,10 @@
   dependencies:
     lodash.isequal "^4.5.0"
 
-"@canale/logger@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-0.1.0.tgz#731633679e6ee7247d8a04d42fbc1e28c2ff3d17"
-  integrity sha512-IkDFp9suKU7I8W5IySUy9pqxrczECNldy/CfRaeeQUQSctgWSWzBO7OC6lqJDGTjfNYFYAh8AgoxLpvOElbd9A==
+"@canale/logger@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-2.0.1.tgz#a94cd7f012f2ff4a41676a5dec07c902ee99d81f"
+  integrity sha512-KKDwdQ0FpLVmkui23w0xkRHBt7WbxylTkB6pw3MkfwnpvRbXpCQ1bpHBeP4/4/ANdViDYJOPrR5sF6oFsLPr8g==
 
 "@types/node@*":
   version "13.9.0"
@@ -23,6 +23,13 @@
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-7.0.0.tgz#9f6993ccc8210efa90bda7e1afabbb06a9f860cd"
   integrity sha512-RiX1I0lK9WFLFqy2xOxke396f0wKIzk5sAll0tL4J4XDYJXURI7JOs96XQb3nP+2gEpQ/LutBb66jgiT5oQshQ==
+
+"@types/websocket@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/websocket/-/websocket-1.0.0.tgz#828c794b0a50949ad061aa311af1009934197e4b"
+  integrity sha512-MLr8hDM8y7vvdAdnoDEP5LotRoYJj7wgT6mWzCUQH/gHqzS4qcnOT/K4dhC0WimWIUiA3Arj9QAJGGKNRiRZKA==
+  dependencies:
+    "@types/node" "*"
 
 "@types/ws@^7.2.2":
   version "7.2.2"

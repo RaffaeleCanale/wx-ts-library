@@ -3,7 +3,7 @@ import WS from 'ws';
 
 import ProtocolSocket, { ProtocolSocketHandler, ProtocolMessageHandler } from '../ProtocolSocket';
 import MultiChannelHandler from './MultiChannelHandler';
-import WebSocket from '../../WebSocket';
+import WebSocketWrapper from '../../WebSocketWrapper';
 
 export interface ProtocolSocketServerOptions {
     port: number;
@@ -44,7 +44,7 @@ export default class ProtocolSocketServer {
         this.wss.on('connection', async (ws) => {
             try {
                 const socket = new ProtocolSocket(
-                    new WebSocket(ws),
+                    WebSocketWrapper.fromWebSocket(ws),
                     this.handler,
                     { timeout: this.options.requestTimeout },
                 );
