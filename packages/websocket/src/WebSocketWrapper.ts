@@ -28,7 +28,8 @@ export enum SOCKET_EVENTS {
 export type WebSocketImpl = { new(address: string): NpmWebSocket | WebSocket };
 
 function isNpmWebSocket(ws: NpmWebSocket | WebSocket): boolean {
-    return !ws.onerror;
+    // @ts-ignore
+    return !!ws.on;
 }
 
 function getErrorMessage(code: number, reason: string): string {
