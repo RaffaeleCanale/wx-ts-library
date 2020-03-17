@@ -1,15 +1,17 @@
 import AbstractProtocolSocket, { ProtocolMessageHandler } from '../ProtocolSocket';
 import { Route, Request, Middleware } from '../../_shared/api';
 
-interface ApiMessage {
+type dict = { [name: string]: string };
+
+export interface ApiMessage {
     path: string;
     method: 'get' | 'post' | 'put' | 'patch' | 'delete';
     body: any;
-    query: { [param: string]: string };
-    headers: { [header: string]: string };
+    query: dict;
+    headers: dict;
 }
 
-function parsePathParams(pathDefinition: string, actualPath: string): { [param: string]: string } | null {
+function parsePathParams(pathDefinition: string, actualPath: string): dict | null {
     const defSplit = pathDefinition.split('/');
     const actualSplit = actualPath.split('/');
 
@@ -17,7 +19,7 @@ function parsePathParams(pathDefinition: string, actualPath: string): { [param: 
         return null;
     }
 
-    const params: { [param: string]: string } = {};
+    const params: dict = {};
     for (let i = 0; i < defSplit.length; i += 1) {
         const definition = defSplit[i];
         const actual = actualSplit[i];
@@ -33,6 +35,56 @@ function parsePathParams(pathDefinition: string, actualPath: string): { [param: 
     }
 
     return params;
+}
+
+export function createGetRequest(path: string, headers: dict = {}, query: dict = {}): ApiMessage {
+    return {
+        path,
+        method: 'get',
+        body: {},
+        query,
+        headers,
+    };
+}
+
+export function createPostRequest(path: string, body: any, headers: dict = {}, query: dict = {}): ApiMessage {
+    return {
+        path,
+        method: 'post',
+        body,
+        query,
+        headers,
+    };
+}
+
+export function createPutRequest(path: string, body: any, headers: dict = {}, query: dict = {}): ApiMessage {
+    return {
+        path,
+        method: 'put',
+        body,
+        query,
+        headers,
+    };
+}
+
+export function createPatchRequest(path: string, body: any, headers: dict = {}, query: dict = {}): ApiMessage {
+    return {
+        path,
+        method: 'patch',
+        body,
+        query,
+        headers,
+    };
+}
+
+export function createDeleteRequest(path: string, headers: dict = {}, query: dict = {}): ApiMessage {
+    return {
+        path,
+        method: 'delete',
+        body: {},
+        query,
+        headers,
+    };
 }
 
 export default class SocketApiHandler implements ProtocolMessageHandler {
@@ -87,7 +139,7 @@ export default class SocketApiHandler implements ProtocolMessageHandler {
         this.fulfillRequest(message, channelId, socket);
     }
 
-    private findRouteFor(path: string): { route?: Route; params: { [param: string]: string } } {
+    private findRouteFor(path: string): { route?: Route; params: dict } {
         for (let i = 0; i < this.routes.length; i += 1) {
             const route = this.routes[i];
             const params = parsePathParams(route.path, path);
