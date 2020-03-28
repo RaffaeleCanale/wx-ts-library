@@ -80,8 +80,10 @@ export default class MultiChannelHandler implements ProtocolServerHandler {
     private getHandler<M extends keyof ProtocolMessageHandler>(channelId: string, method: M): ProtocolSocketHandler[M] {
         const handler = this.handlers[channelId];
         if (handler && handler[method]) {
-            return (handler as ProtocolSocketHandler)[method];
+            // @ts-ignore
+            return (handler as ProtocolSocketHandler)[method].bind(handler);
         }
-        return this.fallbackHandler[method];
+        // @ts-ignore
+        return this.fallbackHandler[method].bind(this.fallbackHandler);
     }
 }

@@ -37,7 +37,7 @@ function getErrorMessage(code: number, reason: string): string {
 }
 
 export const DEV_OPTIONS = {
-    logger: null,
+    logger: null as any,
 };
 
 export default class WebSocketWrapper extends EventEmitter<SOCKET_EVENTS> {
@@ -105,7 +105,6 @@ export default class WebSocketWrapper extends EventEmitter<SOCKET_EVENTS> {
 
         return new Promise((resolve, reject) => {
             if (DEV_OPTIONS.logger) {
-                // @ts-ignore
                 DEV_OPTIONS.logger('=>', message);
             }
 
@@ -135,7 +134,6 @@ export default class WebSocketWrapper extends EventEmitter<SOCKET_EVENTS> {
 
     private receive(data: string): void {
         if (DEV_OPTIONS.logger) {
-            // @ts-ignore
             DEV_OPTIONS.logger('<=', JSON.parse(data));
         }
         this.emit(SOCKET_EVENTS.MESSAGE, JSON.parse(data));
