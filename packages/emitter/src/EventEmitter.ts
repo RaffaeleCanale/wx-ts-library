@@ -1,15 +1,15 @@
 import isEqual from 'lodash.isequal';
 
-type callback = (parameter?: any) => PromiseLike<void> | void;
+export type Callback = (parameter?: any) => PromiseLike<void> | void;
 
 interface Listener<K> {
     id: number;
     key: K;
-    callback: callback;
+    callback: Callback;
     context?: object;
 }
 
-interface ListenerReference {
+export interface ListenerReference {
     remove: () => void;
 }
 
@@ -18,7 +18,7 @@ export default class EventEmitter<K> {
     private listeners: Listener<K>[] = [];
     private idGenerator = 0;
 
-    on(key: K, callback: callback, context?: object): ListenerReference {
+    on(key: K, callback: Callback, context?: object): ListenerReference {
         // eslint-disable-next-line no-plusplus
         const id = ++this.idGenerator;
         this.listeners.push({
@@ -32,6 +32,13 @@ export default class EventEmitter<K> {
                 this.removeListener(id);
             },
         };
+    }
+
+    removeListenerByCallback(callback: Callback): void {
+        const listener = this.listeners.find((l) => l.callback === callback);
+        if (listener) {
+            this.removeListener(listener.id);
+        }
     }
 
     emit(key: K, parameter?: any): Promise<PromiseSettledResult<any>[]> {
