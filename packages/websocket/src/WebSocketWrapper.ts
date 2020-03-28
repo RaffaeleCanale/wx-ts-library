@@ -36,6 +36,10 @@ function getErrorMessage(code: number, reason: string): string {
     return `${reason}: ${WS_ERROR_CODES[code]}`;
 }
 
+export const DEV_OPTIONS = {
+    logger: null,
+};
+
 export default class WebSocketWrapper extends EventEmitter<SOCKET_EVENTS> {
 
     static fromWebSocket(ws: NpmWebSocket | WebSocket): WebSocketWrapper {
@@ -76,14 +80,14 @@ export default class WebSocketWrapper extends EventEmitter<SOCKET_EVENTS> {
         if (isNpmWebSocket(this.ws)) {
             const npmWs = this.ws as NpmWebSocket;
             npmWs.on('message', (data: string): void => {
-                this.emit(SOCKET_EVENTS.MESSAGE, JSON.parse(data));
+                this.receive(data);
             });
             npmWs.on('error', (error: Error) => this.disconnect(error.message));
             npmWs.on('close', (code: number, reason: string) => this.disconnect(getErrorMessage(code, reason)));
         } else {
             const nativeWs = this.ws as WebSocket;
             nativeWs.onmessage = (event: MessageEvent): void => {
-                this.emit(SOCKET_EVENTS.MESSAGE, JSON.parse(event.data));
+                this.receive(event.data);
             };
             nativeWs.onerror = (event: Event) => this.disconnect(event.type);
             nativeWs.onclose = (event: CloseEvent) => this.disconnect(getErrorMessage(event.code, event.reason));
@@ -100,6 +104,11 @@ export default class WebSocketWrapper extends EventEmitter<SOCKET_EVENTS> {
         }
 
         return new Promise((resolve, reject) => {
+            if (DEV_OPTIONS.logger) {
+                // @ts-ignore
+                DEV_OPTIONS.logger('=>', message);
+            }
+
             if (isNpmWebSocket(this.ws!)) {
                 const npmWs = this.ws as NpmWebSocket;
                 npmWs.send(JSON.stringify(message), (error) => (error ? reject(error) : resolve()));
@@ -122,5 +131,13 @@ export default class WebSocketWrapper extends EventEmitter<SOCKET_EVENTS> {
             delete this.ws;
             this.ws = undefined;
         }
+    }
+
+    private receive(data: string): void {
+        if (DEV_OPTIONS.logger) {
+            // @ts-ignore
+            DEV_OPTIONS.logger('<=', JSON.parse(data));
+        }
+        this.emit(SOCKET_EVENTS.MESSAGE, JSON.parse(data));
     }
 }
