@@ -34,7 +34,7 @@ export interface ProtocolSocketOptions {
 
 export default class ProtocolSocket {
 
-    private readonly socket: WebSocketWrapper | ReconnectWebSocket;
+    readonly socket: WebSocketWrapper | ReconnectWebSocket;
 
     private pendingRequests: { [id: string]: PendingRequest<any> } = {};
     private handler: ProtocolSocketHandler;
