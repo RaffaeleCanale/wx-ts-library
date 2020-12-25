@@ -1,15 +1,11 @@
 {
   "name": "@canale/server",
   "version": "2.0.1",
-  "description": "> TODO: description",
+  "description": "Wrapper around express to create a API server",
   "author": "Canale <raffaelecanale@gmail.com>",
   "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
   "license": "MIT",
   "main": "lib/index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
   "files": [
     "lib"
   ],
@@ -22,11 +18,7 @@
   },
   "scripts": {
     "clean": "rm -rf lib/",
-    "build": "tsc --build",
-    "test": "echo \"Error: run tests from root\" && exit 1"
-  },
-  "bugs": {
-    "url": "https://github.com/RaffaeleCanale/wx-ts-library/issues"
+    "build": "../../node_modules/typescript/bin/tsc"
   },
   "dependencies": {
     "@canale/logger": "^2.0.1",

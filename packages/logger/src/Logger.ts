@@ -1,87 +1,46 @@
-function prettyPrint(value: any): string {
-    if (Array.isArray(value)) {
-        return `[${value.map(prettyPrint).join(', ')}]`;
-    }
-    return JSON.stringify(value);
-}
+import { fillTransportWithDefaults, Transport } from './transport';
 
-function formatDate(date: Date): string {
-    const pad = (num: number): string => {
-        const norm = Math.floor(Math.abs(num));
-        return (norm < 10 ? '0' : '') + norm;
-    };
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-}
-
-enum LEVEL {
+export enum Level {
     VERBOSE = 'verbose',
     INFO = 'info',
     WARN = 'warn',
     ERROR = 'error',
 }
 
-interface LogContainer {
+export interface LogContainer {
     timestamp: string;
     name: string;
     level: string;
     message: string;
 }
 
-interface Transport {
-    log: (...args: any[]) => void;
-    processMessage: (...args: any[]) => string;
-    dateFormatter: (date: Date) => string;
-    messageFormatter: (log: LogContainer) => string;
-    levelFormatter: (level: string, index: number) => string;
-    nameFormatter: (name: string) => string;
-    level: LEVEL;
-}
-
-const defaultTransport: Transport = {
-    log: console.log,
-    processMessage: (...message) => message.map(prettyPrint).join(' '),
-    dateFormatter: formatDate,
-    messageFormatter: (info) => `${info.timestamp} ${info.level} [${info.name}] - ${info.message}`,
-    levelFormatter: (level, index) => {
-        return level.substring(0, 4).toUpperCase();
-    },
-    nameFormatter: (name) => name,
-    level: LEVEL.VERBOSE,
-};
-
-class Logger {
+export default class Logger {
 
     private name: string;
     private transports: Transport[];
 
-    constructor(name: string, transports: Transport[]) {
+    constructor(name: string, transports: Partial<Transport>[]) {
         this.name = name;
-        this.transports = transports.map((transport) => {
-            const options = {
-                ...defaultTransport,
-                ...transport,
-            };
-            return options;
-        });
+        this.transports = transports.map(fillTransportWithDefaults);
     }
 
-    verbose(...message: any[]): void {
-        this.log(LEVEL.VERBOSE, ...message);
+    verbose(message: string, extra?: any): void {
+        this.log(Level.VERBOSE, message, extra);
     }
 
-    info(...message: any[]): void {
-        this.log(LEVEL.INFO, ...message);
+    info(message: string, extra?: any): void {
+        this.log(Level.INFO, message, extra);
     }
 
-    warn(...message: any[]): void {
-        this.log(LEVEL.WARN, ...message);
+    warn(message: string, extra?: any): void {
+        this.log(Level.WARN, message, extra);
     }
 
-    error(...message: any[]): void {
-        this.log(LEVEL.ERROR, ...message);
+    error(message: string, extra?: any): void {
+        this.log(Level.ERROR, message, extra);
     }
 
-    log(level: LEVEL, ...message: any[]): void {
+    log(level: Level, message: string, extra?: any): void {
         const levelIndex = Logger.getLevelIndex(level);
 
         this.transports.forEach((transport) => {
@@ -93,14 +52,14 @@ class Logger {
                 timestamp: transport.dateFormatter(new Date()),
                 name: transport.nameFormatter(this.name),
                 level: transport.levelFormatter(level, levelIndex),
-                message: transport.processMessage(...message),
+                message: transport.processMessage(message, extra),
             };
             transport.log(transport.messageFormatter(info));
         });
     }
 
-    private static getLevelIndex(level: LEVEL): number {
-        const index = Object.values(LEVEL).indexOf(level);
+    private static getLevelIndex(level: Level): number {
+        const index = Object.values(Level).indexOf(level);
         if (index < 0) {
             throw new Error(`Level ${level} not found`);
         }
@@ -108,15 +67,3 @@ class Logger {
         return index;
     }
 }
-
-let globalTransports = [defaultTransport];
-
-export function setDefaultTransports(transports: Transport[]): void {
-    globalTransports = transports;
-}
-
-export function getLogger(name: string, transports?: Transport[]): Logger {
-    return new Logger(name, transports || globalTransports);
-}
-
-export default Logger;

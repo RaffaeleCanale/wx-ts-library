@@ -4,11 +4,7 @@
   "description": "A simple, minimalistic logger",
   "author": "Canale <raffaelecanale@gmail.com>",
   "license": "MIT",
-  "main": "lib/Logger.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
+  "main": "lib/index.js",
   "files": [
     "lib"
   ],
@@ -17,8 +13,6 @@
   },
   "scripts": {
     "clean": "rm -rf lib/",
-    "build": "tsc",
-    "test": "echo \"Error: run tests from root\" && exit 1"
-  },
-  "gitHead": "2cfcce43a5c6dfbd8cc175fdd55d28d24ec1ad44"
+    "build": "../../node_modules/typescript/bin/tsc"
+  }
 }

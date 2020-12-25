@@ -1,8 +1,9 @@
 {
     "scripts": {
+        "postinstall": "lerna run bootstrap",
         "clean": "lerna run clean",
-        "build": "bash ./prepare.sh && lerna run build",
-        "publish": "yarn run clean && yarn run build && lerna publish"
+        "build": "lerna run build",
+        "publish": "lerna run clean && lerna run build && lerna publish"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^2.22.0",

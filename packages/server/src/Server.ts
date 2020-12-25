@@ -1,3 +1,4 @@
+import { getLogger } from '@canale/logger';
 import http from 'http';
 import express, {
     Router,
@@ -8,9 +9,9 @@ import express, {
 } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { getLogger } from '@canale/logger';
 import { AddressInfo } from 'net';
-import { Middleware, Request, Route, EndpointHandler, Handler, SendFile } from './_shared/api';
+
+import { Middleware, Request, Route, EndpointHandler, Handler } from './_shared/api';
 
 export interface ServerOptions {
     port: number;

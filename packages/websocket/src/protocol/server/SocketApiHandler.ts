@@ -1,5 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import type { Route, Request, Middleware } from '@canale/server/lib/_shared/api';
 import AbstractProtocolSocket, { ProtocolMessageHandler } from '../ProtocolSocket';
-import { Route, Request, Middleware } from '../../_shared/api';
 
 type dict = { [name: string]: string };
 

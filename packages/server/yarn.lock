@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@canale/logger@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-0.0.8.tgz#798b89aa7b340bc59bc967aecfc9834efe495627"
-  integrity sha512-Og9VAzG8z/Nz7iinVNYjpeELwgWh+zs+5aJ2fU5gRbejfb0Z98XDrmmDTkSZ8I1AhVqn1yelAl3RqmY24x5RCQ==
-
 "@types/body-parser@*", "@types/body-parser@^1.19.0":
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.0.tgz#0685b3c47eb3006ffed117cdd55164b61f80538f"
