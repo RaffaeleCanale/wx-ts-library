@@ -27,10 +27,10 @@ const defaultTransport: Transport = {
 
 export const globalTransports = {
     defaultTransport,
-    transports: [defaultTransport],
+    transports: [defaultTransport] as Partial<Transport>[],
 };
 
-export function setDefaultTransports(transports: Transport[]): void {
+export function setDefaultTransports(transports: Partial<Transport>[]): void {
     globalTransports.transports = transports;
 }
 
