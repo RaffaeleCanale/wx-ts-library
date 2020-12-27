@@ -1,6 +1,6 @@
 {
   "name": "@canale/websocket",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "> TODO: description",
   "author": "Canale <raffaelecanale@gmail.com>",
   "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
@@ -24,14 +24,14 @@
     "url": "https://github.com/RaffaeleCanale/wx-ts-library/issues"
   },
   "dependencies": {
-    "@canale/emitter": "^3.0.0",
-    "@canale/logger": "^3.0.1",
-    "@canale/timer": "^3.0.1",
+    "@canale/emitter": "^4.0.0",
+    "@canale/logger": "^4.0.0",
+    "@canale/timer": "^4.0.0",
     "uuid": "^7.0.2",
     "ws": "^7.2.2"
   },
   "devDependencies": {
-    "@canale/server": "^3.0.1",
+    "@canale/server": "^4.0.0",
     "@types/uuid": "^7.0.0",
     "@types/websocket": "^1.0.0",
     "@types/ws": "^7.2.2"
