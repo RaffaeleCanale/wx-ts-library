@@ -1,66 +1,116 @@
+import { ReusableTimeout } from '@canale/timer';
 import EventEmitter from '@canale/emitter';
-import WebSocketWrapper, { SOCKET_EVENTS, WebSocketImpl } from './WebSocketWrapper';
+import WebSocketWrapper, { SocketEvents, WebSocketImpl } from './WebSocketAdapter';
+import WebSocketClosedError from './WebSocketClosedError';
 
-export default class ReconnectWebSocket extends EventEmitter<SOCKET_EVENTS> {
+export interface ReconnectWebSocketOptions {
+    reconnectDelay?: number | ((retryCount: number) => number);
+}
+
+/**
+ * Wrapper around a WebSocket that will automatically try to reconnect
+ * whenever the connection breaks or fails.
+ */
+export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
 
     private readonly WebSocketImpl: WebSocketImpl;
     private readonly address: string
-    private reconnectCounter = 0;
-    private reconnectTimeout?: NodeJS.Timeout;
+    private readonly options: ReconnectWebSocketOptions;
 
+    private reconnectCounter = 0;
+    private reconnectTimeout = new ReusableTimeout();
     private ws?: WebSocketWrapper;
 
-    constructor(address: string, WebSocketImpl: WebSocketImpl) {
+    /**
+     *
+     * @param address Host address where this socket will try to connect to.
+     * @param WebSocketImpl Base implementation of WebSocket (node or browser).
+     */
+    constructor(
+        address: string,
+        webSocketImpl: WebSocketImpl,
+        options: ReconnectWebSocketOptions = {},
+    ) {
         super();
         this.address = address;
-        this.WebSocketImpl = WebSocketImpl;
+        this.WebSocketImpl = webSocketImpl;
+        this.options = options;
     }
 
+    /**
+     * Returns whether the socket is currently connected.
+     */
     get isConnected(): boolean {
         return !!this.ws && this.ws.isConnected;
     }
 
+    /**
+     * Connect the WebSocket. If the connection fails or breaks later on,
+     * this will continuously try to reconnect with some back-off timers.
+     */
     async connect(): Promise<void> {
-        if (this.reconnectTimeout) {
-            clearTimeout(this.reconnectTimeout);
-            this.reconnectTimeout = undefined;
-        }
+        this.reconnectTimeout.clearTimeout();
 
         try {
             this.ws = await WebSocketWrapper.connect(this.address, this.WebSocketImpl);
-            this.ws.on(SOCKET_EVENTS.MESSAGE, (...args): Promise<any> => this.emit(SOCKET_EVENTS.MESSAGE, ...args));
-            this.ws.on(SOCKET_EVENTS.CLOSE, (...args): Promise<any> => {
-                this.ws = undefined;
+            this.ws.on(
+                'message',
+                (message: any) => this.emit('message', message),
+            );
+            this.ws.on('error', (error: Error) => {
+                if (this.ws) {
+                    this.ws.disconnect();
+                    this.ws = undefined;
+                }
                 this.scheduleReconnect();
-                return this.emit(SOCKET_EVENTS.CLOSE, ...args);
+                this.emit('error', error);
             });
-            this.emit(SOCKET_EVENTS.CONNECT);
+            this.ws.on('close', (error: WebSocketClosedError) => {
+                if (this.ws) {
+                    this.ws.disconnect();
+                    this.ws = undefined;
+                }
+                this.scheduleReconnect();
+                this.emit('close', error);
+            });
+            this.emit('connect', undefined);
+            this.reconnectCounter = 0;
         } catch (error) {
+            this.emit('error', error);
             this.scheduleReconnect();
         }
     }
 
     send(message: any): Promise<void> {
         if (!this.isConnected) {
-            return Promise.reject('Socket is not connected');
+            return Promise.reject(new Error('Socket is not connected'));
         }
         return this.ws!.send(message);
     }
 
-    private scheduleReconnect(): void {
-        if (this.reconnectTimeout) {
-            return;
+    disconnect(): void {
+        if (this.ws) {
+            this.ws.disconnect();
+            this.ws = undefined;
+            this.reconnectTimeout.clearTimeout();
         }
+    }
 
+    private scheduleReconnect(): void {
         this.reconnectCounter += 1;
         const time = this.getBackOffTime();
-        this.reconnectTimeout = setTimeout(
-            (): Promise<void> => this.connect().catch(() => {}),
-            time,
-        );
+        this.reconnectTimeout.resetTimeout(time, () => {
+            this.connect();
+        });
     }
 
     private getBackOffTime(): number {
+        if (this.options.reconnectDelay) {
+            if (typeof this.options.reconnectDelay === 'number') {
+                return this.options.reconnectDelay;
+            }
+            return this.options.reconnectDelay(this.reconnectCounter);
+        }
         return this.reconnectCounter * 30 * 1000;
     }
 }

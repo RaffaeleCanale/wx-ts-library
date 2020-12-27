@@ -29,6 +29,7 @@
             "allowExpressions": true
         }],
         "import/no-unresolved": ["off"],
-        "import/extensions": ["off"]
+        "import/extensions": ["off"],
+        "no-useless-constructor": ["off"]
     }
 }

@@ -1,13 +1,13 @@
+/* eslint-disable no-unused-expressions */
 import Logger from '@canale/logger';
 import WS from 'ws';
 
-import ProtocolSocket, { ProtocolSocketHandler, ProtocolMessageHandler } from '../ProtocolSocket';
-import MultiChannelHandler from './MultiChannelHandler';
-import WebSocketWrapper from '../../WebSocketWrapper';
+import ProtocolSocket, { ProtocolSocketHandler } from '../ProtocolSocket';
+import WebSocketWrapper from '../../WebSocketAdapter';
 
 export interface ProtocolSocketServerOptions {
     port: number;
-    requestTimeout?: number;
+    protocolRequestTimeout?: number;
 }
 
 export interface ProtocolServerHandler extends ProtocolSocketHandler {
@@ -16,41 +16,32 @@ export interface ProtocolServerHandler extends ProtocolSocketHandler {
 
 export default class ProtocolSocketServer {
 
-    private logger: Logger;
-    private options: ProtocolSocketServerOptions;
-    private handler: MultiChannelHandler;
     private wss?: WS.Server;
 
-    constructor(options: ProtocolSocketServerOptions, logger: Logger) {
-        this.options = options;
-        this.logger = logger;
-        this.handler = new MultiChannelHandler(logger);
-    }
-
-    setHandler(channelId: string, handler: Partial<ProtocolMessageHandler>): void {
-        this.handler.setHandler(channelId, handler);
-    }
-
-    setFallbackHandler(handler: ProtocolServerHandler): void {
-        this.handler.setFallbackHandler(handler);
-    }
+    constructor(
+        private readonly handler: ProtocolServerHandler,
+        private readonly options: ProtocolSocketServerOptions,
+        private readonly logger?: Logger,
+    ) {}
 
     start(): void {
         const { port } = this.options;
         this.wss = new WS.Server({
             port,
         });
-        this.logger.info(`WebSocket server is running ws://localhost:${port}`);
+        this.logger?.info(`WebSocket server is running ws://localhost:${port}`);
         this.wss.on('connection', async (ws) => {
             try {
-                const socket = new ProtocolSocket(
-                    WebSocketWrapper.fromWebSocket(ws),
+                const socket = WebSocketWrapper.fromWebSocket(ws);
+                const ps = new ProtocolSocket(
+                    socket,
                     this.handler,
-                    { timeout: this.options.requestTimeout },
+                    this.options,
                 );
-                this.handler.onSocketConnected(socket);
+                this.logger?.info('Socket connected', { address: socket.getAddress() });
+                this.handler.onSocketConnected(ps);
             } catch (error) {
-                this.logger.error('Incoming socket failed', error);
+                this.logger?.error('Incoming socket failed', error);
             }
         });
     }

@@ -1,68 +1,87 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import WebSocketWrapper, { SOCKET_EVENTS } from '../WebSocketWrapper';
+import WebSocketAdapter from '../WebSocketAdapter';
 import PendingRequest from '../utils/PendingRequest';
 import ReconnectWebSocket from '../ReconnectWebSocket';
 
-const DEFAULT_TIMEOUT = 10000;
 
-export enum TYPES {
+enum ProtocolMessageType {
     REQUEST = 'request',
     RESPONSE = 'response',
     MESSAGE = 'message',
 }
 
-export interface ProtocolMessage {
+interface ProtocolMessage {
     id: string;
     channelId: string;
-    type: TYPES;
+    type: ProtocolMessageType;
     content: any;
 }
 
-export interface ProtocolMessageHandler {
+// export interface ProtocolMessageHandler {
+//     fulfillRequest(message: any, channelId: string, socket: ProtocolSocket): Promise<any>;
+//     onMessage(message: any, channelId: string, socket: ProtocolSocket): void;
+// }
+
+export interface ProtocolSocketHandler {
+    /**
+     * This handler gets called whenever the remote socket sent a request.
+     *
+     * @param message Request message
+     * @param channelId Channel id
+     * @param socket Socket that sent the request
+     *
+     * @returns The result of the request which will be sent back to the socket.
+     */
     fulfillRequest(message: any, channelId: string, socket: ProtocolSocket): Promise<any>;
+
+    /**
+     * This handler gets called whenever the remote socket sent a simple message.
+     *
+     * @param message Message sent
+     * @param channelId Channel id
+     * @param socket Socket that sent the message
+     */
     onMessage(message: any, channelId: string, socket: ProtocolSocket): void;
 }
 
-export interface ProtocolSocketHandler extends ProtocolMessageHandler {
-    onError(error: Error, socket: ProtocolSocket): void;
-}
-
+const DEFAULT_PROTOCOL_REQUEST_TIMEOUT = 10000;
 export interface ProtocolSocketOptions {
-    timeout?: number;
+    protocolRequestTimeout?: number;
 }
 
 export default class ProtocolSocket {
 
-    readonly socket: WebSocketWrapper | ReconnectWebSocket;
+    private readonly socket: WebSocketAdapter | ReconnectWebSocket;
 
-    private pendingRequests: { [id: string]: PendingRequest<any> } = {};
+    private pendingRequests: { [id: string]: PendingRequest<unknown> } = {};
     private handler: ProtocolSocketHandler;
-    private timeout: number;
+    private protocolRequestTimeout: number;
 
     constructor(
-        socket: WebSocketWrapper | ReconnectWebSocket,
+        socket: WebSocketAdapter | ReconnectWebSocket,
         handler: ProtocolSocketHandler,
         options: ProtocolSocketOptions = {},
     ) {
         this.handler = handler;
         this.socket = socket;
-        this.timeout = options.timeout || DEFAULT_TIMEOUT;
+        this.protocolRequestTimeout = options.protocolRequestTimeout
+            || DEFAULT_PROTOCOL_REQUEST_TIMEOUT;
 
-        this.socket.on(SOCKET_EVENTS.MESSAGE, (message): void => this.onProtocolMessage(message));
+        this.socket.on('message', (message): void => this.onProtocolMessage(message));
     }
 
-    sendMessage(channelId: string, message: any): Promise<any> {
+    sendMessage(channelId: string, message: any): Promise<void> {
         return this.sendProtocolMessage({
             id: uuidv4(),
             channelId,
-            type: TYPES.MESSAGE,
+            type: ProtocolMessageType.MESSAGE,
             content: message,
         });
     }
 
     async sendRequest(channelId: string, message: any): Promise<any> {
-        const request = new PendingRequest(this.timeout);
+        const request = new PendingRequest(this.protocolRequestTimeout);
         const id = uuidv4();
 
         this.pendingRequests[id] = request;
@@ -73,7 +92,7 @@ export default class ProtocolSocket {
         await this.sendProtocolMessage({
             id,
             channelId,
-            type: TYPES.REQUEST,
+            type: ProtocolMessageType.REQUEST,
             content: message,
         });
 
@@ -81,24 +100,20 @@ export default class ProtocolSocket {
     }
 
     private onProtocolMessage(rawMessage: any): void {
-        try {
-            const message = this.validateMessage(rawMessage);
+        const message = this.validateMessage(rawMessage);
 
-            switch (message.type) {
-                case TYPES.MESSAGE:
-                    this.handleMessage(message);
-                    break;
-                case TYPES.REQUEST:
-                    this.handleRequest(message);
-                    break;
-                case TYPES.RESPONSE:
-                    this.handleResponse(message);
-                    break;
-                default:
-                    break;
-            }
-        } catch (error) {
-            this.handler.onError(error, this);
+        switch (message.type) {
+            case ProtocolMessageType.MESSAGE:
+                this.handleMessage(message);
+                break;
+            case ProtocolMessageType.REQUEST:
+                this.handleRequest(message);
+                break;
+            case ProtocolMessageType.RESPONSE:
+                this.handleResponse(message);
+                break;
+            default:
+                break;
         }
     }
 
@@ -107,24 +122,27 @@ export default class ProtocolSocket {
     }
 
     private async handleRequest(message: ProtocolMessage): Promise<void> {
-        let result;
         try {
-            result = await this.handler.fulfillRequest(message.content, message.channelId, this);
+            const result = await this.handler.fulfillRequest(
+                message.content,
+                message.channelId,
+                this,
+            );
+
+            await this.sendProtocolMessage({
+                id: message.id,
+                channelId: message.channelId,
+                type: ProtocolMessageType.RESPONSE,
+                content: { result },
+            });
         } catch (error) {
             await this.sendProtocolMessage({
                 id: message.id,
                 channelId: message.channelId,
-                type: TYPES.RESPONSE,
+                type: ProtocolMessageType.RESPONSE,
                 content: { error: error.message },
             });
         }
-
-        await this.sendProtocolMessage({
-            id: message.id,
-            channelId: message.channelId,
-            type: TYPES.RESPONSE,
-            content: { result },
-        });
     }
 
     private handleResponse(message: ProtocolMessage): void {
@@ -144,7 +162,6 @@ export default class ProtocolSocket {
         return this.socket.send(message);
     }
 
-
     // eslint-disable-next-line class-methods-use-this
     private validateMessage(message: any): ProtocolMessage {
         if (!message.id) {
@@ -153,7 +170,7 @@ export default class ProtocolSocket {
         if (!message.type) {
             throw new Error('Received message without type');
         }
-        if (!Object.values(TYPES).includes(message.type)) {
+        if (!Object.values(ProtocolMessageType).includes(message.type)) {
             throw new Error(`Received message with invalid type: ${message.type}`);
         }
         return message as ProtocolMessage;

@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import type { Route, Request, Middleware } from '@canale/server/lib/_shared/api';
-import AbstractProtocolSocket, { ProtocolMessageHandler } from '../ProtocolSocket';
+import type { Route, Request, Middleware } from '@canale/server';
+import { ProtocolSocketHandler } from '../ProtocolSocket';
 
 type dict = { [name: string]: string };
 
@@ -38,57 +38,8 @@ function parsePathParams(pathDefinition: string, actualPath: string): dict | nul
     return params;
 }
 
-export function createGetRequest(path: string, headers: dict = {}, query: dict = {}): ApiMessage {
-    return {
-        path,
-        method: 'get',
-        body: {},
-        query,
-        headers,
-    };
-}
 
-export function createPostRequest(path: string, body: any, headers: dict = {}, query: dict = {}): ApiMessage {
-    return {
-        path,
-        method: 'post',
-        body,
-        query,
-        headers,
-    };
-}
-
-export function createPutRequest(path: string, body: any, headers: dict = {}, query: dict = {}): ApiMessage {
-    return {
-        path,
-        method: 'put',
-        body,
-        query,
-        headers,
-    };
-}
-
-export function createPatchRequest(path: string, body: any, headers: dict = {}, query: dict = {}): ApiMessage {
-    return {
-        path,
-        method: 'patch',
-        body,
-        query,
-        headers,
-    };
-}
-
-export function createDeleteRequest(path: string, headers: dict = {}, query: dict = {}): ApiMessage {
-    return {
-        path,
-        method: 'delete',
-        body: {},
-        query,
-        headers,
-    };
-}
-
-export default class SocketApiHandler implements ProtocolMessageHandler {
+export default class SocketApiHandler implements ProtocolSocketHandler {
 
     private routes: Route[];
     private middlewares: Middleware[];
@@ -98,7 +49,7 @@ export default class SocketApiHandler implements ProtocolMessageHandler {
         this.middlewares = middlewares || [];
     }
 
-    async fulfillRequest(message: any, channelId: string, socket: AbstractProtocolSocket): Promise<any> {
+    async fulfillRequest(message: any): Promise<any> {
         const {
             path,
             method,
@@ -136,8 +87,8 @@ export default class SocketApiHandler implements ProtocolMessageHandler {
         return endpoint.handler(request);
     }
 
-    onMessage(message: any, channelId: string, socket: AbstractProtocolSocket): void {
-        this.fulfillRequest(message, channelId, socket);
+    onMessage(message: any): void {
+        this.fulfillRequest(message);
     }
 
     private findRouteFor(path: string): { route?: Route; params: dict } {

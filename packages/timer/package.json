@@ -1,0 +1,23 @@
+{
+  "name": "@canale/timer",
+  "version": "3.0.1",
+  "description": "Utilities related to timer",
+  "author": "Raffaele Canale <raffaelecanale@gmail.com>",
+  "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
+  },
+  "scripts": {
+    "clean": "rm -rf lib/",
+    "build": "../../node_modules/typescript/bin/tsc"
+  }
+}

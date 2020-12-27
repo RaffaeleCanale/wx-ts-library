@@ -1,4 +1,4 @@
-export default class PendingRequest<T> {
+export default class PendingRequest<T = unknown> {
 
     static reject<T>(error: Error): PendingRequest<T> {
         const request = new PendingRequest<T>();

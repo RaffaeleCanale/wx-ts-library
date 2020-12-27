@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "postinstall": "lerna run bootstrap",
+        "postinstall": "lerna bootstrap",
         "clean": "lerna run clean",
         "build": "lerna run build",
         "publish": "lerna run clean && lerna run build && lerna publish"

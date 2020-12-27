@@ -2,27 +2,32 @@
 # yarn lockfile v1
 
 
-"@canale/emitter@^2.1.5":
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/@canale/emitter/-/emitter-2.1.5.tgz#e747f3bb01e21cd071893113a446b32a2bdcdbba"
-  integrity sha512-NCi+meslf91O+FWQE85B6hWOdNh32ch8B6KPitzZ5Ztp3GlrujiRZ/8GLUGn0KD22q0ANKlrS96KgKLEjxgpew==
+"@canale/emitter@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@canale/emitter/-/emitter-3.0.0.tgz#f01b093aed1cfaac4d1d5539cf3439aa734f6beb"
+  integrity sha512-Sn6QM5X7VPPBImr4M01/kaiouYA8YdCP9BVayuOt5MKWPQlD94LMxIH1nX8PqOkEHNDichzeJVZE9edesFaMNg==
   dependencies:
     lodash.isequal "^4.5.0"
 
-"@canale/logger@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-2.0.1.tgz#a94cd7f012f2ff4a41676a5dec07c902ee99d81f"
-  integrity sha512-KKDwdQ0FpLVmkui23w0xkRHBt7WbxylTkB6pw3MkfwnpvRbXpCQ1bpHBeP4/4/ANdViDYJOPrR5sF6oFsLPr8g==
+"@canale/logger@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-3.0.1.tgz#e89e452a8a40f7c66a022aa8244e015e28bc1913"
+  integrity sha512-4Li2GU+lf25lDxjAqcFOHR+TUjMwP0kAjOp6EfTXzL0QZauiYwuf0Cwe/asrNHbyLDnEz9ovgQsL5CbLRXFj1g==
 
-"@canale/server@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@canale/server/-/server-2.0.1.tgz#e7dbccc3fde2ab178ee7b8a7018d9b98c031ce60"
-  integrity sha512-4iiEU+DT9iQ5V2d8KWnWy4ZTbH8a74bvmENN20KZpGbc1kgykeprAUBpDVVa8U61c+68Y9XWNC2KUQKBYKfrYw==
+"@canale/server@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@canale/server/-/server-3.0.1.tgz#4c8562a745a16c829daf93bd7a788d39c43f471a"
+  integrity sha512-Y+PcUaPcVuUxRQkHyJfMAdCfb3XxeJZt7m7DpU7fmSmMeiXAz+cSTJaN9PnoEMK/CRKuV7JRJqNZ2COw9P1Vqg==
   dependencies:
-    "@canale/logger" "^2.0.1"
+    "@canale/logger" "^3.0.1"
     body-parser "^1.19.0"
     cors "^2.8.5"
     express "^4.17.1"
+
+"@canale/timer@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@canale/timer/-/timer-3.0.1.tgz#9cdfb3a6f8bab5a3be5cf56a4eb39a0bf0200526"
+  integrity sha512-HcVnYVCfGHU2QzVk5zwkkO3BClY4PWv8TCTLDDrLN4zLFgQQ5vCy5xO+93nEMotXGb2RHw8GsgoZNvH1f/Zg+A==
 
 "@types/node@*":
   version "13.9.0"
