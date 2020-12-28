@@ -71,6 +71,10 @@ export default class ProtocolSocket {
         this.socket.on('message', (message): void => this.onProtocolMessage(message));
     }
 
+    getSocket(): WebSocketAdapter | ReconnectWebSocket {
+        return this.socket;
+    }
+
     sendMessage(channelId: string, message: any): Promise<void> {
         return this.sendProtocolMessage({
             id: uuidv4(),
