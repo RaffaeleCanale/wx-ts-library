@@ -8,7 +8,7 @@ export default class PromiseEventEmitter<E> {
 
     on<K extends keyof E>(
         key: K,
-        callback: ListenerCallback<E[K],
+        callback: ListenerCallback<E[K]
     >, context?: object): ListenerReference {
         // eslint-disable-next-line no-plusplus
         const id = ++this.idGenerator;
