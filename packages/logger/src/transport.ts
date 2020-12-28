@@ -1,5 +1,12 @@
 import { formatDate, prettyPrint } from './formatUtils';
-import { Level, LogContainer } from './Logger';
+import { LogContainer } from './Logger';
+
+export enum Level {
+    VERBOSE = 'verbose',
+    INFO = 'info',
+    WARN = 'warn',
+    ERROR = 'error',
+}
 
 export interface Transport {
     log: (formattedMessage: string, extra?: any) => void;

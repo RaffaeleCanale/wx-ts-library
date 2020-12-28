@@ -1,11 +1,4 @@
-import { fillTransportWithDefaults, Transport } from './transport';
-
-export enum Level {
-    VERBOSE = 'verbose',
-    INFO = 'info',
-    WARN = 'warn',
-    ERROR = 'error',
-}
+import { fillTransportWithDefaults, Transport, Level } from './transport';
 
 export interface LogContainer {
     timestamp: string;
