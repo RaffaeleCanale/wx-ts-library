@@ -1,7 +1,7 @@
 import isEqual from 'lodash.isequal';
 import { Listener, ListenerCallback, ListenerReference } from './Types';
 
-export default class EventEmitter<E> {
+export default class PromiseEventEmitter<E> {
 
     private listeners: Listener<keyof E, any>[] = [];
     private idGenerator = 0;
@@ -32,10 +32,11 @@ export default class EventEmitter<E> {
         }
     }
 
-    emit<K extends keyof E>(key: K, parameter: E[K]): void {
-        this.listeners
+    emit<K extends keyof E>(key: K, parameter: E[K]): Promise<PromiseSettledResult<any>[]> {
+        const promises = this.listeners
             .filter((listener) => isEqual(key, listener.key))
-            .forEach((listener) => listener.callback.call(listener.context, parameter));
+            .map((listener) => listener.callback.call(listener.context, parameter));
+        return Promise.allSettled(promises);
     }
 
     private removeListener(id: number): void {

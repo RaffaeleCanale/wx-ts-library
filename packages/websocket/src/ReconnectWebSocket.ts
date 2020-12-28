@@ -1,5 +1,5 @@
 import { ReusableTimeout } from '@canale/timer';
-import EventEmitter from '@canale/emitter';
+import { EventEmitter } from '@canale/emitter';
 import WebSocketWrapper, { SocketEvents, WebSocketImpl } from './WebSocketAdapter';
 import WebSocketClosedError from './WebSocketClosedError';
 
