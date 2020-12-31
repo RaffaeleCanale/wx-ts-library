@@ -6,12 +6,10 @@
         "publish": "lerna run clean && lerna run build && lerna publish"
     },
     "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^2.22.0",
-        "@typescript-eslint/parser": "^2.22.0",
-        "eslint": "^6.8.0",
-        "eslint-config-airbnb-base": "^14.0.0",
-        "eslint-plugin-import": "^2.20.1",
+        "@canale/eslint-config-typescript": "./packages/eslint-config-typescript",
+        "eslint-config-prettier": "^7.1.0",
+        "eslint-plugin-prettier": "^3.3.0",
         "lerna": "^3.20.2",
-        "typescript": "^3.8.3"
+        "typescript": "^4.1.3"
     }
 }
