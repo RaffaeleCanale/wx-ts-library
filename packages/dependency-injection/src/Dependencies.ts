@@ -38,3 +38,7 @@ export function getDependency<T>(name: string): T {
     }
     return result as T;
 }
+
+export function getAllDependencies(): Record<string, unknown> {
+    return dependenciesSingleton;
+}
