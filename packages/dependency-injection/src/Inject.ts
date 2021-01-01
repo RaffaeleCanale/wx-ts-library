@@ -5,11 +5,12 @@ import { Dependencies, Injectable } from './types';
  *
  * Injects the attribute with a getter to a dependency.
  */
-export function injectLazy(target: Injectable, key: keyof Dependencies): void {
-    if (!target._dependencies) {
-        target._dependencies = {};
+export function injectLazy(target: any, key: keyof Dependencies): void {
+    const injectable = target as Injectable;
+    if (!injectable._dependencies) {
+        injectable._dependencies = {};
     }
-    target._dependencies[key] = { key, lazy: true };
+    injectable._dependencies[key] = { key, lazy: true };
 }
 
 /**
@@ -17,9 +18,10 @@ export function injectLazy(target: Injectable, key: keyof Dependencies): void {
  *
  * Injects the attribute with a dependency.
  */
-export function inject(target: Injectable, key: keyof Dependencies): void {
-    if (!target._dependencies) {
-        target._dependencies = {};
+export function inject(target: any, key: keyof Dependencies): void {
+    const injectable = target as Injectable;
+    if (!injectable._dependencies) {
+        injectable._dependencies = {};
     }
-    target._dependencies[key] = { key, lazy: false };
+    injectable._dependencies[key] = { key, lazy: false };
 }

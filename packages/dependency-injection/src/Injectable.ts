@@ -21,7 +21,7 @@ function apply(obj: Injectable): void {
  *
  * Adds a constructor hook that allows to initialize all the `@inject` dependencies.
  */
-export function injectable(target: { new (...args: any[]): Injectable }): any {
+export function injectable(target: { new (...args: any[]): any }): any {
     // save a reference to the original constructor
     const original = target;
 
