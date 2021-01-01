@@ -1,20 +1,25 @@
-const dependenciesSingleton: Record<string, unknown> = {};
+import { Dependencies } from './types';
+
+const dependenciesSingleton: Partial<Dependencies> = {};
 
 export function clear(): void {
     // eslint-disable-next-line no-restricted-syntax
     for (const dep of Object.getOwnPropertyNames(dependenciesSingleton)) {
-        delete dependenciesSingleton[dep];
+        delete (dependenciesSingleton as any)[dep];
     }
 }
 
 /**
  * Register a global dependency.
  *
- * @param name Name of the dependency (must be globally unique)
+ * @param key Key of the dependency (must be globally unique)
  * @param dependency Dependency object
  */
-export function register(name: string, dependency: unknown): void {
-    dependenciesSingleton[name] = dependency;
+export function register<K extends keyof Dependencies>(
+    key: K,
+    dependency: Dependencies[K],
+): void {
+    dependenciesSingleton[key] = dependency;
 }
 
 /**
@@ -22,23 +27,25 @@ export function register(name: string, dependency: unknown): void {
  *
  * @param dependencies Map of dependencies
  */
-export function registerAll(dependencies: Record<string, unknown>): void {
+export function registerAll(dependencies: Partial<Dependencies>): void {
     Object.assign(dependenciesSingleton, dependencies);
 }
 
 /**
  * Get a globally registered dependency.
  *
- * @param name Name of the dependency
+ * @param key Key of the dependency
  */
-export function getDependency<T>(name: string): T {
-    const result = dependenciesSingleton[name];
+export function getDependency<K extends keyof Dependencies>(
+    key: K,
+): Dependencies[K] {
+    const result = dependenciesSingleton[key];
     if (!result) {
-        throw new Error(`Dependency ${name} not found`);
+        throw new Error(`Dependency ${key as string} not found`);
     }
-    return result as T;
+    return result;
 }
 
-export function getAllDependencies(): Record<string, unknown> {
+export function getAllDependencies(): Partial<Dependencies> {
     return dependenciesSingleton;
 }

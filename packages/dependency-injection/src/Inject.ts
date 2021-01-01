@@ -1,15 +1,15 @@
-import { Injectable } from './types';
+import { Dependencies, Injectable } from './types';
 
 /**
  * This is a class attribute annotation. Make sure that your class has the `@injectable` annotation.
  *
  * Injects the attribute with a getter to a dependency.
  */
-export function injectLazy(target: Injectable, key: string): void {
+export function injectLazy(target: Injectable, key: keyof Dependencies): void {
     if (!target._dependencies) {
         target._dependencies = {};
     }
-    target._dependencies[key] = { name: key, lazy: true };
+    target._dependencies[key] = { key, lazy: true };
 }
 
 /**
@@ -17,9 +17,9 @@ export function injectLazy(target: Injectable, key: string): void {
  *
  * Injects the attribute with a dependency.
  */
-export function inject(target: Injectable, key: string): void {
+export function inject(target: Injectable, key: keyof Dependencies): void {
     if (!target._dependencies) {
         target._dependencies = {};
     }
-    target._dependencies[key] = { name: key, lazy: false };
+    target._dependencies[key] = { key, lazy: false };
 }

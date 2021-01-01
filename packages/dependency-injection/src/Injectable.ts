@@ -7,11 +7,11 @@ function apply(obj: Injectable): void {
         if (dep.lazy) {
             Object.defineProperty(obj, property, {
                 get() {
-                    return getDependency(dep.name);
+                    return getDependency(dep.key);
                 },
             });
         } else {
-            (obj as any)[property] = getDependency(dep.name);
+            (obj as any)[property] = getDependency(dep.key);
         }
     });
 }
