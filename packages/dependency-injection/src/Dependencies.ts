@@ -23,7 +23,7 @@ export function register<K extends keyof Dependencies>(
     key: K,
     dependency: ValueOrFactory<Dependencies[K]>,
 ): void {
-    dependenciesSingleton[key] = dependency;
+    (dependenciesSingleton as Record<string, unknown>)[key] = dependency;
 }
 
 /**
@@ -58,9 +58,9 @@ export function getDependency<K extends keyof Dependencies>(
 }
 
 export function getAllDependencies(): Partial<Dependencies> {
-    const result: Partial<Dependencies> = {};
+    const result: Record<string, unknown> = {};
     Object.keys(dependenciesSingleton).forEach((key) => {
-        result[key] = getDependency(key);
+        result[key] = getDependency(key as never);
     });
     return result;
 }

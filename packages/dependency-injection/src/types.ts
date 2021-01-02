@@ -8,9 +8,7 @@ export interface Injectable {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Dependencies {
-    [key: string]: unknown;
-}
+export interface Dependencies {}
 
 export type Provider<T> = () => T;
 

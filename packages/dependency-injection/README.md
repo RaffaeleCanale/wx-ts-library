@@ -10,7 +10,7 @@ yarn add @canale/dependency-injection
 
 ## Usage
 
-### 0. (Optional) Define type information
+### 1. Define type information
 
 This framework allows for some level of type checking. To add type information to your dependencies, you can augment the `Dependencies` interface:
 
@@ -25,7 +25,7 @@ declare module '@canale/dependency-injection/lib/types' {
 }
 ```
 
-### 1. Register your dependencies
+### 2. Register your dependencies
 
 ```ts
 import { register, registerAll } from '@canale/dependency-injection';
@@ -43,7 +43,7 @@ registerAll({
 });
 ```
 
-### 2. Load your dependencies
+### 3. Load your dependencies
 
 This can be done manually:
 
