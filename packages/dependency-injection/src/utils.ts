@@ -1,3 +1,5 @@
+import { Provider, ValueOrFactory } from './types';
+
 export function wrapError(error: Error, errorMessage: string): Error {
     const e = new Error(errorMessage);
     (e as any).original = error;
@@ -7,4 +9,22 @@ export function wrapError(error: Error, errorMessage: string): Error {
         }`;
     }
     return e;
+}
+
+function isConstructor<T = unknown>(arg: unknown): arg is new () => T {
+    return typeof arg === 'function' && arg.prototype;
+}
+
+function isProvider<T = unknown>(arg: unknown): arg is Provider<T> {
+    return typeof arg === 'function';
+}
+
+export function getValueOf<T>(value: ValueOrFactory<T>): T {
+    if (isConstructor(value)) {
+        return new value();
+    }
+    if (isProvider(value)) {
+        return value();
+    }
+    return value;
 }

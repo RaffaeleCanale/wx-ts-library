@@ -1,7 +1,11 @@
-import { Dependencies } from './types';
+import { Dependencies, ValueOrFactory, ValueOrFactoryObj } from './types';
+import { getValueOf } from './utils';
 
-const dependenciesSingleton: Partial<Dependencies> = {};
+const dependenciesSingleton: Partial<ValueOrFactoryObj<Dependencies>> = {};
 
+/**
+ * Clear out all the registered dependencies. This is mostly useful for tests.
+ */
 export function clear(): void {
     // eslint-disable-next-line no-restricted-syntax
     for (const dep of Object.getOwnPropertyNames(dependenciesSingleton)) {
@@ -17,7 +21,7 @@ export function clear(): void {
  */
 export function register<K extends keyof Dependencies>(
     key: K,
-    dependency: Dependencies[K],
+    dependency: ValueOrFactory<Dependencies[K]>,
 ): void {
     dependenciesSingleton[key] = dependency;
 }
@@ -27,7 +31,9 @@ export function register<K extends keyof Dependencies>(
  *
  * @param dependencies Map of dependencies
  */
-export function registerAll(dependencies: Partial<Dependencies>): void {
+export function registerAll(
+    dependencies: Partial<ValueOrFactoryObj<Dependencies>>,
+): void {
     Object.assign(dependenciesSingleton, dependencies);
 }
 
@@ -39,13 +45,22 @@ export function registerAll(dependencies: Partial<Dependencies>): void {
 export function getDependency<K extends keyof Dependencies>(
     key: K,
 ): Dependencies[K] {
-    const result = dependenciesSingleton[key];
-    if (!result) {
+    const currentValue = dependenciesSingleton[key] as ValueOrFactory<
+        Dependencies[K]
+    >;
+    if (!currentValue) {
         throw new Error(`Dependency ${key as string} not found`);
     }
-    return result;
+
+    const newValue = getValueOf<Dependencies[K]>(currentValue);
+    dependenciesSingleton[key] = newValue;
+    return newValue;
 }
 
 export function getAllDependencies(): Partial<Dependencies> {
-    return dependenciesSingleton;
+    const result: Partial<Dependencies> = {};
+    Object.keys(dependenciesSingleton).forEach((key) => {
+        result[key] = getDependency(key);
+    });
+    return result;
 }

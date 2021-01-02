@@ -8,4 +8,14 @@ export interface Injectable {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Dependencies {}
+export interface Dependencies {
+    [key: string]: unknown;
+}
+
+export type Provider<T> = () => T;
+
+export type ValueOrFactory<T> = T | Provider<T> | (new () => T);
+
+export type ValueOrFactoryObj<T> = {
+    [K in keyof T]: ValueOrFactory<T[K]>;
+};

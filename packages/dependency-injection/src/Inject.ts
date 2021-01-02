@@ -25,3 +25,7 @@ export function inject(target: any, key: keyof Dependencies): void {
     }
     injectable._dependencies[key] = { key, lazy: false };
 }
+
+export function injectNamed(key: keyof Dependencies): PropertyDecorator {
+    return (target: any) => inject(target, key);
+}
