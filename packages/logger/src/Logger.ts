@@ -8,7 +8,6 @@ export interface LogContainer {
 }
 
 export default class Logger {
-
     private name: string;
     private transports: Transport[];
 
@@ -47,7 +46,7 @@ export default class Logger {
                 level: transport.levelFormatter(level, levelIndex),
                 message: transport.processMessage(message, extra),
             };
-            transport.log(transport.messageFormatter(info));
+            transport.log(transport.messageFormatter(info), extra);
         });
     }
 
