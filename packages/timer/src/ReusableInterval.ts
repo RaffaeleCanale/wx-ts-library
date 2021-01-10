@@ -11,7 +11,7 @@ export default class ReusableInterval {
 
     clearInterval(): void {
         if (this.interval) {
-            clearTimeout(this.interval);
+            clearInterval(this.interval);
             this.interval = undefined;
         }
     }
