@@ -3,10 +3,7 @@ export default class ReusableInterval {
 
     resetInterval(intervalTime: number, fn: () => void): void {
         this.clearInterval();
-        this.interval = setInterval(() => {
-            this.interval = undefined;
-            fn();
-        }, intervalTime);
+        this.interval = setInterval(fn, intervalTime);
     }
 
     clearInterval(): void {
