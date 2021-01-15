@@ -1,6 +1,6 @@
 {
     "name": "@canale/eslint-config-typescript",
-    "version": "4.2.4",
+    "version": "4.2.6",
     "description": "ESLint and Prettier config for TypeScript",
     "author": "Raffaele Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
