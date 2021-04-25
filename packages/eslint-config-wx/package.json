@@ -1,6 +1,6 @@
 {
     "name": "@canale/eslint-config-wx",
-    "version": "4.2.7",
+    "version": "4.2.8",
     "description": "ESLint and Prettier config for TypeScript",
     "author": "Raffaele Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
@@ -23,12 +23,12 @@
     "dependencies": {
         "@typescript-eslint/eslint-plugin": "^4.11.1",
         "@typescript-eslint/parser": "^4.11.1",
-        "eslint": "^7.16.0",
-        "prettier": "^2.2.1",
-        "prettier-plugin-organize-imports": "^1.1.1",
         "@vue/eslint-config-typescript": "^7.0.0",
-        "eslint-plugin-vue": "^7.9.0",
+        "eslint": "^7.16.0",
         "eslint-config-prettier": "^8.3.0",
-        "eslint-plugin-prettier": "^3.4.0"
+        "eslint-plugin-prettier": "^3.4.0",
+        "eslint-plugin-vue": "^7.9.0",
+        "prettier": "^2.2.1",
+        "prettier-plugin-organize-imports": "^1.1.1"
     }
 }
