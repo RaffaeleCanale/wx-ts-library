@@ -1,6 +1,9 @@
 import { ReusableTimeout } from '@canale/timer';
 import { EventEmitter } from '@canale/emitter';
-import WebSocketWrapper, { SocketEvents, WebSocketImpl } from './WebSocketAdapter';
+import WebSocketWrapper, {
+    SocketEvents,
+    WebSocketImpl,
+} from './WebSocketAdapter';
 import WebSocketClosedError from './WebSocketClosedError';
 
 export interface ReconnectWebSocketOptions {
@@ -12,9 +15,8 @@ export interface ReconnectWebSocketOptions {
  * whenever the connection breaks or fails.
  */
 export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
-
     private readonly WebSocketImpl: WebSocketImpl;
-    private readonly address: string
+    private readonly address: string;
     private readonly options: ReconnectWebSocketOptions;
 
     private reconnectCounter = 0;
@@ -52,10 +54,12 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
         this.reconnectTimeout.clearTimeout();
 
         try {
-            this.ws = await WebSocketWrapper.connect(this.address, this.WebSocketImpl);
-            this.ws.on(
-                'message',
-                (message: any) => this.emit('message', message),
+            this.ws = await WebSocketWrapper.connect(
+                this.address,
+                this.WebSocketImpl,
+            );
+            this.ws.on('message', (message: any) =>
+                this.emit('message', message),
             );
             this.ws.on('error', (error: Error) => {
                 if (this.ws) {
