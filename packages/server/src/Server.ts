@@ -76,7 +76,7 @@ export default class Server {
                 .then((response) => {
                     // eslint-disable-next-line no-underscore-dangle
                     if (response && response.__responseType === 'send_file') {
-                        res.status(200).sendFile(response.filePath);
+                        res.status(200).sendFile(response.filePath, response.options);
                         return;
                     }
                     res.status(200).send(response);
