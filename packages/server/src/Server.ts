@@ -1,17 +1,22 @@
 import { getLogger } from '@canale/logger';
-import http from 'http';
-import express, {
-    Router,
-    RequestHandler,
-    Request as ExpressRequest,
-    Response,
-    NextFunction,
-} from 'express';
-import cors from 'cors';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+import express, {
+    NextFunction,
+    Request as ExpressRequest,
+    RequestHandler,
+    Response,
+    Router,
+} from 'express';
+import http from 'http';
 import { AddressInfo } from 'net';
-
-import { Middleware, Request, Route, EndpointHandler, Handler } from './_shared/api';
+import {
+    EndpointHandler,
+    Handler,
+    Middleware,
+    Request,
+    Route,
+} from './_shared/api';
 
 export interface ServerOptions {
     port: number;
@@ -36,7 +41,11 @@ export default class Server {
     private server: http.Server;
     private port: number;
 
-    constructor(options: ServerOptions, routes: Route[], middlewares?: Middleware[]) {
+    constructor(
+        options: ServerOptions,
+        routes: Route[],
+        middlewares?: Middleware[],
+    ) {
         this.port = options.port;
         this.app = express();
         this.server = http.createServer(this.app);
@@ -63,7 +72,11 @@ export default class Server {
     }
 
     private wrapMiddleware(middleware: Middleware): RequestHandler {
-        return (req: ExpressRequest, res: Response, next: NextFunction): void => {
+        return (
+            req: ExpressRequest,
+            res: Response,
+            next: NextFunction,
+        ): void => {
             middleware(requestAdapter(req))
                 .then(() => next())
                 .catch((error) => this.handleError(error, res));
@@ -71,12 +84,19 @@ export default class Server {
     }
 
     private wrapHandler(handler: Handler): RequestHandler {
-        return (req: ExpressRequest, res: Response, next: NextFunction): void => {
+        return (
+            req: ExpressRequest,
+            res: Response,
+            next: NextFunction,
+        ): void => {
             handler(requestAdapter(req))
                 .then((response) => {
                     // eslint-disable-next-line no-underscore-dangle
                     if (response && response.__responseType === 'send_file') {
-                        res.status(200).sendFile(response.filePath, response.options);
+                        res.status(200).sendFile(
+                            response.filePath,
+                            response.options,
+                        );
                         return;
                     }
                     res.status(200).send(response);
@@ -118,7 +138,9 @@ export default class Server {
 
     private processEndpoint(endpoint: EndpointHandler): RequestHandler[] {
         return [
-            ...endpoint.middlewares.map((middleware) => this.wrapMiddleware(middleware)),
+            ...endpoint.middlewares.map((middleware) =>
+                this.wrapMiddleware(middleware),
+            ),
             this.wrapHandler(endpoint.handler),
         ];
     }
