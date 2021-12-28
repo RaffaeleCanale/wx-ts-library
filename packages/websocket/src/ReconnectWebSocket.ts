@@ -8,7 +8,10 @@ import WebSocketWrapper, {
 import WebSocketClosedError from './WebSocketClosedError';
 
 export interface ReconnectWebSocketOptions {
-    reconnectDelay?: number | ((retryCount: number) => number);
+    /**
+     * Time (in ms) the socket will wait before reconnecting.
+     */
+    reconnectDelay: number | ((retryCount: number) => number);
 }
 
 /**
@@ -32,7 +35,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
     constructor(
         address: string,
         webSocketImpl: WebSocketImpl,
-        options: ReconnectWebSocketOptions = {},
+        options: ReconnectWebSocketOptions,
     ) {
         super();
         this.address = address;
@@ -109,12 +112,9 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
     }
 
     private getBackOffTime(): number {
-        if (this.options.reconnectDelay) {
-            if (typeof this.options.reconnectDelay === 'number') {
-                return this.options.reconnectDelay;
-            }
-            return this.options.reconnectDelay(this.reconnectCounter);
+        if (typeof this.options.reconnectDelay === 'number') {
+            return this.options.reconnectDelay;
         }
-        return this.reconnectCounter * 30 * 1000;
+        return this.options.reconnectDelay(this.reconnectCounter);
     }
 }
