@@ -1,9 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-
-import WebSocketAdapter from '../WebSocketAdapter';
-import PendingRequest from '../utils/PendingRequest';
 import ReconnectWebSocket from '../ReconnectWebSocket';
-
+import PendingRequest from '../utils/PendingRequest';
+import { asError, hasStrProperty } from '../utils/Utils';
+import WebSocketAdapter from '../WebSocketAdapter';
 
 enum ProtocolMessageType {
     REQUEST = 'request',
@@ -11,12 +10,25 @@ enum ProtocolMessageType {
     MESSAGE = 'message',
 }
 
-interface ProtocolMessage {
+interface ProtocolMessageRequest {
     id: string;
     channelId: string;
-    type: ProtocolMessageType;
-    content: any;
+    type: ProtocolMessageType.MESSAGE | ProtocolMessageType.REQUEST;
+    content: unknown;
 }
+interface ProtocolMessageResponse {
+    id: string;
+    channelId: string;
+    type: ProtocolMessageType.RESPONSE;
+    content:
+        | {
+              result: unknown;
+          }
+        | {
+              error: string;
+          };
+}
+type ProtocolMessage = ProtocolMessageRequest | ProtocolMessageResponse;
 
 // export interface ProtocolMessageHandler {
 //     fulfillRequest(message: any, channelId: string, socket: ProtocolSocket): Promise<any>;
@@ -33,7 +45,11 @@ export interface ProtocolSocketHandler {
      *
      * @returns The result of the request which will be sent back to the socket.
      */
-    fulfillRequest(message: any, channelId: string, socket: ProtocolSocket): Promise<any>;
+    fulfillRequest(
+        message: unknown,
+        channelId: string,
+        socket: ProtocolSocket,
+    ): Promise<unknown>;
 
     /**
      * This handler gets called whenever the remote socket sent a simple message.
@@ -42,7 +58,11 @@ export interface ProtocolSocketHandler {
      * @param channelId Channel id
      * @param socket Socket that sent the message
      */
-    onMessage(message: any, channelId: string, socket: ProtocolSocket): void;
+    onMessage(
+        message: unknown,
+        channelId: string,
+        socket: ProtocolSocket,
+    ): void;
 }
 
 const DEFAULT_PROTOCOL_REQUEST_TIMEOUT = 10000;
@@ -51,7 +71,6 @@ export interface ProtocolSocketOptions {
 }
 
 export default class ProtocolSocket {
-
     private readonly socket: WebSocketAdapter | ReconnectWebSocket;
 
     private pendingRequests: { [id: string]: PendingRequest<unknown> } = {};
@@ -65,17 +84,19 @@ export default class ProtocolSocket {
     ) {
         this.handler = handler;
         this.socket = socket;
-        this.protocolRequestTimeout = options.protocolRequestTimeout
-            || DEFAULT_PROTOCOL_REQUEST_TIMEOUT;
+        this.protocolRequestTimeout =
+            options.protocolRequestTimeout || DEFAULT_PROTOCOL_REQUEST_TIMEOUT;
 
-        this.socket.on('message', (message): void => this.onProtocolMessage(message));
+        this.socket.on('message', (message): void =>
+            this.onProtocolMessage(message),
+        );
     }
 
     getSocket(): WebSocketAdapter | ReconnectWebSocket {
         return this.socket;
     }
 
-    sendMessage(channelId: string, message: any): Promise<void> {
+    sendMessage(channelId: string, message: unknown): Promise<void> {
         return this.sendProtocolMessage({
             id: uuidv4(),
             channelId,
@@ -84,7 +105,7 @@ export default class ProtocolSocket {
         });
     }
 
-    async sendRequest(channelId: string, message: any): Promise<any> {
+    async sendRequest(channelId: string, message: unknown): Promise<unknown> {
         const request = new PendingRequest(this.protocolRequestTimeout);
         const id = uuidv4();
 
@@ -103,7 +124,7 @@ export default class ProtocolSocket {
         return request.promise;
     }
 
-    private onProtocolMessage(rawMessage: any): void {
+    private onProtocolMessage(rawMessage: unknown): void {
         const message = this.validateMessage(rawMessage);
 
         switch (message.type) {
@@ -111,7 +132,7 @@ export default class ProtocolSocket {
                 this.handleMessage(message);
                 break;
             case ProtocolMessageType.REQUEST:
-                this.handleRequest(message);
+                void this.handleRequest(message);
                 break;
             case ProtocolMessageType.RESPONSE:
                 this.handleResponse(message);
@@ -121,11 +142,13 @@ export default class ProtocolSocket {
         }
     }
 
-    private handleMessage(message: ProtocolMessage): void {
+    private handleMessage(message: ProtocolMessageRequest): void {
         this.handler.onMessage(message.content, message.channelId, this);
     }
 
-    private async handleRequest(message: ProtocolMessage): Promise<void> {
+    private async handleRequest(
+        message: ProtocolMessageRequest,
+    ): Promise<void> {
         try {
             const result = await this.handler.fulfillRequest(
                 message.content,
@@ -144,18 +167,18 @@ export default class ProtocolSocket {
                 id: message.id,
                 channelId: message.channelId,
                 type: ProtocolMessageType.RESPONSE,
-                content: { error: error.message },
+                content: { error: asError(error).message },
             });
         }
     }
 
-    private handleResponse(message: ProtocolMessage): void {
+    private handleResponse(message: ProtocolMessageResponse): void {
         const request = this.pendingRequests[message.id];
         if (!request) {
             throw new Error(`No request found for response: ${message.id}`);
         }
 
-        if (message.content.error) {
+        if ('error' in message.content) {
             request.reject(new Error(message.content.error));
         } else {
             request.resolve(message.content.result);
@@ -167,15 +190,21 @@ export default class ProtocolSocket {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    private validateMessage(message: any): ProtocolMessage {
-        if (!message.id) {
+    private validateMessage(message: unknown): ProtocolMessage {
+        if (!hasStrProperty(message, 'id')) {
             throw new Error('Received message without id');
         }
-        if (!message.type) {
+        if (!hasStrProperty(message, 'type')) {
             throw new Error('Received message without type');
         }
-        if (!Object.values(ProtocolMessageType).includes(message.type)) {
-            throw new Error(`Received message with invalid type: ${message.type}`);
+        if (
+            !Object.values(ProtocolMessageType).includes(
+                message.type as ProtocolMessageType,
+            )
+        ) {
+            throw new Error(
+                `Received message with invalid type: ${message.type}`,
+            );
         }
         return message as ProtocolMessage;
     }

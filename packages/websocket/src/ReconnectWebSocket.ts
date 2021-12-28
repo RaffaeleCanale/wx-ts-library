@@ -1,5 +1,6 @@
-import { ReusableTimeout } from '@canale/timer';
 import { EventEmitter } from '@canale/emitter';
+import { ReusableTimeout } from '@canale/timer';
+import { asError } from './utils/Utils';
 import WebSocketWrapper, {
     SocketEvents,
     WebSocketImpl,
@@ -58,7 +59,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
                 this.address,
                 this.WebSocketImpl,
             );
-            this.ws.on('message', (message: any) =>
+            this.ws.on('message', (message: unknown) =>
                 this.emit('message', message),
             );
             this.ws.on('error', (error: Error) => {
@@ -71,7 +72,6 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
             });
             this.ws.on('close', (error: WebSocketClosedError) => {
                 if (this.ws) {
-                    this.ws.disconnect();
                     this.ws = undefined;
                 }
                 this.scheduleReconnect();
@@ -80,12 +80,12 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
             this.emit('connect', undefined);
             this.reconnectCounter = 0;
         } catch (error) {
-            this.emit('error', error);
+            this.emit('error', asError(error));
             this.scheduleReconnect();
         }
     }
 
-    send(message: any): Promise<void> {
+    send(message: unknown): Promise<void> {
         if (!this.isConnected) {
             return Promise.reject(new Error('Socket is not connected'));
         }
@@ -104,7 +104,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
         this.reconnectCounter += 1;
         const time = this.getBackOffTime();
         this.reconnectTimeout.resetTimeout(time, () => {
-            this.connect();
+            void this.connect();
         });
     }
 

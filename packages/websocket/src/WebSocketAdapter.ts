@@ -1,35 +1,36 @@
-import NpmWebSocket from 'ws';
 import { EventEmitter } from '@canale/emitter';
+import NpmWebSocket from 'ws';
 import WebSocketClosedError from './WebSocketClosedError';
 
-
 export interface SocketEvents {
-    message: any;
+    message: unknown;
     connect: void;
     error: Error;
     close: WebSocketClosedError;
 }
 
-export type WebSocketImpl = { new(address: string): NpmWebSocket | WebSocket };
+export type WebSocketImpl = { new (address: string): NpmWebSocket | WebSocket };
 
 function isNpmWebSocket(ws: NpmWebSocket | WebSocket): ws is NpmWebSocket {
     return !!(ws as any).on;
 }
 
 export const DEV_OPTIONS = {
-    logger: null as any,
+    logger: null as null | ((...args: unknown[]) => void),
 };
 
 /**
  * This is an isomorph adapter of the node and browser websocket.
  */
 export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
-
     static fromWebSocket(ws: NpmWebSocket | WebSocket): WebSocketAdapter {
         return new WebSocketAdapter(ws);
     }
 
-    static connect(address: string, WebSocketImpl: WebSocketImpl): Promise<WebSocketAdapter> {
+    static connect(
+        address: string,
+        WebSocketImpl: WebSocketImpl,
+    ): Promise<WebSocketAdapter> {
         const ws = new WebSocketImpl(address);
         return new Promise((resolve, reject) => {
             if (isNpmWebSocket(ws)) {
@@ -74,7 +75,7 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
         return !this.isClosed;
     }
 
-    async send(message: any): Promise<void> {
+    async send(message: unknown): Promise<void> {
         if (this.isClosed) {
             return Promise.reject(new Error('Socket is disconnected'));
         }
@@ -85,9 +86,8 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
             }
 
             if (isNpmWebSocket(this.ws)) {
-                this.ws.send(
-                    JSON.stringify(message),
-                    (error) => (error ? reject(error) : resolve()),
+                this.ws.send(JSON.stringify(message), (error) =>
+                    error ? reject(error) : resolve(),
                 );
             } else {
                 try {
