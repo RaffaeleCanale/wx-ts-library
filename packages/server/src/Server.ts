@@ -147,7 +147,7 @@ export default class Server {
 
     private handleError(error: any, res: Response): any {
         error = error || {};
-        this.logger.error(error);
+        this.logger.error(error.message + '\n' + error.stack);
         if (error.httpCode) {
             return res.status(error.httpCode).send({ message: error.message });
         }
