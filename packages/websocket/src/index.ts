@@ -1,17 +1,21 @@
-import ReconnectWebSocket from './ReconnectWebSocket';
-
-export { default as ReconnectWebSocket, ReconnectWebSocketOptions } from './ReconnectWebSocket';
-export { DEV_OPTIONS, SocketEvents } from './WebSocketAdapter';
+export {
+    ApiMessage,
+    default as SocketApiHandler,
+} from './protocol/api/SocketApiHandler';
+export * as SocketApiRequests from './protocol/api/SocketApiRequests';
 export {
     default as ProtocolSocket,
-    ProtocolSocketOptions,
     ProtocolSocketHandler,
+    ProtocolSocketOptions,
 } from './protocol/ProtocolSocket';
+export { default as MultiChannelHandler } from './protocol/server/MultiChannelHandler';
 export {
     default as ProtocolSocketServer,
-    ProtocolSocketServerOptions,
     ProtocolServerHandler,
+    ProtocolSocketServerOptions,
 } from './protocol/server/ProtocolSocketServer';
-export { default as MultiChannelHandler } from './protocol/server/MultiChannelHandler';
-export { default as SocketApiHandler, ApiMessage } from './protocol/api/SocketApiHandler';
-export * as SocketApiRequests from './protocol/api/SocketApiRequests';
+export {
+    default as ReconnectWebSocket,
+    ReconnectWebSocketOptions,
+} from './ReconnectWebSocket';
+export { DEV_OPTIONS, SocketEvents } from './WebSocketAdapter';
