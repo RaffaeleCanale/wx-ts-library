@@ -1,9 +1,9 @@
 export {
     clear,
+    getAllDependencies,
+    getDependency,
     register,
     registerAll,
-    getDependency,
-    getAllDependencies,
 } from './Dependencies';
 export { inject, injectLazy, injectNamed } from './Inject';
 export { injectable } from './Injectable';

@@ -1,7 +1,10 @@
 import { Provider, ValueOrFactory } from './types';
 
-export function wrapError(error: Error, errorMessage: string): Error {
+export function wrapError(err: unknown, errorMessage: string): Error {
+    const error = err instanceof Error ? err : new Error(String(err));
+
     const e = new Error(errorMessage);
+
     (e as any).original = error;
     if (e.stack) {
         e.stack = `${e.stack.split('\n').slice(0, 2).join('\n')}\n${

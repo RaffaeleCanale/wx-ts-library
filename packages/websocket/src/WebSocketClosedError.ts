@@ -17,11 +17,7 @@ const WS_ERROR_CODES: { [code: number]: string } = {
 };
 
 export default class WebSocketClosedError extends Error {
-    constructor(
-        private readonly code: number,
-        private readonly reason: string,
-        private readonly cause?: Error,
-    ) {
+    constructor(code: number, reason: string) {
         super(`${reason}: ${WS_ERROR_CODES[code]}`);
     }
 }
