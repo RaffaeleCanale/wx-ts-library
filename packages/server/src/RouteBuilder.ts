@@ -1,6 +1,10 @@
-import { Route, Middleware, Handler, EndpointHandler } from './_shared/api';
+import { EndpointHandler, Handler, Middleware, Route } from './_shared/api';
 
-type EndpointHandlerBuilder = Handler | [Middleware, Handler] | [Middleware, Middleware, Handler] | [Middleware, Middleware, Middleware, Handler]
+type EndpointHandlerBuilder =
+    | Handler
+    | [Middleware, Handler]
+    | [Middleware, Middleware, Handler]
+    | [Middleware, Middleware, Middleware, Handler];
 
 type EndpointsBuilder = {
     get?: EndpointHandlerBuilder;
@@ -8,23 +12,26 @@ type EndpointsBuilder = {
     post?: EndpointHandlerBuilder;
     patch?: EndpointHandlerBuilder;
     delete?: EndpointHandlerBuilder;
-}
+};
 
-function toEndpoint(endpointBuilder?: EndpointHandlerBuilder): EndpointHandler | undefined {
+function toEndpoint(
+    endpointBuilder?: EndpointHandlerBuilder,
+): EndpointHandler | undefined {
     if (!endpointBuilder) {
         return undefined;
     }
 
-    const array: any[] = Array.isArray(endpointBuilder) ? endpointBuilder : [endpointBuilder];
+    const array = Array.isArray(endpointBuilder)
+        ? endpointBuilder
+        : [endpointBuilder];
 
     const middlewares = array.slice(0, -1) as Middleware[];
-    const handler = array[array.length - 1] as Handler;
+    const handler = array[array.length - 1];
 
     return { middlewares, handler };
 }
 
 export default class RouteBuilder {
-
     private route: Route;
 
     constructor(path: string) {

@@ -10,9 +10,11 @@ import express, {
 } from 'express';
 import http from 'http';
 import { AddressInfo } from 'net';
+import { ApiError } from './Errors';
 import {
     EndpointHandler,
     Handler,
+    isSendFile,
     Middleware,
     Request,
     Route,
@@ -27,10 +29,10 @@ export interface ServerOptions {
 function requestAdapter(request: ExpressRequest): Request {
     return {
         path: request.path,
-        body: request.body,
+        body: request.body as unknown,
         params: request.params,
         query: request.query,
-        headers: request.headers as { [header: string]: string },
+        headers: request.headers,
     };
 }
 
@@ -79,7 +81,7 @@ export default class Server {
         ): void => {
             middleware(requestAdapter(req))
                 .then(() => next())
-                .catch((error) => this.handleError(error, res));
+                .catch((error) => this.handleError(error as Error, res));
         };
     }
 
@@ -91,8 +93,7 @@ export default class Server {
         ): void => {
             handler(requestAdapter(req))
                 .then((response) => {
-                    // eslint-disable-next-line no-underscore-dangle
-                    if (response && response.__responseType === 'send_file') {
+                    if (isSendFile(response)) {
                         res.status(200).sendFile(
                             response.filePath,
                             response.options,
@@ -145,11 +146,14 @@ export default class Server {
         ];
     }
 
-    private handleError(error: any, res: Response): any {
-        error = error || {};
-        this.logger.error(error.message + '\n' + error.stack);
-        if (error.httpCode) {
-            return res.status(error.httpCode).send({ message: error.message });
+    private handleError(e: unknown, res: Response): express.Response {
+        const error = e instanceof Error ? e : new Error(String(e));
+
+        this.logger.error(`${error.message}\n${error.stack ?? ''}`);
+        if (error instanceof ApiError) {
+            return res
+                .status(error.statusCode)
+                .send({ message: error.message });
         }
         return res.status(500).send({ message: error.message });
     }

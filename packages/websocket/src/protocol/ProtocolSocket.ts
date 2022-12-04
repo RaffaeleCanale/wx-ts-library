@@ -30,11 +30,6 @@ interface ProtocolMessageResponse {
 }
 type ProtocolMessage = ProtocolMessageRequest | ProtocolMessageResponse;
 
-// export interface ProtocolMessageHandler {
-//     fulfillRequest(message: any, channelId: string, socket: ProtocolSocket): Promise<any>;
-//     onMessage(message: any, channelId: string, socket: ProtocolSocket): void;
-// }
-
 export interface ProtocolSocketHandler {
     /**
      * This handler gets called whenever the remote socket sent a request.

@@ -63,7 +63,9 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
         if (isNpmWebSocket(this.ws)) {
             this.ws.on('message', (data: string) => this.receive(data));
             this.ws.on('error', (error) => this.fail(error));
-            this.ws.on('close', (code, reason) => this.close(code, reason));
+            this.ws.on('close', (code, reason) =>
+                this.close(code, reason.toString()),
+            );
         } else {
             this.ws.onmessage = (event) => this.receive(event.data);
             this.ws.onerror = (event) => this.fail(new Error(event.type));

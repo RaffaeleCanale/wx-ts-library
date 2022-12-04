@@ -1,4 +1,5 @@
-export interface CustomResponse {}
+import type { IncomingHttpHeaders } from 'http';
+import type { ParsedQs } from 'qs';
 
 interface SendFileOptions {
     dotfiles?: 'allow' | 'deny' | 'ignore';
@@ -6,27 +7,44 @@ interface SendFileOptions {
     root?: string;
 }
 
-export class SendFile implements CustomResponse {
-    __responseType = 'send_file';
+export type RequestResponse = SendFile | unknown;
+
+export interface SendFile {
+    __responseType: 'send_file';
     filePath: string;
     options?: SendFileOptions;
-
-    constructor(filePath: string, options?: SendFileOptions) {
-        this.filePath = filePath;
-        this.options = options;
-    }
 }
 
-export type Request = {
+export function sendFileResponse(
+    filePath: string,
+    options?: SendFileOptions,
+): SendFile {
+    return {
+        __responseType: 'send_file',
+        filePath,
+        options,
+    };
+}
+
+export function isSendFile(response: RequestResponse): response is SendFile {
+    return (
+        typeof response === 'object' &&
+        !!response &&
+        '__responseType' in response &&
+        response.__responseType === 'send_file'
+    );
+}
+
+export interface Request {
     path: string;
-    body: any;
-    params: { [name: string]: string };
-    query: { [name: string]: string };
-    headers: { [name: string]: string };
-};
+    body: unknown;
+    params: Record<string, string>;
+    query: ParsedQs;
+    headers: IncomingHttpHeaders;
+}
 
 export type Middleware = (request: Request) => Promise<void>;
-export type Handler = (request: Request) => Promise<any | CustomResponse>;
+export type Handler = (request: Request) => Promise<RequestResponse>;
 export type EndpointHandler = {
     middlewares: Middleware[];
     handler: Handler;

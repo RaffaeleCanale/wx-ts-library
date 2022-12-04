@@ -2,7 +2,6 @@ import RouteBuilder from './RouteBuilder';
 import { Route } from './_shared/api';
 
 export default class RoutesBuilder {
-
     private routes: RouteBuilder[] = [];
 
     route(path: string): RouteBuilder {

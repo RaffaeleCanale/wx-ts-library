@@ -3,10 +3,7 @@ module.exports = {
     env: {
         node: true,
     },
-    extends: [
-        'plugin:prettier/recommended',
-
-    ],
+    extends: ['plugin:prettier/recommended'],
     plugins: ['@typescript-eslint'],
     overrides: [
         {
@@ -31,15 +28,17 @@ module.exports = {
                 '@vue/typescript',
             ],
             rules: {
-                'vue/html-self-closing': ['error', {
-                    html: {
-                        // We allow void elements to be self-closing to be compatible with prettier.
-                        // Prettier will always self-close void elements (see https://github.com/prettier/prettier/issues/5246)
-                        void: 'any',
-                        normal: 'always',
-                        component: 'always',
+                'vue/html-self-closing': [
+                    'error',
+                    {
+                        html: {
+                            // We allow void elements to be self-closing to be compatible with prettier.
+                            // Prettier will always self-close void elements (see https://github.com/prettier/prettier/issues/5246)
+                            void: 'any',
+                            normal: 'always',
+                            component: 'always',
+                        },
                     },
-                },
                 ],
             },
             parserOptions: {
@@ -47,4 +46,4 @@ module.exports = {
             },
         },
     ],
-}
+};
