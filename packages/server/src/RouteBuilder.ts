@@ -1,39 +1,37 @@
 import { EndpointHandler, Handler, Middleware, Route } from './_shared/api';
 
-type EndpointHandlerBuilder<T> =
-    | Handler<T>
-    | [Handler<T>]
-    | [Middleware<T>, Handler<T>]
-    | [Middleware<T>, Middleware<T>, Handler<T>]
-    | [Middleware<T>, Middleware<T>, Middleware<T>, Handler<T>];
+type EndpointHandlerBuilder =
+    | Handler
+    | [Handler]
+    | [Middleware, Handler]
+    | [Middleware, Middleware, Handler]
+    | [Middleware, Middleware, Middleware, Handler];
 
-interface EndpointsBuilder<
-    Get = unknown,
-    Put = unknown,
-    Post = unknown,
-    Patch = unknown,
-    Delete = unknown,
-> {
-    get?: EndpointHandlerBuilder<Get>;
-    put?: EndpointHandlerBuilder<Put>;
-    post?: EndpointHandlerBuilder<Post>;
-    patch?: EndpointHandlerBuilder<Patch>;
-    delete?: EndpointHandlerBuilder<Delete>;
+interface EndpointsBuilder {
+    get: Handler<unknown>;
+    put: Handler<unknown>;
+    post: Handler<unknown>;
+    patch: Handler<unknown>;
+    delete: Handler<unknown>;
 }
 
-function toEndpoint<T>(
-    endpointBuilder?: EndpointHandlerBuilder<T>,
-): EndpointHandler<T> | undefined {
+export function handler<T>(callback: Handler<T>): Handler<unknown> {
+    return callback as Handler<unknown>;
+}
+
+function toEndpoint(
+    endpointBuilder?: EndpointHandlerBuilder,
+): EndpointHandler | undefined {
     if (!endpointBuilder) {
         return undefined;
     }
 
     const array = Array.isArray(endpointBuilder)
         ? endpointBuilder
-        : ([endpointBuilder] as [Handler<T>]);
+        : ([endpointBuilder] as [Handler]);
 
-    const middlewares = array.slice(0, -1) as Middleware<T>[];
-    const handler = array[array.length - 1] as Handler<T>;
+    const middlewares = array.slice(0, -1) as Middleware[];
+    const handler = array[array.length - 1] as Handler;
 
     return { middlewares, handler };
 }

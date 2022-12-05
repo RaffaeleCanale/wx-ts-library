@@ -1,7 +1,7 @@
 import type { IncomingHttpHeaders } from 'http';
 import { ServerResponse } from '../ServerResponse';
 
-export interface Request<T> {
+export interface Request<T = unknown> {
     path: string;
     body: T;
     params: Record<string, string>;
@@ -9,26 +9,22 @@ export interface Request<T> {
     headers: IncomingHttpHeaders;
 }
 
-export type Middleware<T> = (request: Request<T>) => Promise<void>;
-export type Handler<T> = (request: Request<T>) => Promise<ServerResponse>;
-export type EndpointHandler<T> = {
+export type Middleware<T = unknown> = (request: Request<T>) => Promise<void>;
+export type Handler<T = unknown> = (
+    request: Request<T>,
+) => Promise<ServerResponse>;
+export type EndpointHandler<T = unknown> = {
     middlewares: Middleware<T>[];
     handler: Handler<T>;
 };
 
-export interface Route<
-    Get = unknown,
-    Post = unknown,
-    Put = unknown,
-    Patch = unknown,
-    Delete = unknown,
-> {
+export interface Route {
     path: string;
     middlewares: Middleware<unknown>[];
 
-    get?: EndpointHandler<Get>;
-    put?: EndpointHandler<Put>;
-    post?: EndpointHandler<Post>;
-    patch?: EndpointHandler<Patch>;
-    delete?: EndpointHandler<Delete>;
+    get?: EndpointHandler;
+    put?: EndpointHandler;
+    post?: EndpointHandler;
+    patch?: EndpointHandler;
+    delete?: EndpointHandler;
 }
