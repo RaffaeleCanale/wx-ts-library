@@ -8,11 +8,11 @@ type EndpointHandlerBuilder =
     | [Middleware, Middleware, Middleware, Handler];
 
 interface EndpointsBuilder {
-    get: Handler<any>;
-    put: Handler<any>;
-    post: Handler<any>;
-    patch: Handler<any>;
-    delete: Handler<any>;
+    get?: Handler<any>;
+    put?: Handler<any>;
+    post?: Handler<any>;
+    patch?: Handler<any>;
+    delete?: Handler<any>;
 }
 
 export function handler<T>(callback: Handler<T>): Handler<T> {
