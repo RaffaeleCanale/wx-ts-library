@@ -8,15 +8,15 @@ type EndpointHandlerBuilder =
     | [Middleware, Middleware, Middleware, Handler];
 
 interface EndpointsBuilder {
-    get: Handler<unknown>;
-    put: Handler<unknown>;
-    post: Handler<unknown>;
-    patch: Handler<unknown>;
-    delete: Handler<unknown>;
+    get: Handler<any>;
+    put: Handler<any>;
+    post: Handler<any>;
+    patch: Handler<any>;
+    delete: Handler<any>;
 }
 
-export function handler<T>(callback: Handler<T>): Handler<unknown> {
-    return callback as Handler<unknown>;
+export function handler<T>(callback: Handler<T>): Handler<T> {
+    return callback;
 }
 
 function toEndpoint(
