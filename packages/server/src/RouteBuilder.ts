@@ -2,6 +2,7 @@ import { EndpointHandler, Handler, Middleware, Route } from './_shared/api';
 
 type EndpointHandlerBuilder =
     | Handler
+    | [Handler]
     | [Middleware, Handler]
     | [Middleware, Middleware, Handler]
     | [Middleware, Middleware, Middleware, Handler];
@@ -23,10 +24,10 @@ function toEndpoint(
 
     const array = Array.isArray(endpointBuilder)
         ? endpointBuilder
-        : [endpointBuilder];
+        : ([endpointBuilder] as [Handler]);
 
     const middlewares = array.slice(0, -1) as Middleware[];
-    const handler = array[array.length - 1];
+    const handler = array[array.length - 1] as Handler;
 
     return { middlewares, handler };
 }

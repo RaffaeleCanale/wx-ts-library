@@ -14,7 +14,6 @@ import { ApiError } from './Errors';
 import {
     EndpointHandler,
     Handler,
-    isSendFile,
     Middleware,
     Request,
     Route,
@@ -93,14 +92,7 @@ export default class Server {
         ): void => {
             handler(requestAdapter(req))
                 .then((response) => {
-                    if (isSendFile(response)) {
-                        res.status(200).sendFile(
-                            response.filePath,
-                            response.options,
-                        );
-                        return;
-                    }
-                    res.status(200).send(response);
+                    response.send(res);
                 })
                 .catch((error) => this.handleError(error, res));
         };
