@@ -1,33 +1,39 @@
 import { EndpointHandler, Handler, Middleware, Route } from './_shared/api';
 
-type EndpointHandlerBuilder =
-    | Handler
-    | [Handler]
-    | [Middleware, Handler]
-    | [Middleware, Middleware, Handler]
-    | [Middleware, Middleware, Middleware, Handler];
+type EndpointHandlerBuilder<T> =
+    | Handler<T>
+    | [Handler<T>]
+    | [Middleware<T>, Handler<T>]
+    | [Middleware<T>, Middleware<T>, Handler<T>]
+    | [Middleware<T>, Middleware<T>, Middleware<T>, Handler<T>];
 
-type EndpointsBuilder = {
-    get?: EndpointHandlerBuilder;
-    put?: EndpointHandlerBuilder;
-    post?: EndpointHandlerBuilder;
-    patch?: EndpointHandlerBuilder;
-    delete?: EndpointHandlerBuilder;
-};
+interface EndpointsBuilder<
+    Get = unknown,
+    Put = unknown,
+    Post = unknown,
+    Patch = unknown,
+    Delete = unknown,
+> {
+    get?: EndpointHandlerBuilder<Get>;
+    put?: EndpointHandlerBuilder<Put>;
+    post?: EndpointHandlerBuilder<Post>;
+    patch?: EndpointHandlerBuilder<Patch>;
+    delete?: EndpointHandlerBuilder<Delete>;
+}
 
-function toEndpoint(
-    endpointBuilder?: EndpointHandlerBuilder,
-): EndpointHandler | undefined {
+function toEndpoint<T>(
+    endpointBuilder?: EndpointHandlerBuilder<T>,
+): EndpointHandler<T> | undefined {
     if (!endpointBuilder) {
         return undefined;
     }
 
     const array = Array.isArray(endpointBuilder)
         ? endpointBuilder
-        : ([endpointBuilder] as [Handler]);
+        : ([endpointBuilder] as [Handler<T>]);
 
-    const middlewares = array.slice(0, -1) as Middleware[];
-    const handler = array[array.length - 1] as Handler;
+    const middlewares = array.slice(0, -1) as Middleware<T>[];
+    const handler = array[array.length - 1] as Handler<T>;
 
     return { middlewares, handler };
 }
@@ -42,7 +48,7 @@ export default class RouteBuilder {
         };
     }
 
-    middlewares(...middlewares: Middleware[]): this {
+    middlewares(...middlewares: Middleware<unknown>[]): this {
         this.route.middlewares = middlewares;
         return this;
     }

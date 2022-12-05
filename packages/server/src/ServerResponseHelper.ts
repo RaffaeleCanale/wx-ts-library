@@ -11,7 +11,10 @@ export function text(text: string, options: BaseOptions = {}): ServerResponse {
     return new TextResponse(text, options);
 }
 
-export function json(body: unknown, options: BaseOptions = {}): ServerResponse {
+export function json(
+    body?: unknown,
+    options: BaseOptions = {},
+): ServerResponse {
     return new JsonResponse(body, options);
 }
 

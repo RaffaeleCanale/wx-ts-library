@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import type { Route, Request, Middleware } from '@canale/server';
+import type { Middleware, Request, Route } from '@canale/server';
 import { ProtocolSocketHandler } from '../ProtocolSocket';
 
 type dict = { [name: string]: string };
@@ -12,7 +12,10 @@ export interface ApiMessage {
     headers: dict;
 }
 
-function parsePathParams(pathDefinition: string, actualPath: string): dict | null {
+function parsePathParams(
+    pathDefinition: string,
+    actualPath: string,
+): dict | null {
     const defSplit = pathDefinition.split('/');
     const actualSplit = actualPath.split('/');
 
@@ -38,25 +41,18 @@ function parsePathParams(pathDefinition: string, actualPath: string): dict | nul
     return params;
 }
 
-
 export default class SocketApiHandler implements ProtocolSocketHandler {
-
     private routes: Route[];
-    private middlewares: Middleware[];
+    private middlewares: Middleware<unknown>[];
 
-    constructor(routes: Route[], middlewares?: Middleware[]) {
+    constructor(routes: Route[], middlewares?: Middleware<unknown>[]) {
         this.routes = routes;
         this.middlewares = middlewares || [];
     }
 
     async fulfillRequest(message: any): Promise<any> {
-        const {
-            path,
-            method,
-            body,
-            headers,
-            query,
-        } = this.validateMessage(message);
+        const { path, method, body, headers, query } =
+            this.validateMessage(message);
 
         const { route, params } = this.findRouteFor(path);
         if (!route) {
@@ -67,7 +63,7 @@ export default class SocketApiHandler implements ProtocolSocketHandler {
         if (!endpoint) {
             throw new Error(`Method ${method} not found for ${path}`);
         }
-        const request: Request = {
+        const request: Request<unknown> = {
             path,
             body,
             headers,
@@ -111,7 +107,9 @@ export default class SocketApiHandler implements ProtocolSocketHandler {
         if (!message.method) {
             throw new Error('Property `method` is missing in the API message');
         }
-        if (!['get', 'post', 'put', 'patch', 'delete'].includes(message.method)) {
+        if (
+            !['get', 'post', 'put', 'patch', 'delete'].includes(message.method)
+        ) {
             throw new Error('Property `method` is invalid');
         }
         if (!message.body) {

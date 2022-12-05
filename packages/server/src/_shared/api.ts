@@ -1,29 +1,34 @@
 import type { IncomingHttpHeaders } from 'http';
-import type { ParsedQs } from 'qs';
 import { ServerResponse } from '../ServerResponse';
 
-export interface Request {
+export interface Request<T> {
     path: string;
-    body: unknown;
+    body: T;
     params: Record<string, string>;
-    query: ParsedQs;
+    query: { [key: string]: string | string[] };
     headers: IncomingHttpHeaders;
 }
 
-export type Middleware = (request: Request) => Promise<void>;
-export type Handler = (request: Request) => Promise<ServerResponse>;
-export type EndpointHandler = {
-    middlewares: Middleware[];
-    handler: Handler;
+export type Middleware<T> = (request: Request<T>) => Promise<void>;
+export type Handler<T> = (request: Request<T>) => Promise<ServerResponse>;
+export type EndpointHandler<T> = {
+    middlewares: Middleware<T>[];
+    handler: Handler<T>;
 };
 
-export interface Route {
+export interface Route<
+    Get = unknown,
+    Post = unknown,
+    Put = unknown,
+    Patch = unknown,
+    Delete = unknown,
+> {
     path: string;
-    middlewares: Middleware[];
+    middlewares: Middleware<unknown>[];
 
-    get?: EndpointHandler;
-    put?: EndpointHandler;
-    post?: EndpointHandler;
-    patch?: EndpointHandler;
-    delete?: EndpointHandler;
+    get?: EndpointHandler<Get>;
+    put?: EndpointHandler<Put>;
+    post?: EndpointHandler<Post>;
+    patch?: EndpointHandler<Patch>;
+    delete?: EndpointHandler<Delete>;
 }

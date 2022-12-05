@@ -25,12 +25,12 @@ export interface ServerOptions {
     version: number;
 }
 
-function requestAdapter(request: ExpressRequest): Request {
+function requestAdapter<T>(request: ExpressRequest): Request<T> {
     return {
         path: request.path,
-        body: request.body as unknown,
+        body: request.body as T,
         params: request.params,
-        query: request.query,
+        query: request.query as { [key: string]: string | string[] },
         headers: request.headers,
     };
 }
@@ -45,7 +45,7 @@ export default class Server {
     constructor(
         options: ServerOptions,
         routes: Route[],
-        middlewares?: Middleware[],
+        middlewares?: Middleware<unknown>[],
     ) {
         this.port = options.port;
         this.app = express();
@@ -72,25 +72,25 @@ export default class Server {
         });
     }
 
-    private wrapMiddleware(middleware: Middleware): RequestHandler {
+    private wrapMiddleware<T>(middleware: Middleware<T>): RequestHandler {
         return (
             req: ExpressRequest,
             res: Response,
             next: NextFunction,
         ): void => {
-            middleware(requestAdapter(req))
+            middleware(requestAdapter<T>(req))
                 .then(() => next())
                 .catch((error) => this.handleError(error as Error, res));
         };
     }
 
-    private wrapHandler(handler: Handler): RequestHandler {
+    private wrapHandler<T>(handler: Handler<T>): RequestHandler {
         return (
             req: ExpressRequest,
             res: Response,
             next: NextFunction,
         ): void => {
-            handler(requestAdapter(req))
+            handler(requestAdapter<T>(req))
                 .then((response) => {
                     response.send(res);
                 })
@@ -129,12 +129,12 @@ export default class Server {
         }
     }
 
-    private processEndpoint(endpoint: EndpointHandler): RequestHandler[] {
+    private processEndpoint<T>(endpoint: EndpointHandler<T>): RequestHandler[] {
         return [
             ...endpoint.middlewares.map((middleware) =>
-                this.wrapMiddleware(middleware),
+                this.wrapMiddleware<T>(middleware),
             ),
-            this.wrapHandler(endpoint.handler),
+            this.wrapHandler<T>(endpoint.handler),
         ];
     }
 
