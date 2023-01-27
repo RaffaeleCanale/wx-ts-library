@@ -19,6 +19,9 @@ module.exports = {
                 sourceType: 'module',
                 ecmaVersion: 2020,
             },
+            rules: {
+                '@typescript-eslint/unbound-method': 'off',
+            }
         },
         {
             files: ['*.vue'],
