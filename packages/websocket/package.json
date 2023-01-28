@@ -27,13 +27,15 @@
         "@canale/emitter": "^4.4.4",
         "@canale/logger": "^4.1.9",
         "@canale/timer": "^4.2.3",
-        "uuid": "^9.0.0",
-        "ws": "^8.11.0"
+        "uuid": "^9.0.0"
     },
     "devDependencies": {
         "@canale/server": "^4.5.5",
         "@types/uuid": "^9.0.0",
         "@types/websocket": "^1.0.5",
         "@types/ws": "^8.5.3"
+    },
+    "peerDependencies": {
+        "ws": "^8.12.0"
     }
 }

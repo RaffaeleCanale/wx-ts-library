@@ -1,5 +1,5 @@
 import { EventEmitter } from '@canale/emitter';
-import NpmWebSocket from 'ws';
+import type NpmWebSocket from 'ws';
 import WebSocketClosedError from './WebSocketClosedError';
 
 export interface SocketEvents {
