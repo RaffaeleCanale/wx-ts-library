@@ -1,6 +1,6 @@
 {
     "name": "@canale/server",
-    "version": "5.0.2",
+    "version": "5.0.5",
     "description": "Wrapper around express to create a API server",
     "author": "Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
