@@ -1,8 +1,5 @@
-// export {
-//     ApiMessage,
-//     default as SocketApiHandler,
-// } from './protocol/api/SocketApiHandler';
-// export * as SocketApiRequests from './protocol/api/SocketApiRequests';
+export * from './protocol/api/SocketApiHandler';
+export * from './protocol/api/SocketApiRequests';
 export {
     default as ProtocolSocket,
     ProtocolSocketHandler,
