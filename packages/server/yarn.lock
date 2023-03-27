@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@canale/logger@^4.1.9":
+  version "4.1.9"
+  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-4.1.9.tgz#231b89fa625e2834abc12ce77b422966652bb6f1"
+  integrity sha512-1siYpzriNhcQP8ubSt9hJCgPzbuW5l//u5GJTHk8p7T9p8fOIDxh91I+dFkI09GA718kzIXb6N+HSOd+hq91dw==
+
 "@types/body-parser@*", "@types/body-parser@^1.19.2":
   version "1.19.2"
   resolved "https://registry.npmjs.org/@types/body-parser/-/body-parser-1.19.2.tgz"
@@ -495,3 +500,8 @@ vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+
+zod@^3.21.4:
+  version "3.21.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.21.4.tgz#10882231d992519f0a10b5dd58a38c9dabbb64db"
+  integrity sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==

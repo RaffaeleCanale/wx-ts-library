@@ -24,7 +24,8 @@
         "@canale/logger": "^4.1.9",
         "body-parser": "^1.20.1",
         "cors": "^2.8.5",
-        "express": "^4.18.2"
+        "express": "^4.18.2",
+        "zod": "^3.21.4"
     },
     "devDependencies": {
         "@types/body-parser": "^1.19.2",

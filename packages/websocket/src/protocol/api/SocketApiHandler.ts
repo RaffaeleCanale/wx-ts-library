@@ -1,127 +1,112 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import type { Middleware, Request, Route } from '@canale/server';
-import { ProtocolSocketHandler } from '../ProtocolSocket';
+// // // eslint-disable-next-line import/no-extraneous-dependencies
+// import { ApiError, Method, Request, Route, Routes } from '@canale/server';
+// import { z } from 'zod';
+// import { ProtocolSocketHandler } from '../ProtocolSocket';
 
-type dict = { [name: string]: string };
+// type dict = { [name: string]: string };
 
-export interface ApiMessage {
-    path: string;
-    method: 'get' | 'post' | 'put' | 'patch' | 'delete';
-    body: any;
-    query: dict;
-    headers: dict;
-}
+// // export interface ApiMessage {
+// //     path: string;
+// //     method: 'get' | 'post' | 'put' | 'patch' | 'delete';
+// //     body: any;
+// //     query: dict;
+// //     headers: dict;
+// // }
 
-function parsePathParams(
-    pathDefinition: string,
-    actualPath: string,
-): dict | null {
-    const defSplit = pathDefinition.split('/');
-    const actualSplit = actualPath.split('/');
+// const ApiMessage = z.object({
+//     path: z.string(),
+//     method: z.union([
+//         z.literal('get'),
+//         z.literal('post'),
+//         z.literal('put'),
+//         z.literal('patch'),
+//         z.literal('delete'),
+//     ]),
+//     body: z.unknown(),
+//     query: z.record(z.array(z.string())),
+//     headers: z.record(z.string()),
+// });
 
-    if (defSplit.length !== actualSplit.length) {
-        return null;
-    }
+// function parsePathParams(
+//     pathDefinition: string,
+//     actualPath: string,
+// ): dict | null {
+//     const defSplit = pathDefinition.split('/');
+//     const actualSplit = actualPath.split('/');
 
-    const params: dict = {};
-    for (let i = 0; i < defSplit.length; i += 1) {
-        const definition = defSplit[i];
-        const actual = actualSplit[i];
+//     if (defSplit.length !== actualSplit.length) {
+//         return null;
+//     }
 
-        if (definition.startsWith(':')) {
-            const paramName = definition.substr(1);
-            const paramValue = actual;
+//     const params: dict = {};
+//     for (let i = 0; i < defSplit.length; i += 1) {
+//         const definition = defSplit[i];
+//         const actual = actualSplit[i];
 
-            params[paramName] = paramValue;
-        } else if (definition !== actual) {
-            return null;
-        }
-    }
+//         if (definition.startsWith(':')) {
+//             const paramName = definition.substr(1);
+//             const paramValue = actual;
 
-    return params;
-}
+//             params[paramName] = paramValue;
+//         } else if (definition !== actual) {
+//             return null;
+//         }
+//     }
 
-export default class SocketApiHandler implements ProtocolSocketHandler {
-    private routes: Route[];
-    private middlewares: Middleware<unknown>[];
+//     return params;
+// }
 
-    constructor(routes: Route[], middlewares?: Middleware<unknown>[]) {
-        this.routes = routes;
-        this.middlewares = middlewares || [];
-    }
+// export default class SocketApiHandler implements ProtocolSocketHandler {
+//     constructor(private readonly routes: Routes) {}
 
-    async fulfillRequest(message: any): Promise<any> {
-        const { path, method, body, headers, query } =
-            this.validateMessage(message);
+//     async fulfillRequest(messageObj: unknown): Promise<unknown> {
+//         const { path, method, body, headers, query } =
+//             ApiMessage.parse(messageObj);
 
-        const { route, params } = this.findRouteFor(path);
-        if (!route) {
-            throw new Error(`No route found for ${path}`);
-        }
+//         // const { path, method, body, headers, query } =
+//         //     this.validateMessage(message);
 
-        const endpoint = route[method];
-        if (!endpoint) {
-            throw new Error(`Method ${method} not found for ${path}`);
-        }
-        const request: Request<unknown> = {
-            path,
-            body,
-            headers,
-            params,
-            query,
-        };
-        const middlewares = [
-            ...this.middlewares,
-            ...route.middlewares,
-            ...endpoint.middlewares,
-        ];
-        for (let i = 0; i < middlewares.length; i += 1) {
-            const middleware = middlewares[i];
-            await middleware(request);
-        }
+//         const { route, params } = this.findRouteFor(path, method);
 
-        return endpoint.handler(request);
-    }
+//         const request = new Request(body, query, params, headers);
 
-    onMessage(message: any): void {
-        this.fulfillRequest(message);
-    }
+//         // const middlewares = [
+//         //     ...this.middlewares,
+//         //     ...route.middlewares,
+//         //     ...endpoint.middlewares,
+//         // ];
+//         // for (let i = 0; i < middlewares.length; i += 1) {
+//         //     const middleware = middlewares[i];
+//         //     await middleware(request);
+//         // }
 
-    private findRouteFor(path: string): { route?: Route; params: dict } {
-        for (let i = 0; i < this.routes.length; i += 1) {
-            const route = this.routes[i];
-            const params = parsePathParams(route.path, path);
+//         const response = await route(request);
 
-            if (params) {
-                return { route, params };
-            }
-        }
-        return { params: {} };
-    }
+//         // TODO Unwrap?
+//         return response;
+//     }
 
-    // eslint-disable-next-line class-methods-use-this
-    private validateMessage(message: any): ApiMessage {
-        if (!message.path) {
-            throw new Error('Property `path` is missing in the API message');
-        }
-        if (!message.method) {
-            throw new Error('Property `method` is missing in the API message');
-        }
-        if (
-            !['get', 'post', 'put', 'patch', 'delete'].includes(message.method)
-        ) {
-            throw new Error('Property `method` is invalid');
-        }
-        if (!message.body) {
-            message.body = {};
-        }
-        if (!message.query) {
-            message.query = {};
-        }
-        if (!message.headers) {
-            message.headers = {};
-        }
+//     onMessage(message: unknown): void {
+//         void this.fulfillRequest(message);
+//     }
 
-        return message as ApiMessage;
-    }
-}
+//     private findRouteFor(
+//         path: string,
+//         method: Method,
+//     ): { route: Route; params: Record<string, string> } {
+//         const routeEntries = Object.entries(this.routes);
+
+//         for (const [pathDefinition, routeHandlers] of routeEntries) {
+//             const params = parsePathParams(pathDefinition, path);
+
+//             if (params) {
+//                 const route = routeHandlers[method];
+//                 if (route) {
+//                     return { route, params };
+//                 }
+//             }
+//         }
+
+//         throw new ApiError.NotFound('Route not found');
+//     }
+// }
