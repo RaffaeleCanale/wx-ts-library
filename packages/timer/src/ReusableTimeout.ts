@@ -1,5 +1,5 @@
 export default class ReusableTimeout {
-    private timeout?: NodeJS.Timeout;
+    private timeout?: ReturnType<typeof setTimeout>;
 
     resetTimeout(time: number, fn: () => void): void {
         this.clearTimeout();

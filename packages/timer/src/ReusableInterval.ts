@@ -1,5 +1,5 @@
 export default class ReusableInterval {
-    private interval?: NodeJS.Timeout;
+    private interval?: ReturnType<typeof setInterval>;
 
     resetInterval(intervalTime: number, fn: () => void): void {
         this.clearInterval();
