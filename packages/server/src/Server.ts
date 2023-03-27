@@ -2,11 +2,11 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
-import { AddressInfo } from 'net';
+import type { AddressInfo } from 'net';
 import { ApiError } from './ApiError';
 import { Request } from './Request';
-import { Response } from './response/Response';
-import { Method, Route, Routes } from './Route';
+import type { Response } from './response/Response';
+import type { Method, Route, Routes } from './Route';
 
 export interface ServerOptions {
     port: number;
@@ -58,7 +58,7 @@ export class Server {
         // }
 
         // api router
-        this.app.use('prefix', this.createRouter(routes));
+        this.app.use(options.prefix, this.createRouter(routes));
     }
 
     start(): void {
