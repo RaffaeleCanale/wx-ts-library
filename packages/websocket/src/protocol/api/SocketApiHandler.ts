@@ -1,112 +1,83 @@
-// // // eslint-disable-next-line import/no-extraneous-dependencies
-// import { ApiError, Method, Request, Route, Routes } from '@canale/server';
-// import { z } from 'zod';
-// import { ProtocolSocketHandler } from '../ProtocolSocket';
+import type { Method, Route, Routes } from '@canale/server';
+import { ApiError, Request } from '@canale/server';
+import type { ProtocolSocketHandler } from '../ProtocolSocket';
+import { ApiMessageParse } from './ApiMessage';
+import type { ApiResponse } from './ApiResponse';
 
-// type dict = { [name: string]: string };
+function parsePathParams(
+    pathDefinition: string,
+    actualPath: string,
+): Record<string, string> | null {
+    const defSplit = pathDefinition.split('/');
+    const actualSplit = actualPath.split('/');
 
-// // export interface ApiMessage {
-// //     path: string;
-// //     method: 'get' | 'post' | 'put' | 'patch' | 'delete';
-// //     body: any;
-// //     query: dict;
-// //     headers: dict;
-// // }
+    if (defSplit.length !== actualSplit.length) {
+        return null;
+    }
 
-// const ApiMessage = z.object({
-//     path: z.string(),
-//     method: z.union([
-//         z.literal('get'),
-//         z.literal('post'),
-//         z.literal('put'),
-//         z.literal('patch'),
-//         z.literal('delete'),
-//     ]),
-//     body: z.unknown(),
-//     query: z.record(z.array(z.string())),
-//     headers: z.record(z.string()),
-// });
+    const params: Record<string, string> = {};
+    for (let i = 0; i < defSplit.length; i += 1) {
+        const definition = defSplit[i];
+        const actual = actualSplit[i];
 
-// function parsePathParams(
-//     pathDefinition: string,
-//     actualPath: string,
-// ): dict | null {
-//     const defSplit = pathDefinition.split('/');
-//     const actualSplit = actualPath.split('/');
+        if (definition.startsWith(':')) {
+            const paramName = definition.substr(1);
+            const paramValue = actual;
 
-//     if (defSplit.length !== actualSplit.length) {
-//         return null;
-//     }
+            params[paramName] = paramValue;
+        } else if (definition !== actual) {
+            return null;
+        }
+    }
 
-//     const params: dict = {};
-//     for (let i = 0; i < defSplit.length; i += 1) {
-//         const definition = defSplit[i];
-//         const actual = actualSplit[i];
+    return params;
+}
 
-//         if (definition.startsWith(':')) {
-//             const paramName = definition.substr(1);
-//             const paramValue = actual;
+export default class SocketApiHandler implements ProtocolSocketHandler {
+    constructor(private readonly routes: Routes) {}
 
-//             params[paramName] = paramValue;
-//         } else if (definition !== actual) {
-//             return null;
-//         }
-//     }
+    async fulfillRequest(messageObj: unknown): Promise<ApiResponse> {
+        const { path, method, body, headers, query } =
+            ApiMessageParse.parse(messageObj);
 
-//     return params;
-// }
+        const { route, params } = this.findRouteFor(path, method);
 
-// export default class SocketApiHandler implements ProtocolSocketHandler {
-//     constructor(private readonly routes: Routes) {}
+        const request = new Request(body, query, params, headers);
 
-//     async fulfillRequest(messageObj: unknown): Promise<unknown> {
-//         const { path, method, body, headers, query } =
-//             ApiMessage.parse(messageObj);
+        const response = await route(request);
 
-//         // const { path, method, body, headers, query } =
-//         //     this.validateMessage(message);
+        if (response.type !== 'json') {
+            throw new Error('Only json responses are supported');
+        }
 
-//         const { route, params } = this.findRouteFor(path, method);
+        return {
+            headers: response.headers,
+            status: response.status,
+            body: response.body,
+        };
+    }
 
-//         const request = new Request(body, query, params, headers);
+    onMessage(message: unknown): void {
+        void this.fulfillRequest(message);
+    }
 
-//         // const middlewares = [
-//         //     ...this.middlewares,
-//         //     ...route.middlewares,
-//         //     ...endpoint.middlewares,
-//         // ];
-//         // for (let i = 0; i < middlewares.length; i += 1) {
-//         //     const middleware = middlewares[i];
-//         //     await middleware(request);
-//         // }
+    private findRouteFor(
+        path: string,
+        method: Method,
+    ): { route: Route; params: Record<string, string> } {
+        const routeEntries = Object.entries(this.routes);
 
-//         const response = await route(request);
+        for (const [pathDefinition, routeHandlers] of routeEntries) {
+            const params = parsePathParams(pathDefinition, path);
 
-//         // TODO Unwrap?
-//         return response;
-//     }
+            if (params) {
+                const route = routeHandlers[method];
+                if (route) {
+                    return { route, params };
+                }
+            }
+        }
 
-//     onMessage(message: unknown): void {
-//         void this.fulfillRequest(message);
-//     }
-
-//     private findRouteFor(
-//         path: string,
-//         method: Method,
-//     ): { route: Route; params: Record<string, string> } {
-//         const routeEntries = Object.entries(this.routes);
-
-//         for (const [pathDefinition, routeHandlers] of routeEntries) {
-//             const params = parsePathParams(pathDefinition, path);
-
-//             if (params) {
-//                 const route = routeHandlers[method];
-//                 if (route) {
-//                     return { route, params };
-//                 }
-//             }
-//         }
-
-//         throw new ApiError.NotFound('Route not found');
-//     }
-// }
+        throw new ApiError.NotFound('Route not found');
+    }
+}

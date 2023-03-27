@@ -1,72 +1,55 @@
-// import { ApiMessage } from './SocketApiHandler';
+import type { ApiMessage } from './ApiMessage';
 
-// type dict = { [name: string]: string };
+type RequestOptions = Partial<Pick<ApiMessage, 'headers' | 'query'>>;
 
-// export function createGetRequest(path: string, headers: dict = {}, query: dict = {}): ApiMessage {
-//     return {
-//         path,
-//         method: 'get',
-//         body: {},
-//         query,
-//         headers,
-//     };
-// }
+export const SocketApiRequest = {
+    get(path: string, options: RequestOptions = {}): ApiMessage {
+        return {
+            path,
+            method: 'get',
+            body: {},
+            query: options.query ?? {},
+            headers: options.headers ?? {},
+        };
+    },
 
-// export function createPostRequest(
-//     path: string,
-//     body: any,
-//     headers: dict = {},
-//     query: dict = {},
-// ): ApiMessage {
-//     return {
-//         path,
-//         method: 'post',
-//         body,
-//         query,
-//         headers,
-//     };
-// }
+    post<T>(path: string, body: T, options: RequestOptions = {}): ApiMessage {
+        return {
+            path,
+            method: 'post',
+            body,
+            query: options.query ?? {},
+            headers: options.headers ?? {},
+        };
+    },
 
-// export function createPutRequest(
-//     path: string,
-//     body: any,
-//     headers: dict = {},
-//     query: dict = {},
-// ): ApiMessage {
-//     return {
-//         path,
-//         method: 'put',
-//         body,
-//         query,
-//         headers,
-//     };
-// }
+    put<T>(path: string, body: T, options: RequestOptions = {}): ApiMessage {
+        return {
+            path,
+            method: 'put',
+            body,
+            query: options.query ?? {},
+            headers: options.headers ?? {},
+        };
+    },
 
-// export function createPatchRequest(
-//     path: string,
-//     body: any,
-//     headers: dict = {},
-//     query: dict = {},
-// ): ApiMessage {
-//     return {
-//         path,
-//         method: 'patch',
-//         body,
-//         query,
-//         headers,
-//     };
-// }
+    patch<T>(path: string, body: T, options: RequestOptions = {}): ApiMessage {
+        return {
+            path,
+            method: 'patch',
+            body,
+            query: options.query ?? {},
+            headers: options.headers ?? {},
+        };
+    },
 
-// export function createDeleteRequest(
-//     path: string,
-//     headers: dict = {},
-//     query: dict = {},
-// ): ApiMessage {
-//     return {
-//         path,
-//         method: 'delete',
-//         body: {},
-//         query,
-//         headers,
-//     };
-// }
+    delete(path: string, options: RequestOptions = {}): ApiMessage {
+        return {
+            path,
+            method: 'delete',
+            body: {},
+            query: options.query ?? {},
+            headers: options.headers ?? {},
+        };
+    },
+};

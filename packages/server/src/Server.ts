@@ -5,6 +5,7 @@ import http from 'http';
 import { AddressInfo } from 'net';
 import { ApiError } from './ApiError';
 import { Request } from './Request';
+import { Response } from './response/Response';
 import { Method, Route, Routes } from './Route';
 
 export interface ServerOptions {
@@ -16,6 +17,20 @@ export interface ServerOptions {
 interface Logger {
     info(message: string): void;
     error(message: string): void;
+}
+
+function doSend(res: express.Response, response: Response): express.Response {
+    switch (response.type) {
+        case 'json':
+            return res.json(response.body);
+        case 'text':
+            return res.send(response.response);
+        case 'file':
+            res.sendFile(response.path, response.fileOptions);
+            return res;
+        default:
+            throw new Error('Unknown response type');
+    }
 }
 
 export class Server {
@@ -76,7 +91,11 @@ export class Server {
             const request = Request.fromExpress(req);
 
             const response = await route(request);
-            response.send(res);
+
+            doSend(
+                res.status(response.status).header(response.headers),
+                response,
+            );
         } catch (error) {
             const apiError = ApiError.from(error);
 

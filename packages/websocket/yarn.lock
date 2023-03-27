@@ -2,37 +2,95 @@
 # yarn lockfile v1
 
 
-"@canale/emitter@^4.4.4":
-  version "4.4.4"
-  resolved "https://registry.yarnpkg.com/@canale/emitter/-/emitter-4.4.4.tgz#1ded8a63746bbc9524ecc8ba7122ec5598423c0c"
-  integrity sha512-w1CCvcW3/QscPcfyMZ/eJCCE70E5C9moA5BHqbk8Fsvr7t1XAx+PDgC38h+jC3bk8SpLr/zS49rEpDuHf0srwg==
+"@canale/emitter@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@canale/emitter/-/emitter-5.0.0.tgz#6aec7963e08a1e54964f334bead92a899c736ba8"
+  integrity sha512-L4MzJHk2aeNW1PAn39ej79+QY+RecUmiG8A/jRJ0crI/WQOsRbTVUZR7tr6OpYxncim9UKeTP7ivAQvVtZRFWQ==
   dependencies:
     lodash.isequal "^4.5.0"
 
-"@canale/logger@^4.1.9":
-  version "4.1.9"
-  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-4.1.9.tgz#231b89fa625e2834abc12ce77b422966652bb6f1"
-  integrity sha512-1siYpzriNhcQP8ubSt9hJCgPzbuW5l//u5GJTHk8p7T9p8fOIDxh91I+dFkI09GA718kzIXb6N+HSOd+hq91dw==
+"@canale/logger@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@canale/logger/-/logger-5.0.0.tgz#25c09126f3009141ba80dfeacd02c168e538ad21"
+  integrity sha512-E4asc/bWppoOPV2Voj+WX3uSU8LwF/6AA7UOvc4SBmz7mr2BclfzprkGb9x1l9FcqbGcC/tHVZkEkU4YreDVKw==
 
-"@canale/server@^4.5.5":
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/@canale/server/-/server-4.5.5.tgz#f1310fc211baf7a0dd381bafcf191544db72dd59"
-  integrity sha512-77DJTm2Y0VBXetA0X/Fg70yTlqXdZGMGjha8x2lc9PbGVv6KztO7XYlb4VhYTCm3tBC0a/R+3iVYKgob/w4c0w==
+"@canale/server@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@canale/server/-/server-5.0.1.tgz#ceefcb51f414327bd7da0f0729fb4cdaba32cd8b"
+  integrity sha512-qF1AZaxVOc4YZ7GYmbCEz6vlfS8YZPHlMzozaJaECh+Jb4YWmAIJqK2tX0/Ztwk5fr6TtfgwE5rDzFzyzLkz9A==
   dependencies:
-    "@canale/logger" "^4.1.9"
+    "@canale/logger" "^5.0.0"
     body-parser "^1.20.1"
     cors "^2.8.5"
     express "^4.18.2"
+    zod "^3.21.4"
 
-"@canale/timer@^4.2.3":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/@canale/timer/-/timer-4.2.3.tgz#53b5f12ded49d6147c4fa9890a5f4c17e65ee3ec"
-  integrity sha512-rlnUUUEUiJ+H8X28tPCmAIAJKTKBE9WoarlX+gfHZ1ldQn2VtVLoykNxwNXUOEzCcdf3MyBORzVdgwswO3YOZw==
+"@canale/timer@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@canale/timer/-/timer-5.0.0.tgz#c68c2fe0658a1195895af981e518df1a3e9ec653"
+  integrity sha512-CNB83+jlwZdTow07FIvkijTaFDV9wyZpU4NpzvsXSnbv9dLPsGFRmz2FGwhU1rJdmeSabUqWZEj/R6rL0/ohcg==
+
+"@types/body-parser@*":
+  version "1.19.2"
+  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.2.tgz#aea2059e28b7658639081347ac4fab3de166e6f0"
+  integrity sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==
+  dependencies:
+    "@types/connect" "*"
+    "@types/node" "*"
+
+"@types/connect@*":
+  version "3.4.35"
+  resolved "https://registry.yarnpkg.com/@types/connect/-/connect-3.4.35.tgz#5fcf6ae445e4021d1fc2219a4873cc73a3bb2ad1"
+  integrity sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==
+  dependencies:
+    "@types/node" "*"
+
+"@types/express-serve-static-core@^4.17.33":
+  version "4.17.33"
+  resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.33.tgz#de35d30a9d637dc1450ad18dd583d75d5733d543"
+  integrity sha512-TPBqmR/HRYI3eC2E5hmiivIzv+bidAfXofM+sbonAGvyDhySGw9/PQZFt2BLOrjUUR++4eJVpx6KnLQK1Fk9tA==
+  dependencies:
+    "@types/node" "*"
+    "@types/qs" "*"
+    "@types/range-parser" "*"
+
+"@types/express@^4.17.17":
+  version "4.17.17"
+  resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.17.tgz#01d5437f6ef9cfa8668e616e13c2f2ac9a491ae4"
+  integrity sha512-Q4FmmuLGBG58btUnfS1c1r/NQdlp3DMfGDGig8WhfpA2YRUtEkxAjkZb0yvplJGYdF1fsQ81iMDcH24sSCNC/Q==
+  dependencies:
+    "@types/body-parser" "*"
+    "@types/express-serve-static-core" "^4.17.33"
+    "@types/qs" "*"
+    "@types/serve-static" "*"
+
+"@types/mime@*":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-3.0.1.tgz#5f8f2bca0a5863cb69bc0b0acd88c96cb1d4ae10"
+  integrity sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==
 
 "@types/node@*":
   version "13.9.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.9.0.tgz#5b6ee7a77faacddd7de719017d0bc12f52f81589"
   integrity sha512-0ARSQootUG1RljH2HncpsY2TJBfGQIKOOi7kxzUY6z54ePu/ZD+wJA8zI2Q6v8rol2qpG/rvqsReco8zNMPvhQ==
+
+"@types/qs@*":
+  version "6.9.7"
+  resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.7.tgz#63bb7d067db107cc1e457c303bc25d511febf6cb"
+  integrity sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==
+
+"@types/range-parser@*":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
+  integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
+
+"@types/serve-static@*":
+  version "1.15.1"
+  resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.15.1.tgz#86b1753f0be4f9a1bee68d459fcda5be4ea52b5d"
+  integrity sha512-NUo5XNiAdULrJENtJXZZ3fHtfMolzZwczzBbnAeBbqBwG+LaG6YaJtuwzwGSQZ2wsCrxjEhNNjAkKigy3n8teQ==
+  dependencies:
+    "@types/mime" "*"
+    "@types/node" "*"
 
 "@types/uuid@^9.0.0":
   version "9.0.0"
@@ -478,7 +536,7 @@ vary@^1, vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-ws@^8.12.0:
-  version "8.12.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.12.0.tgz#485074cc392689da78e1828a9ff23585e06cddd8"
-  integrity sha512-kU62emKIdKVeEIOIKVegvqpXMSTAMLJozpHZaJNDYqBjzlSYXQGviYwN1osDLJ9av68qHd4a2oSjd7yD4pacig==
+zod@^3.21.4:
+  version "3.21.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.21.4.tgz#10882231d992519f0a10b5dd58a38c9dabbb64db"
+  integrity sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==

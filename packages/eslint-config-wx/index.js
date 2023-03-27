@@ -21,7 +21,8 @@ module.exports = {
             },
             rules: {
                 '@typescript-eslint/unbound-method': 'off',
-            }
+                '@typescript-eslint/consistent-type-imports': 'error',
+            },
         },
         {
             files: ['*.vue'],

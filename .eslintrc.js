@@ -1,3 +1,3 @@
 module.exports = {
-    extends: '@canale/eslint-config-typescript'
-}
+    extends: '@canale/eslint-config-typescript',
+};

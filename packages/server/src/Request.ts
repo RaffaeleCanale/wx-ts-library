@@ -1,4 +1,4 @@
-import { Request as ExpressRequest } from 'express';
+import type { Request as ExpressRequest } from 'express';
 import { IncomingHttpHeaders } from 'http';
 import { z } from 'zod';
 

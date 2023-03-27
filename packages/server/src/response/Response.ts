@@ -1,24 +1,11 @@
-import type { Response as ExpressResponse } from 'express';
 import type { OutgoingHttpHeaders } from 'http';
+import { File } from './FileResponse';
+import { Json } from './JsonResponse';
+import { Text } from './TextResponse';
 
 export interface BaseOptions {
     status?: number;
     headers?: OutgoingHttpHeaders;
 }
 
-export interface Response {
-    send(res: ExpressResponse): void;
-}
-
-export function withBaseOptions(
-    res: ExpressResponse,
-    options: BaseOptions | undefined,
-    contentType: string,
-) {
-    return res
-        .header({
-            'Content-Type': contentType,
-            ...(options?.headers ?? {}),
-        })
-        .status(options?.status ?? 200);
-}
+export type Response<T = unknown> = Json<T> | Text | File;

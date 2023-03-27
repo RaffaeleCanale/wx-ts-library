@@ -1,8 +1,12 @@
-import { BaseOptions, Response, withBaseOptions } from './Response';
+import type { BaseOptions } from './Response';
 
-export type FileResponse = Response & {
-    __brand?: 'file';
-};
+export interface File {
+    type: 'file';
+    path: string;
+    status: number;
+    headers: Record<string, string>;
+    fileOptions: SendFileOptions;
+}
 
 export interface SendFileOptions {
     dotfiles?: 'allow' | 'deny' | 'ignore';
@@ -10,15 +14,20 @@ export interface SendFileOptions {
 }
 
 export function file(
-    filePath: string,
+    path: string,
     options?: BaseOptions & SendFileOptions,
-): FileResponse {
+): File {
     return {
-        send(res) {
-            withBaseOptions(res, options, 'application/octet-stream').sendFile(
-                filePath,
-                options,
-            );
+        type: 'file',
+        path,
+        status: options?.status ?? 200,
+        headers: {
+            'Content-Type': 'text/plain',
+            ...(options?.headers ?? {}),
+        },
+        fileOptions: {
+            dotfiles: options?.dotfiles,
+            root: options?.root,
         },
     };
 }

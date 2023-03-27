@@ -1,13 +1,20 @@
-import { BaseOptions, Response, withBaseOptions } from './Response';
+import { BaseOptions } from './Response';
 
-export type Json<T> = Response & {
-    __brand?: T;
-};
+export interface Json<T> {
+    type: 'json';
+    body: T;
+    status: number;
+    headers: Record<string, string>;
+}
 
 export function json<T>(data: T, options?: BaseOptions): Json<T> {
     return {
-        send(res) {
-            withBaseOptions(res, options, 'application/json').json(data);
+        type: 'json',
+        body: data,
+        status: options?.status ?? 200,
+        headers: {
+            'Content-Type': 'text/plain',
+            ...(options?.headers ?? {}),
         },
     };
 }

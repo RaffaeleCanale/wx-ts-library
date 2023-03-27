@@ -1,13 +1,20 @@
-import { BaseOptions, Response, withBaseOptions } from './Response';
+import { BaseOptions } from './Response';
 
-export type TextResponse = Response & {
-    __brand?: 'text';
-};
+export interface Text {
+    type: 'text';
+    response: string;
+    status: number;
+    headers: Record<string, string>;
+}
 
-export function text(data: string, options?: BaseOptions): TextResponse {
+export function text(data: string, options?: BaseOptions): Text {
     return {
-        send(res) {
-            withBaseOptions(res, options, 'text/plain').send(data);
+        type: 'text',
+        response: data,
+        status: options?.status ?? 200,
+        headers: {
+            'Content-Type': 'text/plain',
+            ...(options?.headers ?? {}),
         },
     };
 }
