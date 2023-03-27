@@ -18,7 +18,7 @@ interface Logger {
     error(message: string): void;
 }
 
-export default class Server {
+export class Server {
     private readonly app: express.Express;
     private readonly server: http.Server;
     private readonly port: number;
