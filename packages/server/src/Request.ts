@@ -1,8 +1,8 @@
 import type { Request as ExpressRequest } from 'express';
-import { IncomingHttpHeaders } from 'http';
-import { z } from 'zod';
+import type { IncomingHttpHeaders } from 'http';
+import type { z } from 'zod';
 
-export class Request {
+export class Request<Params = Record<string, string>> {
     static fromExpress(req: ExpressRequest): Request {
         function normalizedQuery(): Record<string, string[]> {
             const query: Record<string, string[]> = {};
@@ -31,7 +31,7 @@ export class Request {
     constructor(
         private readonly bodyValue: unknown,
         private readonly queryValue: Record<string, string[]>,
-        private readonly paramsValue: Record<string, string>,
+        private readonly paramsValue: Params,
         private readonly headersValue: IncomingHttpHeaders,
     ) {}
 
@@ -53,8 +53,8 @@ export class Request {
         return validator.parse(this.queryValue);
     }
 
-    params<T = Record<string, string>>() {
-        return this.paramsValue as T;
+    params() {
+        return this.paramsValue;
     }
 
     headers(): IncomingHttpHeaders {
