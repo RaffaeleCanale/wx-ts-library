@@ -1,11 +1,12 @@
 import type { OutgoingHttpHeaders } from 'http';
-import { File } from './FileResponse';
-import { Json } from './JsonResponse';
-import { Text } from './TextResponse';
+import type { Data } from './DataResponse';
+import type { File } from './FileResponse';
+import type { Json } from './JsonResponse';
+import type { Text } from './TextResponse';
 
 export interface BaseOptions {
     status?: number;
     headers?: OutgoingHttpHeaders;
 }
 
-export type Response<T = unknown> = Json<T> | Text | File;
+export type Response<T = unknown> = Json<T> | Text | File | Data;

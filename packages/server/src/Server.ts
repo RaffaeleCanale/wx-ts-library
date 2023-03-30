@@ -25,6 +25,8 @@ function doSend(res: express.Response, response: Response): express.Response {
             return res.json(response.body);
         case 'text':
             return res.send(response.response);
+        case 'data':
+            return res.send(response.data);
         case 'file':
             res.sendFile(response.path, response.fileOptions);
             return res;

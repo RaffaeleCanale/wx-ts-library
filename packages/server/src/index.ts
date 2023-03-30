@@ -1,5 +1,6 @@
 export * from './ApiError';
 export * from './Request';
+export * from './response/DataResponse';
 export * from './response/FileResponse';
 export * from './response/JsonResponse';
 export * from './response/Response';

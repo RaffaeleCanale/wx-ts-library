@@ -1,19 +1,19 @@
 import type { BaseOptions } from './Response';
 
-export interface Json<T> {
-    type: 'json';
-    body: T;
+export interface Data {
+    type: 'data';
+    data: unknown;
     status: number;
     headers: Record<string, string>;
 }
 
-export function json<T>(data: T, options?: BaseOptions): Json<T> {
+export function data(data: unknown, options?: BaseOptions): Data {
     return {
-        type: 'json',
-        body: data,
+        type: 'data',
+        data,
         status: options?.status ?? 200,
         headers: {
-            'Content-Type': 'text/plain',
+            'Content-Type': 'application/octet-stream',
             ...(options?.headers ?? {}),
         },
     };
