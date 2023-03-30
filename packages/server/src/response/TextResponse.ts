@@ -1,4 +1,4 @@
-import { BaseOptions } from './Response';
+import type { BaseOptions } from './Response';
 
 export interface Text {
     type: 'text';

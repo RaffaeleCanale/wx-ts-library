@@ -22,7 +22,7 @@ export function file(
         path,
         status: options?.status ?? 200,
         headers: {
-            'Content-Type': 'text/plain',
+            'Content-Type': 'application/octet-stream',
             ...(options?.headers ?? {}),
         },
         fileOptions: {

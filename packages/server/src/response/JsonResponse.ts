@@ -13,7 +13,7 @@ export function json<T>(data: T, options?: BaseOptions): Json<T> {
         body: data,
         status: options?.status ?? 200,
         headers: {
-            'Content-Type': 'text/plain',
+            'Content-Type': 'application/json',
             ...(options?.headers ?? {}),
         },
     };
