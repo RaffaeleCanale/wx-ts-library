@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import ReconnectWebSocket from '../ReconnectWebSocket';
+import type ReconnectWebSocket from '../ReconnectWebSocket';
 import PendingRequest from '../utils/PendingRequest';
 import { asError, hasStrProperty } from '../utils/Utils';
-import WebSocketAdapter from '../WebSocketAdapter';
+import type WebSocketAdapter from '../WebSocketAdapter';
 
 enum ProtocolMessageType {
     REQUEST = 'request',
