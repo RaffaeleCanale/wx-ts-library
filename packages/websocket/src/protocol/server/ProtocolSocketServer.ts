@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-expressions */
-import WS from 'ws';
+import { WebSocketServer } from 'ws';
 
 import WebSocketWrapper from '../../WebSocketAdapter.js';
 import ProtocolSocket, { ProtocolSocketHandler } from '../ProtocolSocket.js';
@@ -14,7 +13,7 @@ export interface ProtocolServerHandler extends ProtocolSocketHandler {
 }
 
 export default class ProtocolSocketServer {
-    private wss?: WS.Server;
+    private wss?: WebSocketServer;
 
     constructor(
         private readonly handler: ProtocolServerHandler,
@@ -23,7 +22,7 @@ export default class ProtocolSocketServer {
 
     start(): void {
         const { port } = this.options;
-        this.wss = new WS.Server({
+        this.wss = new WebSocketServer({
             port,
         });
         console.log(`WebSocket server is running ws://localhost:${port}`);
