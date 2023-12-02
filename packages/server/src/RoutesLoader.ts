@@ -6,23 +6,25 @@ function isValidMethod(method: string): method is Method {
     return ['get', 'post', 'delete', 'put', 'patch'].includes(method);
 }
 
-export function importRoutes(directory: string, prefix = ''): Routes {
+export async function importRoutes(
+    directory: string,
+    prefix = '',
+): Promise<Routes> {
     const result: Routes = {};
 
-    fs.readdirSync(directory).forEach((key): void => {
+    const promises = fs.readdirSync(directory).map(async (key) => {
         const file = path.join(directory, key);
         const isDirectory = fs.statSync(file).isDirectory();
 
         if (isDirectory) {
             const path = `${prefix}/${key}`;
-            const routes = importRoutes(file, path);
+            const routes = await importRoutes(file, path);
             Object.assign(result, routes);
         } else if (file.endsWith('.js')) {
             const routeName = key.substring(0, key.length - 3);
             const path = `${prefix}/${routeName}`;
 
-            // eslint-disable-next-line
-            const modules = require(file) as Record<string, unknown>;
+            const modules = await import(file);
 
             const routes: Partial<Record<Method, Route>> = {};
 
@@ -42,6 +44,7 @@ export function importRoutes(directory: string, prefix = ''): Routes {
             console.warn(`Unknown file type: ${file}`);
         }
     });
+    await Promise.all(promises);
 
     return result;
 }
