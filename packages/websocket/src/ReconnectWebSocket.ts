@@ -1,9 +1,9 @@
 import { EventEmitter } from '@canale/emitter';
 import { ReusableTimeout } from '@canale/timer';
-import { asError } from './utils/Utils';
-import type { SocketEvents, WebSocketImpl } from './WebSocketAdapter';
-import WebSocketWrapper from './WebSocketAdapter';
-import type WebSocketClosedError from './WebSocketClosedError';
+import type { SocketEvents, WebSocketImpl } from './WebSocketAdapter.js';
+import WebSocketWrapper from './WebSocketAdapter.js';
+import type WebSocketClosedError from './WebSocketClosedError.js';
+import { asError } from './utils/Utils.js';
 
 export interface ReconnectWebSocketOptions {
     /**

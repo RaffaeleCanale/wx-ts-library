@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Method, Route, Routes } from './Route';
+import type { Method, Route, Routes } from './Route.js';
 
 function isValidMethod(method: string): method is Method {
     return ['get', 'post', 'delete', 'put', 'patch'].includes(method);

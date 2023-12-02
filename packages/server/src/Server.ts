@@ -3,10 +3,10 @@ import cors from 'cors';
 import express from 'express';
 import http from 'http';
 import type { AddressInfo } from 'net';
-import { ApiError } from './ApiError';
-import { Request } from './Request';
-import type { Response } from './response/Response';
-import type { Method, Route, Routes } from './Route';
+import { ApiError } from './ApiError.js';
+import { Request } from './Request.js';
+import type { Method, Route, Routes } from './Route.js';
+import type { Response } from './response/Response.js';
 
 export interface ServerOptions {
     port: number;

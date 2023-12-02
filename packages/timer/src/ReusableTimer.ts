@@ -1,5 +1,5 @@
-import ReusableInterval from './ReusableInterval';
-import ReusableTimeout from './ReusableTimeout';
+import ReusableInterval from './ReusableInterval.js';
+import ReusableTimeout from './ReusableTimeout.js';
 
 export default class ReusableTimer {
     private readonly timeout = new ReusableTimeout();

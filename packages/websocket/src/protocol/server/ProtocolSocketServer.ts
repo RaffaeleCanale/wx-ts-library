@@ -1,9 +1,8 @@
 /* eslint-disable no-unused-expressions */
-import Logger from '@canale/logger';
 import WS from 'ws';
 
-import ProtocolSocket, { ProtocolSocketHandler } from '../ProtocolSocket';
-import WebSocketWrapper from '../../WebSocketAdapter';
+import WebSocketWrapper from '../../WebSocketAdapter.js';
+import ProtocolSocket, { ProtocolSocketHandler } from '../ProtocolSocket.js';
 
 export interface ProtocolSocketServerOptions {
     port: number;
@@ -15,13 +14,11 @@ export interface ProtocolServerHandler extends ProtocolSocketHandler {
 }
 
 export default class ProtocolSocketServer {
-
     private wss?: WS.Server;
 
     constructor(
         private readonly handler: ProtocolServerHandler,
         private readonly options: ProtocolSocketServerOptions,
-        private readonly logger?: Logger,
     ) {}
 
     start(): void {
@@ -29,8 +26,8 @@ export default class ProtocolSocketServer {
         this.wss = new WS.Server({
             port,
         });
-        this.logger?.info(`WebSocket server is running ws://localhost:${port}`);
-        this.wss.on('connection', async (ws) => {
+        console.log(`WebSocket server is running ws://localhost:${port}`);
+        this.wss.on('connection', (ws) => {
             try {
                 const socket = WebSocketWrapper.fromWebSocket(ws);
                 const ps = new ProtocolSocket(
@@ -38,10 +35,12 @@ export default class ProtocolSocketServer {
                     this.handler,
                     this.options,
                 );
-                this.logger?.info('Socket connected', { address: socket.getAddress() });
+                console.debug('Socket connected', {
+                    address: socket.getAddress(),
+                });
                 this.handler.onSocketConnected(ps);
             } catch (error) {
-                this.logger?.error('Incoming socket failed', error);
+                console.error('Incoming socket failed', error);
             }
         });
     }

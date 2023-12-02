@@ -1,8 +1,8 @@
 import type { OutgoingHttpHeaders } from 'http';
-import type { Data } from './DataResponse';
-import type { File } from './FileResponse';
-import type { Json } from './JsonResponse';
-import type { Text } from './TextResponse';
+import type { Data } from './DataResponse.js';
+import type { File } from './FileResponse.js';
+import type { Json } from './JsonResponse.js';
+import type { Text } from './TextResponse.js';
 
 export interface BaseOptions {
     status?: number;

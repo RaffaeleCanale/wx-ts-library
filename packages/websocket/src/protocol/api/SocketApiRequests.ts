@@ -1,4 +1,4 @@
-import type { ApiMessage } from './ApiMessage';
+import type { ApiMessage } from './ApiMessage.js';
 
 type RequestOptions = Partial<Pick<ApiMessage, 'headers' | 'query'>>;
 

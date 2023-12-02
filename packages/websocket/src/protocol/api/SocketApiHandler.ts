@@ -1,8 +1,8 @@
 import type { Method, Route, Routes } from '@canale/server';
 import { ApiError, Request } from '@canale/server';
-import type { ProtocolSocketHandler } from '../ProtocolSocket';
-import { ApiMessageParse } from './ApiMessage';
-import type { ApiResponse } from './ApiResponse';
+import type { ProtocolSocketHandler } from '../ProtocolSocket.js';
+import { ApiMessageParse } from './ApiMessage.js';
+import type { ApiResponse } from './ApiResponse.js';
 
 function parsePathParams(
     pathDefinition: string,

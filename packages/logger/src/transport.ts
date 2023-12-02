@@ -1,5 +1,5 @@
-import { formatDate, prettyPrint } from './formatUtils';
-import { LogContainer } from './Logger';
+import { formatDate, prettyPrint } from './formatUtils.js';
+import { LogContainer } from './Logger.js';
 
 export enum Level {
     VERBOSE = 'verbose',
@@ -20,17 +20,18 @@ export interface Transport {
 
 const defaultTransport: Transport = {
     // eslint-disable-next-line no-console
-    log: (message: string, extra?: any) => console.log(message, prettyPrint(extra)),
+    log: (message: string, extra?: any) =>
+        console.log(message, prettyPrint(extra)),
     processMessage: (message: string) => message,
     dateFormatter: formatDate,
-    messageFormatter: (info) => `${info.timestamp} ${info.level} [${info.name}] - ${info.message}`,
+    messageFormatter: (info) =>
+        `${info.timestamp} ${info.level} [${info.name}] - ${info.message}`,
     levelFormatter: (level) => {
         return level.substring(0, 4).toUpperCase();
     },
     nameFormatter: (name) => name,
     level: Level.VERBOSE,
 };
-
 
 export const globalTransports = {
     defaultTransport,
@@ -41,7 +42,9 @@ export function setDefaultTransports(transports: Partial<Transport>[]): void {
     globalTransports.transports = transports;
 }
 
-export function fillTransportWithDefaults(transport: Partial<Transport>): Transport {
+export function fillTransportWithDefaults(
+    transport: Partial<Transport>,
+): Transport {
     return {
         ...defaultTransport,
         ...transport,

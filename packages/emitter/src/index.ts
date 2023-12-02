@@ -1,3 +1,4 @@
-export { default as EventEmitter } from './EventEmitter';
-export { default as PromiseEventEmitter } from './PromiseEventEmitter';
-export { Listener, ListenerCallback, ListenerReference } from './Types';
+export { default as EventEmitter } from './EventEmitter.js';
+export { default as PromiseEventEmitter } from './PromiseEventEmitter.js';
+export { Listener, ListenerCallback, ListenerReference } from './Types.js';
+

@@ -6,6 +6,7 @@
   "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
   "license": "MIT",
   "main": "lib/index.js",
+  "type": "module",
   "files": [
     "lib"
   ],

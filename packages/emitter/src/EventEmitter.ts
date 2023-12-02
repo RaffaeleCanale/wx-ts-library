@@ -1,5 +1,5 @@
 import isEqual from 'lodash.isequal';
-import { Listener, ListenerCallback, ListenerReference } from './Types';
+import type { Listener, ListenerCallback, ListenerReference } from './Types.js';
 
 export default class EventEmitter<E> {
 

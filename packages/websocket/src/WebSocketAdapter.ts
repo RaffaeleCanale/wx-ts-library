@@ -1,6 +1,6 @@
 import { EventEmitter } from '@canale/emitter';
 import type NpmWebSocket from 'ws';
-import WebSocketClosedError from './WebSocketClosedError';
+import WebSocketClosedError from './WebSocketClosedError.js';
 
 export interface SocketEvents {
     message: unknown;

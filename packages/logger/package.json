@@ -5,6 +5,7 @@
   "author": "Canale <raffaelecanale@gmail.com>",
   "license": "MIT",
   "main": "lib/index.js",
+  "type": "module",
   "files": [
     "lib"
   ],

@@ -6,6 +6,7 @@
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
     "license": "MIT",
     "main": "lib/index.js",
+    "type": "module",
     "files": [
         "lib"
     ],
@@ -25,7 +26,6 @@
     },
     "dependencies": {
         "@canale/emitter": "^5.0.0",
-        "@canale/logger": "^5.0.0",
         "@canale/timer": "^5.0.0",
         "uuid": "^9.0.0",
         "zod": "^3.21.4"

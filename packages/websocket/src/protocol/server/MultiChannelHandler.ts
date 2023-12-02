@@ -1,5 +1,5 @@
-import { ProtocolServerHandler } from './ProtocolSocketServer';
-import ProtocolSocket, { ProtocolSocketHandler } from '../ProtocolSocket';
+import ProtocolSocket, { ProtocolSocketHandler } from '../ProtocolSocket.js';
+import { ProtocolServerHandler } from './ProtocolSocketServer.js';
 
 export default class MultiChannelHandler implements ProtocolServerHandler {
     constructor(

@@ -1,4 +1,4 @@
-import type { BaseOptions } from './Response';
+import type { BaseOptions } from './Response.js';
 
 export interface Json<T> {
     type: 'json';
