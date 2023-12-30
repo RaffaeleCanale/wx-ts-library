@@ -6,25 +6,43 @@ function isValidMethod(method: string): method is Method {
     return ['get', 'post', 'delete', 'put', 'patch'].includes(method);
 }
 
+interface File {
+    absPath: string;
+    basename: string;
+    isDirectory: boolean;
+}
+
+function readdir(directory: string): File[] {
+    return fs.readdirSync(directory).map((file) => ({
+        absPath: path.join(directory, file),
+        basename: file,
+        isDirectory: fs.statSync(path.join(directory, file)).isDirectory(),
+    }));
+}
+
 export async function importRoutes(
-    directory: string,
-    prefix = '',
+    routesDirectory: string,
+    routePathPrefix = '',
 ): Promise<Routes> {
     const result: Routes = {};
 
-    const promises = fs.readdirSync(directory).map(async (key) => {
-        const file = path.join(directory, key);
-        const isDirectory = fs.statSync(file).isDirectory();
-
-        if (isDirectory) {
-            const path = `${prefix}/${key}`;
-            const routes = await importRoutes(file, path);
+    const promises = readdir(routesDirectory).map(async (file) => {
+        if (file.isDirectory) {
+            const routes = await importRoutes(
+                file.absPath,
+                `${routePathPrefix}/${file.basename}`,
+            );
             Object.assign(result, routes);
-        } else if (file.endsWith('.js')) {
-            const routeName = key.substring(0, key.length - 3);
-            const path = `${prefix}/${routeName}`;
+        } else if (file.basename.endsWith('.js')) {
+            const routePath =
+                file.basename === 'index.js'
+                    ? routePathPrefix
+                    : `${routePathPrefix}/${file.basename.substring(
+                          0,
+                          file.basename.length - 3,
+                      )}`;
 
-            const modules = await import(file);
+            const modules = await import(file.absPath);
 
             const routes: Partial<Record<Method, Route>> = {};
 
@@ -32,16 +50,16 @@ export async function importRoutes(
                 const method = name.toLocaleLowerCase();
                 if (!isValidMethod(method)) {
                     console.warn(
-                        `Ignoring invalid method "${method}" in ${file}`,
+                        `Ignoring invalid method "${method}" in ${file.absPath}`,
                     );
                     return;
                 }
                 routes[method] = module as Route;
             });
 
-            result[path] = routes;
+            result[routePath] = routes;
         } else {
-            console.warn(`Unknown file type: ${file}`);
+            console.warn(`Unknown file type: ${file.absPath}`);
         }
     });
     await Promise.all(promises);
