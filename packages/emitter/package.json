@@ -1,6 +1,6 @@
 {
     "name": "@canale/emitter",
-    "version": "6.0.0-alpha.0",
+    "version": "7.0.0",
     "description": "A simple, promise-based, event emitter",
     "author": "Raffaele Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",

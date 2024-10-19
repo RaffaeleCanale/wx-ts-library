@@ -1,5 +1,7 @@
 {
-    "packages": ["packages/*"],
-    "npmClient": "pnpm",
-    "version": "6.0.2"
+  "packages": [
+    "packages/*"
+  ],
+  "npmClient": "pnpm",
+  "version": "7.0.0"
 }
