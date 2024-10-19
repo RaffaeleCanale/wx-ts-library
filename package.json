@@ -1,6 +1,5 @@
 {
     "scripts": {
-        "postinstall": "lerna bootstrap",
         "clean": "lerna run clean",
         "build": "lerna run build",
         "lint": "eslint packages/ && prettier . --check",
