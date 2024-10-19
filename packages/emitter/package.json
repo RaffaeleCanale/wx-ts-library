@@ -1,30 +1,30 @@
 {
-  "name": "@canale/emitter",
-  "version": "6.0.0-alpha.0",
-  "description": "A simple, promise-based, event emitter",
-  "author": "Raffaele Canale <raffaelecanale@gmail.com>",
-  "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
-  "license": "MIT",
-  "main": "lib/index.js",
-  "type": "module",
-  "files": [
-    "lib"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
-  },
-  "scripts": {
-    "clean": "rm -rf lib/",
-    "build": "../../node_modules/typescript/bin/tsc"
-  },
-  "dependencies": {
-    "lodash.isequal": "^4.5.0"
-  },
-  "devDependencies": {
-    "@types/lodash.isequal": "^4.5.6"
-  }
+    "name": "@canale/emitter",
+    "version": "6.0.0-alpha.0",
+    "description": "A simple, promise-based, event emitter",
+    "author": "Raffaele Canale <raffaelecanale@gmail.com>",
+    "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
+    "license": "MIT",
+    "main": "lib/index.js",
+    "type": "module",
+    "files": [
+        "lib"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
+    },
+    "scripts": {
+        "clean": "rm -rf lib/",
+        "build": "../../node_modules/typescript/bin/tsc"
+    },
+    "dependencies": {
+        "lodash.isequal": "^4.5.0"
+    },
+    "devDependencies": {
+        "@types/lodash.isequal": "^4.5.6"
+    }
 }

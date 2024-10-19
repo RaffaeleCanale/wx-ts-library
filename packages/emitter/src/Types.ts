@@ -1,4 +1,4 @@
-export type ListenerCallback<P> = (parameter: P) => any;
+export type ListenerCallback<P> = (parameter: P) => unknown;
 
 export interface Listener<K, P> {
     id: number;

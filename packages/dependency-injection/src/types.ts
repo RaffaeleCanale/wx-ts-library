@@ -7,7 +7,7 @@ export interface Injectable {
     _dependencies?: Record<string, DependencyRef>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line
 export interface Dependencies {}
 
 export type Provider<T> = () => T;

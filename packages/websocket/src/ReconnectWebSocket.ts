@@ -44,7 +44,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
     /**
      * Returns whether the socket is currently connected.
      */
-    get isConnected(): boolean {
+    get isConnected() {
         return !!this.ws && this.ws.isConnected;
     }
 
@@ -90,6 +90,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
         if (!this.isConnected) {
             return Promise.reject(new Error('Socket is not connected'));
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return this.ws!.send(message);
     }
 

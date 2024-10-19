@@ -8,7 +8,7 @@ export function getLogger(
     name: string,
     transports?: Partial<Transport>[],
 ): Logger {
-    return new Logger(name, transports || globalTransports.transports);
+    return new Logger(name, transports ?? globalTransports.transports);
 }
 
 export default Logger;

@@ -13,7 +13,11 @@ export const SocketApiRequest = {
         };
     },
 
-    post<T>(path: string, body: T, options: RequestOptions = {}): ApiMessage {
+    post(
+        path: string,
+        body: unknown,
+        options: RequestOptions = {},
+    ): ApiMessage {
         return {
             path,
             method: 'post',
@@ -23,7 +27,7 @@ export const SocketApiRequest = {
         };
     },
 
-    put<T>(path: string, body: T, options: RequestOptions = {}): ApiMessage {
+    put(path: string, body: unknown, options: RequestOptions = {}): ApiMessage {
         return {
             path,
             method: 'put',
@@ -33,7 +37,11 @@ export const SocketApiRequest = {
         };
     },
 
-    patch<T>(path: string, body: T, options: RequestOptions = {}): ApiMessage {
+    patch(
+        path: string,
+        body: unknown,
+        options: RequestOptions = {},
+    ): ApiMessage {
         return {
             path,
             method: 'patch',

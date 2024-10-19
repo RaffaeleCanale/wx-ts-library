@@ -42,7 +42,10 @@ export async function importRoutes(
                           file.basename.length - 3,
                       )}`;
 
-            const modules = await import(file.absPath);
+            const modules = (await import(file.absPath)) as Record<
+                string,
+                Route
+            >;
 
             const routes: Partial<Record<Method, Route>> = {};
 
@@ -54,7 +57,7 @@ export async function importRoutes(
                     );
                     return;
                 }
-                routes[method] = module as Route;
+                routes[method] = module;
             });
 
             result[routePath] = routes;

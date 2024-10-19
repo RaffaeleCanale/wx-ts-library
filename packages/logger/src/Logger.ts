@@ -16,23 +16,23 @@ export default class Logger {
         this.transports = transports.map(fillTransportWithDefaults);
     }
 
-    verbose(message: string, extra?: any): void {
+    verbose(message: string, extra?: unknown): void {
         this.log(Level.VERBOSE, message, extra);
     }
 
-    info(message: string, extra?: any): void {
+    info(message: string, extra?: unknown): void {
         this.log(Level.INFO, message, extra);
     }
 
-    warn(message: string, extra?: any): void {
+    warn(message: string, extra?: unknown): void {
         this.log(Level.WARN, message, extra);
     }
 
-    error(message: string, extra?: any): void {
+    error(message: string, extra?: unknown): void {
         this.log(Level.ERROR, message, extra);
     }
 
-    log(level: Level, message: string, extra?: any): void {
+    log(level: Level, message: string, extra?: unknown): void {
         const levelIndex = Logger.getLevelIndex(level);
 
         this.transports.forEach((transport) => {

@@ -3,13 +3,15 @@
         "postinstall": "lerna bootstrap",
         "clean": "lerna run clean",
         "build": "lerna run build",
-        "publish": "lerna run clean && lerna run build && lerna publish"
+        "lint": "eslint packages/ && prettier . --check",
+        "version": "lerna version",
+        "publish": "lerna run clean && lerna run build && pnpm lint && lerna publish"
     },
     "devDependencies": {
-        "@canale/eslint-config-typescript": "file:packages/eslint-config-wx",
-        "eslint-config-prettier": "^7.1.0",
-        "eslint-plugin-prettier": "^3.3.0",
-        "lerna": "^3.20.2",
-        "typescript": "^4.9.3"
-    }
+        "@canale/eslint-config-wx": "file:packages/eslint-config-wx",
+        "lerna": "^8.1.8",
+        "typescript": "^5.6.3",
+        "typescript-eslint": "^8.10.0"
+    },
+    "packageManager": "pnpm@8.7.4+sha1.9dfcac89c4010a00ce092c3cda76dab72cd99198"
 }

@@ -9,8 +9,8 @@ export enum Level {
 }
 
 export interface Transport {
-    log: (formattedMessage: string, extra?: any) => void;
-    processMessage: (message: string, extra?: any) => string;
+    log: (formattedMessage: string, extra?: unknown) => void;
+    processMessage: (message: string, extra?: unknown) => string;
     dateFormatter: (date: Date) => string;
     messageFormatter: (log: LogContainer) => string;
     levelFormatter: (level: string, index: number) => string;
@@ -19,8 +19,7 @@ export interface Transport {
 }
 
 const defaultTransport: Transport = {
-    // eslint-disable-next-line no-console
-    log: (message: string, extra?: any) =>
+    log: (message: string, extra?: unknown) =>
         console.log(message, prettyPrint(extra)),
     processMessage: (message: string) => message,
     dateFormatter: formatDate,

@@ -68,7 +68,7 @@ export interface ProtocolSocketOptions {
 export default class ProtocolSocket {
     private readonly socket: WebSocketAdapter | ReconnectWebSocket;
 
-    private pendingRequests: { [id: string]: PendingRequest<unknown> } = {};
+    private pendingRequests: { [id: string]: PendingRequest } = {};
     private handler: ProtocolSocketHandler;
     private protocolRequestTimeout: number;
 
@@ -80,7 +80,7 @@ export default class ProtocolSocket {
         this.handler = handler;
         this.socket = socket;
         this.protocolRequestTimeout =
-            options.protocolRequestTimeout || DEFAULT_PROTOCOL_REQUEST_TIMEOUT;
+            options.protocolRequestTimeout ?? DEFAULT_PROTOCOL_REQUEST_TIMEOUT;
 
         this.socket.on('message', (message): void =>
             this.onProtocolMessage(message),
@@ -105,7 +105,8 @@ export default class ProtocolSocket {
         const id = uuidv4();
 
         this.pendingRequests[id] = request;
-        request.promise.finally(() => {
+        void request.promise.finally(() => {
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
             delete this.pendingRequests[id];
         });
 
@@ -184,7 +185,6 @@ export default class ProtocolSocket {
         return this.socket.send(message);
     }
 
-    // eslint-disable-next-line class-methods-use-this
     private validateMessage(message: unknown): ProtocolMessage {
         if (!hasStrProperty(message, 'id')) {
             throw new Error('Received message without id');

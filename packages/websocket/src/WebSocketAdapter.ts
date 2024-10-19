@@ -1,18 +1,20 @@
 import { EventEmitter } from '@canale/emitter';
 import type NpmWebSocket from 'ws';
 import WebSocketClosedError from './WebSocketClosedError.js';
+import { asError } from './utils/Utils.js';
 
 export interface SocketEvents {
     message: unknown;
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     connect: void;
     error: Error;
     close: WebSocketClosedError;
 }
 
-export type WebSocketImpl = { new (address: string): NpmWebSocket | WebSocket };
+export type WebSocketImpl = new (address: string) => NpmWebSocket | WebSocket;
 
 function isNpmWebSocket(ws: NpmWebSocket | WebSocket): ws is NpmWebSocket {
-    return !!(ws as any).on;
+    return !!(ws as { on?: unknown }).on;
 }
 
 export const DEV_OPTIONS = {
@@ -67,6 +69,7 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
                 this.close(code, reason.toString()),
             );
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.ws.onmessage = (event) => this.receive(event.data);
             this.ws.onerror = (event) => this.fail(new Error(event.type));
             this.ws.onclose = (event) => this.close(event.code, event.reason);
@@ -96,7 +99,7 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
                     this.ws.send(JSON.stringify(message));
                     resolve();
                 } catch (error) {
-                    reject(error);
+                    reject(asError(error));
                 }
             }
         });
@@ -107,7 +110,9 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
     }
 
     getAddress(): string {
+        // eslint-disable-next-line
         const { _socket } = this.ws as any;
+        // eslint-disable-next-line
         return `${_socket.remoteAddress}:${_socket.remotePort}`;
     }
 

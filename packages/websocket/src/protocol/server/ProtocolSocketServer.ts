@@ -25,7 +25,9 @@ export default class ProtocolSocketServer {
         this.wss = new WebSocketServer({
             port,
         });
-        console.log(`WebSocket server is running ws://localhost:${port}`);
+        console.log(
+            `WebSocket server is running ws://localhost:${String(port)}`,
+        );
         this.wss.on('connection', (ws) => {
             try {
                 const socket = WebSocketWrapper.fromWebSocket(ws);
@@ -34,9 +36,6 @@ export default class ProtocolSocketServer {
                     this.handler,
                     this.options,
                 );
-                console.debug('Socket connected', {
-                    address: socket.getAddress(),
-                });
                 this.handler.onSocketConnected(ps);
             } catch (error) {
                 console.error('Incoming socket failed', error);

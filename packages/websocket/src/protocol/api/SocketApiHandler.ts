@@ -17,11 +17,13 @@ function parsePathParams(
 
     const params: Record<string, string> = {};
     for (let i = 0; i < defSplit.length; i += 1) {
-        const definition = defSplit[i];
-        const actual = actualSplit[i];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const definition = defSplit[i]!;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const actual = actualSplit[i]!;
 
         if (definition.startsWith(':')) {
-            const paramName = definition.substr(1);
+            const paramName = definition.substring(1);
             const paramValue = actual;
 
             params[paramName] = paramValue;

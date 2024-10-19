@@ -18,6 +18,6 @@ const WS_ERROR_CODES: { [code: number]: string } = {
 
 export default class WebSocketClosedError extends Error {
     constructor(code: number, reason: string) {
-        super(`${reason}: ${WS_ERROR_CODES[code]}`);
+        super(`${reason}: ${WS_ERROR_CODES[code] ?? '-'}`);
     }
 }

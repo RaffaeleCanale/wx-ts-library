@@ -7,8 +7,8 @@ const dependenciesSingleton: Partial<ValueOrFactoryObj<Dependencies>> = {};
  * Clear out all the registered dependencies. This is mostly useful for tests.
  */
 export function clear(): void {
-    // eslint-disable-next-line no-restricted-syntax
     for (const dep of Object.getOwnPropertyNames(dependenciesSingleton)) {
+        // eslint-disable-next-line
         delete (dependenciesSingleton as any)[dep];
     }
 }
@@ -45,9 +45,9 @@ export function registerAll(
 export function getDependency<K extends keyof Dependencies>(
     key: K,
 ): Dependencies[K] {
-    const currentValue = dependenciesSingleton[key] as ValueOrFactory<
-        Dependencies[K]
-    >;
+    const currentValue = dependenciesSingleton[key] as
+        | ValueOrFactory<Dependencies[K]>
+        | undefined;
     if (!currentValue) {
         throw new Error(`Dependency ${key as string} not found`);
     }

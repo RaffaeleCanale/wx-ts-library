@@ -65,8 +65,10 @@ export class Server {
 
     start(): void {
         this.server.listen(this.port, (): void => {
-            const address = this.server.address() as AddressInfo;
-            this.logger?.info(`Started on port ${address ? address.port : ''}`);
+            const address = this.server.address() as AddressInfo | null;
+            this.logger?.info(
+                `Started on port ${address ? String(address.port) : ''}`,
+            );
         });
     }
 
