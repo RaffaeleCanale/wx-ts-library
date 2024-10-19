@@ -1,10 +1,11 @@
+import type { OutgoingHttpHeaders } from 'http';
 import type { BaseOptions } from './Response.js';
 
 export interface Text {
     type: 'text';
     response: string;
     status: number;
-    headers: Record<string, string>;
+    headers: OutgoingHttpHeaders;
 }
 
 export function text(data: string, options?: BaseOptions): Text {

@@ -1,10 +1,11 @@
+import type { OutgoingHttpHeaders } from 'http';
 import type { BaseOptions } from './Response.js';
 
 export interface File {
     type: 'file';
     path: string;
     status: number;
-    headers: Record<string, string>;
+    headers: OutgoingHttpHeaders;
     fileOptions: SendFileOptions;
 }
 

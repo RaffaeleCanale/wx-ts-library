@@ -1,10 +1,11 @@
+import type { OutgoingHttpHeaders } from 'http';
 import type { BaseOptions } from './Response.js';
 
 export interface Data {
     type: 'data';
     data: unknown;
     status: number;
-    headers: Record<string, string>;
+    headers: OutgoingHttpHeaders;
 }
 
 export function data(data: unknown, options?: BaseOptions): Data {
@@ -13,7 +14,7 @@ export function data(data: unknown, options?: BaseOptions): Data {
         data,
         status: options?.status ?? 200,
         headers: {
-            'Content-Type': 'application/octet-stream',
+            'content-type': 'application/octet-stream',
             ...(options?.headers ?? {}),
         },
     };
