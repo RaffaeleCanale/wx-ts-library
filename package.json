@@ -2,9 +2,9 @@
     "scripts": {
         "clean": "lerna clean && lerna run clean",
         "build": "lerna run build",
-        "lint": "eslint packages/ && prettier . --check",
+        "lint": "eslint packages/ && prettier . \"!pnpm-lock.yaml\" --check",
         "version": "lerna version",
-        "publish": "lerna run clean && lerna run build && pnpm lint && lerna publish --no-private"
+        "publish": "lerna run build && pnpm lint && lerna publish --no-private"
     },
     "devDependencies": {
         "@canale/eslint-config-wx": "file:packages/eslint-config-wx",
