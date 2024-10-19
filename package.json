@@ -4,7 +4,7 @@
         "build": "lerna run build",
         "lint": "eslint packages/ && prettier . \"!pnpm-lock.yaml\" \"!lerna.json\" --check",
         "version": "lerna version",
-        "publish": "lerna run build && pnpm lint && lerna publish --no-private"
+        "publish": "lerna run build && pnpm lint && lerna publish from-package --no-private "
     },
     "devDependencies": {
         "@canale/eslint-config-wx": "file:packages/eslint-config-wx",
