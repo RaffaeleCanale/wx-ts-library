@@ -1,5 +1,5 @@
-import { type Request } from './Request.js';
-import { type Response } from './response/Response.js';
+import type { Request } from './Request.js';
+import type { Response } from './response/Response.js';
 
 export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
