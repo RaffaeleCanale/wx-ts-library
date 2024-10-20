@@ -53,6 +53,7 @@ export default function config(projectDirectory, tseslint, rules = {}) {
                 '@typescript-eslint/consistent-indexed-object-style': 'off',
                 '@typescript-eslint/unbound-method': 'off',
                 'no-console': ['error'],
+                '@typescript-eslint/consistent-type-imports': ['error'],
                 ...rules,
             },
         },
