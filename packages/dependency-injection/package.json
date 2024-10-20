@@ -1,6 +1,6 @@
 {
     "name": "@canale/dependency-injection",
-    "version": "7.0.24",
+    "version": "7.0.25",
     "description": "Extremely simple, singleton based, dependency injection framework",
     "author": "Raffaele Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",

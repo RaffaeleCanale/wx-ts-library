@@ -1,6 +1,6 @@
 {
     "name": "@canale/logger",
-    "version": "7.0.24",
+    "version": "7.0.25",
     "description": "A simple, minimalistic logger",
     "author": "Canale <raffaelecanale@gmail.com>",
     "license": "MIT",
