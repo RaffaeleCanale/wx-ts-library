@@ -1,6 +1,6 @@
 {
     "name": "@canale/server",
-    "version": "7.0.20",
+    "version": "7.0.21",
     "description": "Wrapper around express to create a API server",
     "author": "Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
@@ -22,7 +22,7 @@
         "build": "tsc"
     },
     "dependencies": {
-        "@canale/logger": "^7.0.20",
+        "@canale/logger": "^7.0.21",
         "body-parser": "^1.20.1",
         "cors": "^2.8.5",
         "express": "^4.18.2",
