@@ -10,7 +10,8 @@
         "index.mjs",
         "prettier.mjs",
         "tsconfig.node-lib.json",
-        "tsconfig.node.json"
+        "tsconfig.node.json",
+        "tsconfig.dom.json"
     ],
     "publishConfig": {
         "access": "public"
