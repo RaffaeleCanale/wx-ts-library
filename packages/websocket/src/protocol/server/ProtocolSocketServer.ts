@@ -27,7 +27,8 @@ export default class ProtocolSocketServer {
         this.wss = new WebSocketServer({
             port,
         });
-        console.log(
+        // eslint-disable-next-line no-console
+        console.info(
             `WebSocket server is running ws://localhost:${String(port)}`,
         );
         this.wss.on('connection', (ws) => {
@@ -40,6 +41,7 @@ export default class ProtocolSocketServer {
                 );
                 this.handler.onSocketConnected(ps);
             } catch (error) {
+                // eslint-disable-next-line no-console
                 console.error('Incoming socket failed', error);
             }
         });

@@ -52,6 +52,7 @@ export async function importRoutes(
             Object.entries(modules).forEach(([name, module]) => {
                 const method = name.toLocaleLowerCase();
                 if (!isValidMethod(method)) {
+                    // eslint-disable-next-line no-console
                     console.warn(
                         `Ignoring invalid method "${method}" in ${file.absPath}`,
                     );
@@ -62,6 +63,7 @@ export async function importRoutes(
 
             result[routePath] = routes;
         } else {
+            // eslint-disable-next-line no-console
             console.warn(`Unknown file type: ${file.absPath}`);
         }
     });

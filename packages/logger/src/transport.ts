@@ -20,6 +20,7 @@ export interface Transport {
 
 const defaultTransport: Transport = {
     log: (message: string, extra?: unknown) =>
+        // eslint-disable-next-line no-console
         console.log(message, prettyPrint(extra)),
     processMessage: (message: string) => message,
     dateFormatter: formatDate,

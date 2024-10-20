@@ -20,7 +20,8 @@
         "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
     },
     "scripts": {
-        "clean": "rm -rf lib/"
+        "clean": "rm -rf lib/",
+        "inspect": "eslint --inspect-config"
     },
     "dependencies": {
         "@eslint/js": "^9.12.0",
