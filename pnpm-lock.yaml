@@ -82,7 +82,7 @@ importers:
   packages/server:
     dependencies:
       '@canale/logger':
-        specifier: ^7.0.19
+        specifier: ^7.0.20
         version: link:../logger
       body-parser:
         specifier: ^1.20.1
@@ -125,13 +125,13 @@ importers:
   packages/websocket:
     dependencies:
       '@canale/emitter':
-        specifier: ^7.0.19
+        specifier: ^7.0.20
         version: link:../emitter
       '@canale/server':
         specifier: ^5.0.8
         version: 5.0.8
       '@canale/timer':
-        specifier: ^7.0.19
+        specifier: ^7.0.20
         version: link:../timer
       uuid:
         specifier: ^9.0.0
