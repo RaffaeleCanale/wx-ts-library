@@ -19,7 +19,7 @@
     },
     "scripts": {
         "clean": "rm -rf lib/",
-        "build": "../../node_modules/typescript/bin/tsc"
+        "build": "tsc"
     },
     "bugs": {
         "url": "https://github.com/RaffaeleCanale/wx-ts-library/issues"
