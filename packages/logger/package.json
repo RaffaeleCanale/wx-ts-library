@@ -15,5 +15,9 @@
     "scripts": {
         "clean": "rm -rf lib/",
         "build": "../../node_modules/typescript/bin/tsc"
+    },
+    "devDependencies": {
+        "@canale/eslint-config-wx": "workspace:^",
+        "@types/node": "^22.7.7"
     }
 }

@@ -1,5 +1,5 @@
 {
-    "extends": "../../tsconfig.json",
+    "extends": "./node_modules/@canale/eslint-config-wx/tsconfig.node-lib.json",
     "compilerOptions": {
         "outDir": "./lib"
     },

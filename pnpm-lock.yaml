@@ -21,7 +21,14 @@ importers:
         specifier: ^8.10.0
         version: 8.10.0(eslint@9.13.0)(typescript@5.6.3)
 
-  packages/dependency-injection: {}
+  packages/dependency-injection:
+    devDependencies:
+      '@canale/eslint-config-wx':
+        specifier: workspace:^
+        version: link:../eslint-config-wx
+      '@types/node':
+        specifier: ^22.7.7
+        version: 22.7.7
 
   packages/emitter:
     dependencies:
@@ -29,9 +36,15 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
     devDependencies:
+      '@canale/eslint-config-wx':
+        specifier: workspace:^
+        version: link:../eslint-config-wx
       '@types/lodash.isequal':
         specifier: ^4.5.6
         version: 4.5.8
+      '@types/node':
+        specifier: ^22.7.7
+        version: 22.7.7
 
   packages/eslint-config-wx:
     dependencies:
@@ -57,7 +70,14 @@ importers:
         specifier: ^8.8.1
         version: 8.10.0(eslint@9.13.0)(typescript@5.6.3)
 
-  packages/logger: {}
+  packages/logger:
+    devDependencies:
+      '@canale/eslint-config-wx':
+        specifier: workspace:^
+        version: link:../eslint-config-wx
+      '@types/node':
+        specifier: ^22.7.7
+        version: 22.7.7
 
   packages/server:
     dependencies:
@@ -77,6 +97,9 @@ importers:
         specifier: ^3.21.4
         version: 3.23.8
     devDependencies:
+      '@canale/eslint-config-wx':
+        specifier: workspace:^
+        version: link:../eslint-config-wx
       '@types/body-parser':
         specifier: ^1.19.2
         version: 1.19.5
@@ -86,8 +109,18 @@ importers:
       '@types/express':
         specifier: ^4.17.14
         version: 4.17.21
+      '@types/node':
+        specifier: ^22.7.7
+        version: 22.7.7
 
-  packages/timer: {}
+  packages/timer:
+    devDependencies:
+      '@canale/eslint-config-wx':
+        specifier: workspace:^
+        version: link:../eslint-config-wx
+      '@types/node':
+        specifier: ^22.7.7
+        version: 22.7.7
 
   packages/websocket:
     dependencies:
@@ -110,9 +143,15 @@ importers:
         specifier: ^3.21.4
         version: 3.23.8
     devDependencies:
+      '@canale/eslint-config-wx':
+        specifier: workspace:^
+        version: link:../eslint-config-wx
       '@types/express':
         specifier: ^4.17.17
         version: 4.17.21
+      '@types/node':
+        specifier: ^22.7.7
+        version: 22.7.7
       '@types/uuid':
         specifier: ^9.0.0
         version: 9.0.8

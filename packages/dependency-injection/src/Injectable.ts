@@ -1,6 +1,6 @@
-import { getDependency } from './Dependencies';
-import { Injectable } from './types';
-import { wrapError } from './utils';
+import { getDependency } from './Dependencies.js';
+import type { Injectable } from './types.js';
+import { wrapError } from './utils.js';
 
 function apply(obj: Injectable): void {
     Object.entries(obj._dependencies ?? {}).forEach(([property, dep]) => {

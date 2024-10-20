@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Dependencies, Injectable } from './types';
+import type { Dependencies, Injectable } from './types.js';
 
 /**
  * This is a class attribute annotation. Make sure that your class has the `@injectable` annotation.

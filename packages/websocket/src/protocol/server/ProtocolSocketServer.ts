@@ -1,7 +1,9 @@
 import { WebSocketServer } from 'ws';
 
 import WebSocketWrapper from '../../WebSocketAdapter.js';
-import ProtocolSocket, { ProtocolSocketHandler } from '../ProtocolSocket.js';
+import ProtocolSocket, {
+    type ProtocolSocketHandler,
+} from '../ProtocolSocket.js';
 
 export interface ProtocolSocketServerOptions {
     port: number;

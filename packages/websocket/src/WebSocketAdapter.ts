@@ -71,7 +71,12 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
         } else {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.ws.onmessage = (event) => this.receive(event.data);
-            this.ws.onerror = (event) => this.fail(new Error(event.type));
+            this.ws.onerror = (event) =>
+                this.fail(
+                    new Error(
+                        (event as { type?: string }).type ?? 'unknown error',
+                    ),
+                );
             this.ws.onclose = (event) => this.close(event.code, event.reason);
         }
     }

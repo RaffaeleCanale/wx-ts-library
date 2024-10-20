@@ -1,18 +1,18 @@
-export {
-    default as ReconnectWebSocket,
-    ReconnectWebSocketOptions,
-} from './ReconnectWebSocket.js';
-export { DEV_OPTIONS, SocketEvents } from './WebSocketAdapter.js';
-export {
-    default as ProtocolSocket,
-    ProtocolSocketHandler,
-    ProtocolSocketOptions,
-} from './protocol/ProtocolSocket.js';
 export * from './protocol/api/SocketApiHandler.js';
 export * from './protocol/api/SocketApiRequests.js';
+export {
+    default as ProtocolSocket,
+    type ProtocolSocketHandler,
+    type ProtocolSocketOptions,
+} from './protocol/ProtocolSocket.js';
 export { default as MultiChannelHandler } from './protocol/server/MultiChannelHandler.js';
 export {
-    ProtocolServerHandler,
     default as ProtocolSocketServer,
-    ProtocolSocketServerOptions,
+    type ProtocolServerHandler,
+    type ProtocolSocketServerOptions,
 } from './protocol/server/ProtocolSocketServer.js';
+export {
+    default as ReconnectWebSocket,
+    type ReconnectWebSocketOptions,
+} from './ReconnectWebSocket.js';
+export { DEV_OPTIONS, type SocketEvents } from './WebSocketAdapter.js';

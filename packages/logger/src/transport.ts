@@ -1,5 +1,5 @@
 import { formatDate, prettyPrint } from './formatUtils.js';
-import { LogContainer } from './Logger.js';
+import type { LogContainer } from './Logger.js';
 
 export enum Level {
     VERBOSE = 'verbose',

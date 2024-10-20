@@ -1,5 +1,9 @@
-import { Dependencies, ValueOrFactory, ValueOrFactoryObj } from './types';
-import { getValueOf } from './utils';
+import type {
+    Dependencies,
+    ValueOrFactory,
+    ValueOrFactoryObj,
+} from './types.js';
+import { getValueOf } from './utils.js';
 
 const dependenciesSingleton: Partial<ValueOrFactoryObj<Dependencies>> = {};
 

@@ -1,8 +1,8 @@
 import Logger from './Logger.js';
-import { globalTransports, Transport } from './transport.js';
+import { globalTransports, type Transport } from './transport.js';
 
-export { LogContainer } from './Logger.js';
-export { Level, setDefaultTransports, Transport } from './transport.js';
+export type { LogContainer } from './Logger.js';
+export { Level, setDefaultTransports, type Transport } from './transport.js';
 
 export function getLogger(
     name: string,

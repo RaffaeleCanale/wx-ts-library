@@ -8,7 +8,9 @@
     "main": "index.mjs",
     "files": [
         "index.mjs",
-        "prettier.mjs"
+        "prettier.mjs",
+        "tsconfig.node-lib.json",
+        "tsconfig.node.json"
     ],
     "publishConfig": {
         "access": "public"

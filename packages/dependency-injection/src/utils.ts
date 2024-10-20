@@ -1,4 +1,4 @@
-import { Provider, ValueOrFactory } from './types';
+import type { Provider, ValueOrFactory } from './types.js';
 
 export function wrapError(err: unknown, errorMessage: string): Error {
     const error = err instanceof Error ? err : new Error(String(err));
