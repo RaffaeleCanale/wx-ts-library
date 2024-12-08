@@ -1,16 +1,38 @@
 import { EventEmitter } from '@canale/emitter';
 import { ReusableTimeout } from '@canale/timer';
 import { asError } from './utils/Utils.js';
+import type WebSocketAdapter from './WebSocketAdapter.js';
 import type { SocketEvents, WebSocketImpl } from './WebSocketAdapter.js';
 import WebSocketWrapper from './WebSocketAdapter.js';
-import type { WebSocketClosedError } from './WebSocketClosedError.js';
+import { WebSocketClosedError, WsErrorCodes } from './WebSocketClosedError.js';
 
 export interface ReconnectWebSocketOptions {
     /**
      * Time (in ms) the socket will wait before reconnecting.
      */
     reconnectDelay: number | ((retryCount: number) => number);
+    /**
+     * Maximum number of retries before giving up.
+     */
+    maxRetries: number;
 }
+
+export type SocketState =
+    | {
+          state: 'idle';
+      }
+    | {
+          state: 'reconnecting';
+          failuresCount: number;
+          reconnectTimeout: ReusableTimeout;
+      }
+    | {
+          state: 'connected';
+          ws: WebSocketAdapter;
+      }
+    | {
+          state: 'disconnected';
+      };
 
 /**
  * Wrapper around a WebSocket that will automatically try to reconnect
@@ -21,9 +43,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
     private readonly address: string;
     private readonly options: ReconnectWebSocketOptions;
 
-    private reconnectCounter = 0;
-    private reconnectTimeout = new ReusableTimeout();
-    private ws?: WebSocketWrapper;
+    private state: SocketState = { state: 'idle' };
 
     /**
      *
@@ -41,11 +61,8 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
         this.options = options;
     }
 
-    /**
-     * Returns whether the socket is currently connected.
-     */
-    get isConnected() {
-        return !!this.ws && this.ws.isConnected;
+    getState(): SocketState['state'] {
+        return this.state.state;
     }
 
     /**
@@ -53,67 +70,99 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
      * this will continuously try to reconnect with some back-off timers.
      */
     async connect(): Promise<void> {
-        this.reconnectTimeout.clearTimeout();
+        if (this.state.state === 'connected') {
+            return;
+        }
+        if (this.state.state === 'reconnecting') {
+            this.state.reconnectTimeout.clearTimeout();
+        }
 
         try {
-            this.ws = await WebSocketWrapper.connect(
+            const ws = await WebSocketWrapper.connect(
                 this.address,
                 this.WebSocketImpl,
             );
-            this.ws.on('message', (message: unknown) =>
-                this.emit('message', message),
-            );
-            this.ws.on('error', (error: Error) => {
-                if (this.ws) {
-                    this.ws.disconnect();
-                    this.ws = undefined;
-                }
-                this.scheduleReconnect();
-                this.emit('error', error);
-            });
-            this.ws.on('close', (error: WebSocketClosedError) => {
-                if (this.ws) {
-                    this.ws = undefined;
-                }
-                this.scheduleReconnect();
-                this.emit('close', error);
-            });
+            ws.on('message', (message) => this.emit('message', message));
+            ws.on('error', (error) => this.emit('error', error));
+            ws.on('close', (error) => this.onClosed(error));
+
             this.emit('connect', undefined);
-            this.reconnectCounter = 0;
+            this.state = { state: 'connected', ws };
         } catch (error) {
-            this.emit('error', asError(error));
-            this.scheduleReconnect();
+            this.onClosed(asError(error));
         }
     }
 
     send(message: unknown): Promise<void> {
-        if (!this.isConnected) {
+        if (this.state.state !== 'connected') {
             return Promise.reject(new Error('Socket is not connected'));
         }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return this.ws!.send(message);
+        return this.state.ws.send(message);
     }
 
     disconnect(): void {
-        if (this.ws) {
-            this.ws.disconnect();
-            this.ws = undefined;
-            this.reconnectTimeout.clearTimeout();
+        switch (this.state.state) {
+            case 'connected':
+                this.state.ws.disconnect();
+                this.state = { state: 'disconnected' };
+                break;
+            case 'reconnecting':
+                this.state.reconnectTimeout.clearTimeout();
+                this.state = { state: 'disconnected' };
+                break;
+            case 'idle':
+            case 'disconnected':
+                break;
         }
     }
 
-    private scheduleReconnect(): void {
-        this.reconnectCounter += 1;
-        const time = this.getBackOffTime();
-        this.reconnectTimeout.resetTimeout(time, () => {
+    private onClosed(error: Error | WebSocketClosedError): void {
+        if ('code' in error && error.code === WsErrorCodes.CLOSE_NORMAL) {
+            this.emit('close', error);
+            this.state = { state: 'disconnected' };
+            return;
+        }
+
+        switch (this.state.state) {
+            case 'idle':
+            case 'connected':
+                this.state = {
+                    state: 'reconnecting',
+                    failuresCount: 1,
+                    reconnectTimeout: new ReusableTimeout(),
+                };
+                break;
+            case 'disconnected':
+                return;
+            case 'reconnecting':
+                this.state.failuresCount += 1;
+                break;
+        }
+
+        if (this.state.failuresCount > this.options.maxRetries) {
+            this.state = { state: 'disconnected' };
+            this.emit(
+                'close',
+                new WebSocketClosedError(
+                    WsErrorCodes.CLOSE_ABNORMAL,
+                    'Max retries reached',
+                ),
+            );
+            return;
+        }
+
+        this.emit('error', error);
+
+        const time = this.getBackOffTime(this.state.failuresCount);
+        this.state.reconnectTimeout.resetTimeout(time, () => {
             void this.connect();
         });
     }
 
-    private getBackOffTime(): number {
+    private getBackOffTime(failuresCount: number): number {
         if (typeof this.options.reconnectDelay === 'number') {
             return this.options.reconnectDelay;
         }
-        return this.options.reconnectDelay(this.reconnectCounter);
+        return this.options.reconnectDelay(failuresCount);
     }
 }

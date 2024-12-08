@@ -66,13 +66,13 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
             this.ws.on('message', (data: string) => this.receive(data));
             this.ws.on('error', (error) => this.fail(error));
             this.ws.on('close', (code, reason) =>
-                this.close(code, reason.toString()),
+                this.onClose(code, reason.toString()),
             );
         } else {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.ws.onmessage = (event) => this.receive(event.data);
             this.ws.onerror = (event) => this.fail(new Error(event.message));
-            this.ws.onclose = (event) => this.close(event.code, event.reason);
+            this.ws.onclose = (event) => this.onClose(event.code, event.reason);
         }
     }
 
@@ -106,7 +106,7 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
     }
 
     disconnect(): void {
-        this.close(1000, 'Disconnected by host');
+        this.ws.close();
     }
 
     getAddress(): string {
@@ -118,13 +118,10 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
 
     private fail(error: Error): void {
         this.emit('error', error);
-        this.ws.close();
-        this.isClosed = true;
     }
 
-    private close(code: number, reason: string): void {
+    private onClose(code: number, reason: string): void {
         this.emit('close', new WebSocketClosedError(code as 1000, reason));
-        this.ws.close();
         this.isClosed = true;
     }
 

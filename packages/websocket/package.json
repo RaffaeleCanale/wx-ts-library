@@ -19,7 +19,8 @@
     },
     "scripts": {
         "clean": "rm -rf lib/",
-        "build": "tsc"
+        "build": "tsc",
+        "test": "vitest"
     },
     "bugs": {
         "url": "https://github.com/RaffaeleCanale/wx-ts-library/issues"
@@ -36,7 +37,8 @@
         "@types/node": "^22.7.7",
         "@types/uuid": "^9.0.0",
         "@types/websocket": "^1.0.5",
-        "@types/ws": "^8.5.3"
+        "@types/ws": "^8.5.3",
+        "vitest": "^2.1.8"
     },
     "peerDependencies": {
         "@canale/server": "^5.0.8",
