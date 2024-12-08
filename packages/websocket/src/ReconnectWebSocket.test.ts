@@ -10,10 +10,10 @@ class FakeWs {
         FakeWs.instances.push(this);
     }
 
-    onopen?: () => {};
-    onmessage?: (event: { data: string }) => {};
-    onerror?: (error: Error) => {};
-    onclose?: (event: { code: number; reason: string }) => {};
+    onopen?: () => void;
+    onmessage?: (event: { data: string }) => void;
+    onerror?: (error: Error) => void;
+    onclose?: (event: { code: number; reason: string }) => void;
 
     close = vi.fn();
 }
@@ -33,7 +33,8 @@ describe('ReconnectWebSocket', () => {
         onConnect = vi.fn();
         onMessage = vi.fn();
 
-        socket = new ReconnectWebSocket('', FakeWs, {
+        // eslint-disable-next-line
+        socket = new ReconnectWebSocket('', FakeWs as any, {
             reconnectDelay: seconds(10),
             maxRetries: 3,
         });
@@ -178,7 +179,7 @@ describe('ReconnectWebSocket', () => {
         expect(onError).toHaveBeenCalledTimes(3);
     });
 
-    test('when socket is connected and disconnect is called, it disconnects without retrying', async () => {});
+    // test('when socket is connected and disconnect is called, it disconnects without retrying', async () => {});
 
-    test('when socket is reconnecting and disconnect is called, it disconnects without retrying', async () => {});
+    // test('when socket is reconnecting and disconnect is called, it disconnects without retrying', async () => {});
 });
