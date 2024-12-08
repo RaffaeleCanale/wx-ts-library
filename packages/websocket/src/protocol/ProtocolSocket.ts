@@ -110,12 +110,16 @@ export default class ProtocolSocket {
             delete this.pendingRequests[id];
         });
 
-        await this.sendProtocolMessage({
-            id,
-            channelId,
-            type: ProtocolMessageType.REQUEST,
-            content: message,
-        });
+        try {
+            await this.sendProtocolMessage({
+                id,
+                channelId,
+                type: ProtocolMessageType.REQUEST,
+                content: message,
+            });
+        } catch (error) {
+            request.reject(asError(error));
+        }
 
         return request.promise;
     }
