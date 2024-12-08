@@ -90,6 +90,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
             this.state = { state: 'connected', ws };
         } catch (error) {
             this.onClosed(asError(error));
+            throw error;
         }
     }
 
