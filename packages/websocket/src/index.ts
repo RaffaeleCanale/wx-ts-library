@@ -16,3 +16,4 @@ export {
     type ReconnectWebSocketOptions,
 } from './ReconnectWebSocket.js';
 export { DEV_OPTIONS, type SocketEvents } from './WebSocketAdapter.js';
+export * from './WebSocketClosedError.js';

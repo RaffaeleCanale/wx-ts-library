@@ -1,23 +1,29 @@
-const WS_ERROR_CODES: { [code: number]: string } = {
-    1000: 'CLOSE_NORMAL',
-    1001: 'CLOSE_GOING_AWAY',
-    1002: 'CLOSE_PROTOCOL_ERROR',
-    1003: 'CLOSE_UNSUPPORTED',
-    1005: 'CLOSED_NO_STATUS',
-    1006: 'CLOSE_ABNORMAL',
-    1007: 'UNSUPPORTED_PAYLOAD',
-    1008: 'POLICY_VIOLATION',
-    1009: 'CLOSE_TOO_LARGE',
-    1010: 'MANDATORY_EXTENSION',
-    1011: 'SERVER_ERROR',
-    1012: 'SERVICE_RESTART',
-    1013: 'TRY_AGAIN_LATER',
-    1014: 'BAD_GATEWAY',
-    1015: 'TLS_HANDSHAKE_FAIL',
-};
+export const WsErrorCodes = {
+    OTHER: 0,
+    CLOSE_NORMAL: 1000,
+    CLOSE_GOING_AWAY: 1001,
+    CLOSE_PROTOCOL_ERROR: 1002,
+    CLOSE_UNSUPPORTED: 1003,
+    CLOSED_NO_STATUS: 1005,
+    CLOSE_ABNORMAL: 1006,
+    UNSUPPORTED_PAYLOAD: 1007,
+    POLICY_VIOLATION: 1008,
+    CLOSE_TOO_LARGE: 1009,
+    MANDATORY_EXTENSION: 1010,
+    SERVER_ERROR: 1011,
+    SERVICE_RESTART: 1012,
+    TRY_AGAIN_LATER: 1013,
+    BAD_GATEWAY: 1014,
+    TLS_HANDSHAKE_FAIL: 1015,
+} as const;
 
-export default class WebSocketClosedError extends Error {
-    constructor(code: number, reason: string) {
-        super(`${reason}: ${WS_ERROR_CODES[code] ?? '-'}`);
+export class WebSocketError extends Error {
+    constructor(
+        public readonly code: (typeof WsErrorCodes)[keyof typeof WsErrorCodes],
+        public readonly reason: string,
+    ) {
+        super(
+            `WebSocket closed with code ${String(code)} and reason: ${reason}`,
+        );
     }
 }

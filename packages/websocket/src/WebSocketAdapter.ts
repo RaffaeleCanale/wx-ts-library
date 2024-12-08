@@ -1,6 +1,6 @@
 import { EventEmitter } from '@canale/emitter';
 import type NpmWebSocket from 'ws';
-import WebSocketClosedError from './WebSocketClosedError.js';
+import { WebSocketError } from './WebSocketClosedError.js';
 import { asError } from './utils/Utils.js';
 
 export interface SocketEvents {
@@ -8,7 +8,7 @@ export interface SocketEvents {
     // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     connect: void;
     error: Error;
-    close: WebSocketClosedError;
+    close: WebSocketError;
 }
 
 export type WebSocketImpl = new (address: string) => NpmWebSocket | WebSocket;
@@ -71,12 +71,7 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
         } else {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.ws.onmessage = (event) => this.receive(event.data);
-            this.ws.onerror = (event) =>
-                this.fail(
-                    new Error(
-                        (event as { type?: string }).type ?? 'unknown error',
-                    ),
-                );
+            this.ws.onerror = (event) => this.fail(new Error(event.message));
             this.ws.onclose = (event) => this.close(event.code, event.reason);
         }
     }
@@ -128,7 +123,7 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
     }
 
     private close(code: number, reason: string): void {
-        this.emit('close', new WebSocketClosedError(code, reason));
+        this.emit('close', new WebSocketError(code as 1000, reason));
         this.ws.close();
         this.isClosed = true;
     }
