@@ -156,7 +156,9 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
 
         const time = this.getBackOffTime(this.state.failuresCount);
         this.state.reconnectTimeout.resetTimeout(time, () => {
-            void this.connect();
+            this.connect().catch(() => {
+                /* ignored */
+            });
         });
     }
 
