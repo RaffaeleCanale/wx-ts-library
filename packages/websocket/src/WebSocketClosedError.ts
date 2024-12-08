@@ -17,7 +17,7 @@ export const WsErrorCodes = {
     TLS_HANDSHAKE_FAIL: 1015,
 } as const;
 
-export class WebSocketError extends Error {
+export class WebSocketClosedError extends Error {
     constructor(
         public readonly code: (typeof WsErrorCodes)[keyof typeof WsErrorCodes],
         public readonly reason: string,

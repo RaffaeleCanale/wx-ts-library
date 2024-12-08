@@ -3,7 +3,7 @@ import { ReusableTimeout } from '@canale/timer';
 import { asError } from './utils/Utils.js';
 import type { SocketEvents, WebSocketImpl } from './WebSocketAdapter.js';
 import WebSocketWrapper from './WebSocketAdapter.js';
-import type { WebSocketError as WebSocketClosedError } from './WebSocketClosedError.js';
+import type { WebSocketClosedError } from './WebSocketClosedError.js';
 
 export interface ReconnectWebSocketOptions {
     /**
