@@ -6,7 +6,7 @@ import type { SocketEvents, WebSocketImpl } from './WebSocketAdapter.js';
 import WebSocketWrapper from './WebSocketAdapter.js';
 import { WebSocketClosedError, WsErrorCodes } from './WebSocketClosedError.js';
 
-export interface ReconnectWebSocketOptions {
+export type ReconnectWebSocketOptions = {
     /**
      * Time (in ms) the socket will wait before reconnecting.
      */
@@ -15,7 +15,7 @@ export interface ReconnectWebSocketOptions {
      * Maximum number of retries before giving up.
      */
     maxRetries: number;
-}
+};
 
 export type SocketState =
     | {

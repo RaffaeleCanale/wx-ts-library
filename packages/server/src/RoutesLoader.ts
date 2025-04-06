@@ -6,11 +6,11 @@ function isValidMethod(method: string): method is Method {
     return ['get', 'post', 'delete', 'put', 'patch'].includes(method);
 }
 
-interface File {
+type File = {
     absPath: string;
     basename: string;
     isDirectory: boolean;
-}
+};
 
 function readdir(directory: string): File[] {
     return fs.readdirSync(directory).map((file) => ({

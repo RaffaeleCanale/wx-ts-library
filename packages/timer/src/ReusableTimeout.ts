@@ -17,6 +17,6 @@ export default class ReusableTimeout {
     }
 
     hasTimeout(): boolean {
-        return !!this.timeout;
+        return this.timeout !== undefined;
     }
 }

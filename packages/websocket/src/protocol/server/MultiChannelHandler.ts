@@ -4,12 +4,16 @@ import ProtocolSocket, {
 import type { ProtocolServerHandler } from './ProtocolSocketServer.js';
 
 export default class MultiChannelHandler implements ProtocolServerHandler {
+    private readonly handlers: Record<string, ProtocolSocketHandler>;
+    private readonly fallbackHandler: ProtocolSocketHandler;
+
     constructor(
-        private readonly handlers: {
-            [channelId: string]: ProtocolSocketHandler;
-        },
-        private readonly fallbackHandler: ProtocolSocketHandler,
-    ) {}
+        handlers: Record<string, ProtocolSocketHandler>,
+        fallbackHandler: ProtocolSocketHandler,
+    ) {
+        this.handlers = handlers;
+        this.fallbackHandler = fallbackHandler;
+    }
 
     onMessage(
         message: unknown,

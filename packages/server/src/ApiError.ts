@@ -24,12 +24,13 @@ export class ApiError extends Error {
         return new ServerError(detail);
     }
 
-    constructor(
-        message: string,
-        public readonly statusCode: number,
-        public readonly detail?: string,
-    ) {
+    public readonly statusCode: number;
+    public readonly detail?: string;
+
+    constructor(message: string, statusCode: number, detail?: string) {
         super(message);
+        this.statusCode = statusCode;
+        this.detail = detail;
     }
 
     toJson() {

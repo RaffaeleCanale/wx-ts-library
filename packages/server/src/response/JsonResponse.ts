@@ -1,12 +1,12 @@
 import type { OutgoingHttpHeaders } from 'http';
 import type { BaseOptions } from './Response.js';
 
-export interface Json<T> {
+export type Json<T> = {
     type: 'json';
     body: T;
     status: number;
     headers: OutgoingHttpHeaders;
-}
+};
 
 export function json<T>(data: T, options?: BaseOptions): Json<T> {
     return {

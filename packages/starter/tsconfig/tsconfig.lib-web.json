@@ -1,0 +1,37 @@
+{
+    /*
+        Environment: Web
+        Emits code: Yes
+    */
+    "compilerOptions": {
+        // COMMON OPTIONS
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        // - strictness
+        "strict": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noUncheckedSideEffectImports": true,
+        "erasableSyntaxOnly": true,
+        "verbatimModuleSyntax": true,
+        // - modules
+        "isolatedModules": true, // Disable cross-file type checking (e.g. namespace)
+        "moduleDetection": "force", // Forces type: module
+        "esModuleInterop": true, // Interop with commonjs libraries
+        "target": "ES2022", // Output code target
+        "skipLibCheck": true, // Don't typecheck lib files
+
+        // ENVIRONMENT
+        "lib": ["ES2024", "DOM", "DOM.Iterable"],
+        "jsx": "react-jsx",
+
+        // OUTPUT
+        "outDir": "${configDir}/dist",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        // -- source maps
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true
+    },
+    "include": ["${configDir}/src"]
+}

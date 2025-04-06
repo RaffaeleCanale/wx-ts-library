@@ -10,5 +10,5 @@ export function hasStrProperty<K extends string>(
     key: K,
 ): obj is Record<K, string> {
     const value = (obj as Record<string, unknown>)[key];
-    return !!value && typeof value === 'string';
+    return Boolean(value) && typeof value === 'string';
 }

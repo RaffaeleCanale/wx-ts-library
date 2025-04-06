@@ -7,12 +7,12 @@ import type { ApiResponse } from './ApiResponse.js';
 function parsePathParams(
     pathDefinition: string,
     actualPath: string,
-): Record<string, string> | null {
+): Record<string, string> | undefined {
     const defSplit = pathDefinition.split('/');
     const actualSplit = actualPath.split('/');
 
     if (defSplit.length !== actualSplit.length) {
-        return null;
+        return undefined;
     }
 
     const params: Record<string, string> = {};
@@ -28,15 +28,19 @@ function parsePathParams(
 
             params[paramName] = paramValue;
         } else if (definition !== actual) {
-            return null;
+            return undefined;
         }
     }
 
     return params;
 }
 
-export default class SocketApiHandler implements ProtocolSocketHandler {
-    constructor(private readonly routes: Routes) {}
+export class SocketApiHandler implements ProtocolSocketHandler {
+    private readonly routes: Routes;
+
+    constructor(routes: Routes) {
+        this.routes = routes;
+    }
 
     async fulfillRequest(messageObj: unknown): Promise<ApiResponse> {
         const { path, method, body, headers, query } =

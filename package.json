@@ -1,16 +1,14 @@
 {
+    "private": true,
+    "type": "module",
     "scripts": {
-        "clean": "lerna clean && lerna run clean",
-        "build": "lerna run build",
-        "lint": "eslint packages/ && prettier . \"!pnpm-lock.yaml\" \"!lerna.json\" --check",
-        "version": "lerna version",
-        "publish": "lerna run build && pnpm lint && lerna publish from-package --yes"
+        "build": "pnpm -r run build",
+        "lint": "wx-lint --skip-knip",
+        "publish": "pnpm build && pnpm publish --no-git-checks -r"
     },
     "devDependencies": {
-        "@canale/eslint-config-wx": "file:packages/eslint-config-wx",
-        "lerna": "^8.1.8",
-        "typescript": "^5.6.3",
-        "typescript-eslint": "^8.10.0"
-    },
-    "packageManager": "pnpm@8.7.4+sha1.9dfcac89c4010a00ce092c3cda76dab72cd99198"
+        "@canale/starter": "workspace:*",
+        "typescript": "^5.8.3",
+        "vitest": "^3.1.1"
+    }
 }

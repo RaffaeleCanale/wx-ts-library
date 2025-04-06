@@ -1,14 +1,14 @@
 {
     "name": "@canale/timer",
-    "version": "7.0.25",
+    "version": "7.1.0",
     "description": "Utilities related to timer",
     "author": "Raffaele Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
     "license": "MIT",
-    "main": "lib/index.js",
+    "main": "dist/index.js",
     "type": "module",
     "files": [
-        "lib"
+        "dist"
     ],
     "publishConfig": {
         "access": "public"
@@ -18,11 +18,9 @@
         "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
     },
     "scripts": {
-        "clean": "rm -rf lib/",
         "build": "tsc"
     },
     "devDependencies": {
-        "@canale/eslint-config-wx": "workspace:^",
         "@types/node": "^22.7.7"
     }
 }

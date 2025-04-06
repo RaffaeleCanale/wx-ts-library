@@ -1,14 +1,14 @@
 {
     "name": "@canale/dependency-injection",
-    "version": "7.0.25",
+    "version": "7.1.0",
     "description": "Extremely simple, singleton based, dependency injection framework",
     "author": "Raffaele Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
     "license": "MIT",
     "type": "module",
-    "main": "lib/index.js",
+    "main": "dist/index.js",
     "files": [
-        "lib"
+        "dist"
     ],
     "publishConfig": {
         "access": "public"
@@ -18,11 +18,9 @@
         "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
     },
     "scripts": {
-        "clean": "rm -rf lib/",
         "build": "tsc"
     },
     "devDependencies": {
-        "@canale/eslint-config-wx": "workspace:^",
         "@types/node": "^22.7.7"
     }
 }

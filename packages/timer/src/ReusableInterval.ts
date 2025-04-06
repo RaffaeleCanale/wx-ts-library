@@ -14,6 +14,6 @@ export default class ReusableInterval {
     }
 
     hasInterval(): boolean {
-        return !!this.interval;
+        return this.interval !== undefined;
     }
 }

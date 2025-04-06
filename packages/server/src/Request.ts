@@ -28,12 +28,22 @@ export class Request<Params = Record<string, string>> {
         );
     }
 
+    private readonly bodyValue: unknown;
+    private readonly queryValue: Record<string, string[]>;
+    private readonly paramsValue: Params;
+    private readonly headersValue: IncomingHttpHeaders;
+
     constructor(
-        private readonly bodyValue: unknown,
-        private readonly queryValue: Record<string, string[]>,
-        private readonly paramsValue: Params,
-        private readonly headersValue: IncomingHttpHeaders,
-    ) {}
+        bodyValue: unknown,
+        queryValue: Record<string, string[]>,
+        paramsValue: Params,
+        headersValue: IncomingHttpHeaders,
+    ) {
+        this.bodyValue = bodyValue;
+        this.queryValue = queryValue;
+        this.paramsValue = paramsValue;
+        this.headersValue = headersValue;
+    }
 
     body(): unknown;
     body<T>(validator: z.ZodType<T>): T;

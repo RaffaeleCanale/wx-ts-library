@@ -4,22 +4,16 @@ import type WebSocketAdapter from '../WebSocketAdapter.js';
 import PendingRequest from '../utils/PendingRequest.js';
 import { asError, hasStrProperty } from '../utils/Utils.js';
 
-enum ProtocolMessageType {
-    REQUEST = 'request',
-    RESPONSE = 'response',
-    MESSAGE = 'message',
-}
-
-interface ProtocolMessageRequest {
+type ProtocolMessageRequest = {
     id: string;
     channelId: string;
-    type: ProtocolMessageType.MESSAGE | ProtocolMessageType.REQUEST;
+    type: 'message' | 'request';
     content: unknown;
-}
-interface ProtocolMessageResponse {
+};
+type ProtocolMessageResponse = {
     id: string;
     channelId: string;
-    type: ProtocolMessageType.RESPONSE;
+    type: 'response';
     content:
         | {
               result: unknown;
@@ -27,10 +21,10 @@ interface ProtocolMessageResponse {
         | {
               error: string;
           };
-}
+};
 type ProtocolMessage = ProtocolMessageRequest | ProtocolMessageResponse;
 
-export interface ProtocolSocketHandler {
+export type ProtocolSocketHandler = {
     /**
      * This handler gets called whenever the remote socket sent a request.
      *
@@ -58,17 +52,17 @@ export interface ProtocolSocketHandler {
         channelId: string,
         socket: ProtocolSocket,
     ): void;
-}
+};
 
 const DEFAULT_PROTOCOL_REQUEST_TIMEOUT = 10000;
-export interface ProtocolSocketOptions {
+export type ProtocolSocketOptions = {
     protocolRequestTimeout?: number;
-}
+};
 
 export default class ProtocolSocket {
     private readonly socket: WebSocketAdapter | ReconnectWebSocket;
 
-    private pendingRequests: { [id: string]: PendingRequest } = {};
+    private pendingRequests: Record<string, PendingRequest> = {};
     private handler: ProtocolSocketHandler;
     private protocolRequestTimeout: number;
 
@@ -95,7 +89,7 @@ export default class ProtocolSocket {
         return this.sendProtocolMessage({
             id: uuidv4(),
             channelId,
-            type: ProtocolMessageType.MESSAGE,
+            type: 'message',
             content: message,
         });
     }
@@ -114,7 +108,7 @@ export default class ProtocolSocket {
             await this.sendProtocolMessage({
                 id,
                 channelId,
-                type: ProtocolMessageType.REQUEST,
+                type: 'request',
                 content: message,
             });
         } catch (error) {
@@ -128,13 +122,13 @@ export default class ProtocolSocket {
         const message = this.validateMessage(rawMessage);
 
         switch (message.type) {
-            case ProtocolMessageType.MESSAGE:
+            case 'message':
                 this.handleMessage(message);
                 break;
-            case ProtocolMessageType.REQUEST:
+            case 'request':
                 void this.handleRequest(message);
                 break;
-            case ProtocolMessageType.RESPONSE:
+            case 'response':
                 this.handleResponse(message);
                 break;
             default:
@@ -159,14 +153,14 @@ export default class ProtocolSocket {
             await this.sendProtocolMessage({
                 id: message.id,
                 channelId: message.channelId,
-                type: ProtocolMessageType.RESPONSE,
+                type: 'response',
                 content: { result },
             });
         } catch (error) {
             await this.sendProtocolMessage({
                 id: message.id,
                 channelId: message.channelId,
-                type: ProtocolMessageType.RESPONSE,
+                type: 'response',
                 content: { error: asError(error).message },
             });
         }
@@ -196,11 +190,12 @@ export default class ProtocolSocket {
         if (!hasStrProperty(message, 'type')) {
             throw new Error('Received message without type');
         }
-        if (
-            !Object.values(ProtocolMessageType).includes(
-                message.type as ProtocolMessageType,
-            )
-        ) {
+        const types: ProtocolMessage['type'][] = [
+            'message',
+            'request',
+            'response',
+        ];
+        if (!types.includes(message.type as ProtocolMessage['type'])) {
             throw new Error(
                 `Received message with invalid type: ${message.type}`,
             );

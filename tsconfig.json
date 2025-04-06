@@ -1,0 +1,3 @@
+{
+    "extends": "@canale/starter/tsconfig/node"
+}

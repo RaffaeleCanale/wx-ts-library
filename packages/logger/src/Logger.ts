@@ -1,15 +1,15 @@
 import {
-    Level,
+    type Level,
     type Transport,
     fillTransportWithDefaults,
 } from './transport.js';
 
-export interface LogContainer {
+export type LogContainer = {
     timestamp: string;
     name: string;
     level: string;
     message: string;
-}
+};
 
 export default class Logger {
     private name: string;
@@ -21,19 +21,19 @@ export default class Logger {
     }
 
     verbose(message: string, extra?: unknown): void {
-        this.log(Level.VERBOSE, message, extra);
+        this.log('verbose', message, extra);
     }
 
     info(message: string, extra?: unknown): void {
-        this.log(Level.INFO, message, extra);
+        this.log('info', message, extra);
     }
 
     warn(message: string, extra?: unknown): void {
-        this.log(Level.WARN, message, extra);
+        this.log('warn', message, extra);
     }
 
     error(message: string, extra?: unknown): void {
-        this.log(Level.ERROR, message, extra);
+        this.log('error', message, extra);
     }
 
     log(level: Level, message: string, extra?: unknown): void {
@@ -55,11 +55,15 @@ export default class Logger {
     }
 
     private static getLevelIndex(level: Level): number {
-        const index = Object.values(Level).indexOf(level);
-        if (index < 0) {
-            throw new Error(`Level ${level} not found`);
+        switch (level) {
+            case 'verbose':
+                return 0;
+            case 'info':
+                return 1;
+            case 'warn':
+                return 2;
+            case 'error':
+                return 3;
         }
-
-        return index;
     }
 }

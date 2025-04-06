@@ -8,9 +8,7 @@ import type { Dependencies, Injectable } from './types.js';
  */
 export function injectLazy(target: any, key: keyof Dependencies): void {
     const injectable = target as Injectable;
-    if (!injectable._dependencies) {
-        injectable._dependencies = {};
-    }
+    injectable._dependencies ??= {};
     injectable._dependencies[key] = { key, lazy: true };
 }
 
@@ -21,9 +19,7 @@ export function injectLazy(target: any, key: keyof Dependencies): void {
  */
 export function inject(target: any, key: keyof Dependencies): void {
     const injectable = target as Injectable;
-    if (!injectable._dependencies) {
-        injectable._dependencies = {};
-    }
+    injectable._dependencies ??= {};
     injectable._dependencies[key] = { key, lazy: false };
 }
 

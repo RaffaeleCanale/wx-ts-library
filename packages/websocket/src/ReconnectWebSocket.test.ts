@@ -50,7 +50,7 @@ describe('ReconnectWebSocket', () => {
         if (FakeWs.instances.length !== 1) {
             throw new Error('Expected exactly one instance of FakeWs');
         }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
         return FakeWs.instances[0]!;
     }
 

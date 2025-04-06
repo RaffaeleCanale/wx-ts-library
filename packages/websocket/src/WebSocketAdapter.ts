@@ -3,22 +3,22 @@ import type NpmWebSocket from 'ws';
 import { WebSocketClosedError } from './WebSocketClosedError.js';
 import { asError } from './utils/Utils.js';
 
-export interface SocketEvents {
+export type SocketEvents = {
     message: unknown;
     // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     connect: void;
     error: Error;
     close: WebSocketClosedError;
-}
+};
 
 export type WebSocketImpl = new (address: string) => NpmWebSocket | WebSocket;
 
 function isNpmWebSocket(ws: NpmWebSocket | WebSocket): ws is NpmWebSocket {
-    return !!(ws as { on?: unknown }).on;
+    return Boolean((ws as { on?: unknown }).on);
 }
 
 export const DEV_OPTIONS = {
-    logger: null as null | ((...args: unknown[]) => void),
+    logger: undefined as undefined | ((...args: unknown[]) => void),
 };
 
 /**
@@ -47,8 +47,11 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
                 ws.onerror = reject;
                 ws.onclose = reject;
                 ws.onopen = (): void => {
+                    // eslint-disable-next-line no-restricted-syntax
                     ws.onerror = null;
+                    // eslint-disable-next-line no-restricted-syntax
                     ws.onclose = null;
+                    // eslint-disable-next-line no-restricted-syntax
                     ws.onopen = null;
                     resolve(new WebSocketAdapter(ws));
                 };

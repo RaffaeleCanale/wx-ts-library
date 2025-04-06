@@ -1,18 +1,18 @@
 import type { OutgoingHttpHeaders } from 'http';
 import type { BaseOptions } from './Response.js';
 
-export interface File {
+export type File = {
     type: 'file';
     path: string;
     status: number;
     headers: OutgoingHttpHeaders;
     fileOptions: SendFileOptions;
-}
+};
 
-export interface SendFileOptions {
+export type SendFileOptions = {
     dotfiles?: 'allow' | 'deny' | 'ignore';
     root?: string;
-}
+};
 
 export function file(
     path: string,

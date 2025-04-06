@@ -16,7 +16,7 @@ export function wrapError(err: unknown, errorMessage: string): Error {
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 function isConstructor<T>(arg: unknown): arg is new () => T {
-    return typeof arg === 'function' && !!arg.prototype;
+    return typeof arg === 'function' && Boolean(arg.prototype);
 }
 
 function isProvider<T = unknown>(arg: unknown): arg is Provider<T> {

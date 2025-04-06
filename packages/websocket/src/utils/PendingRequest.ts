@@ -19,7 +19,7 @@ export default class PendingRequest<T = unknown> {
             this.rejector = reject;
         });
 
-        if (timeout) {
+        if (timeout !== undefined) {
             this.timeout = setTimeout(() => {
                 this.reject(new Error('Request timed out'));
             }, timeout);

@@ -5,22 +5,27 @@ import ProtocolSocket, {
     type ProtocolSocketHandler,
 } from '../ProtocolSocket.js';
 
-export interface ProtocolSocketServerOptions {
+export type ProtocolSocketServerOptions = {
     port: number;
     protocolRequestTimeout?: number;
-}
+};
 
-export interface ProtocolServerHandler extends ProtocolSocketHandler {
+export type ProtocolServerHandler = {
     onSocketConnected(socket: ProtocolSocket): void;
-}
+} & ProtocolSocketHandler;
 
 export default class ProtocolSocketServer {
     private wss?: WebSocketServer;
+    private readonly handler: ProtocolServerHandler;
+    private readonly options: ProtocolSocketServerOptions;
 
     constructor(
-        private readonly handler: ProtocolServerHandler,
-        private readonly options: ProtocolSocketServerOptions,
-    ) {}
+        handler: ProtocolServerHandler,
+        options: ProtocolSocketServerOptions,
+    ) {
+        this.handler = handler;
+        this.options = options;
+    }
 
     start(): void {
         const { port } = this.options;

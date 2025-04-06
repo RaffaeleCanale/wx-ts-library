@@ -1,14 +1,9 @@
 import { formatDate, prettyPrint } from './formatUtils.js';
 import type { LogContainer } from './Logger.js';
 
-export enum Level {
-    VERBOSE = 'verbose',
-    INFO = 'info',
-    WARN = 'warn',
-    ERROR = 'error',
-}
+export type Level = 'verbose' | 'info' | 'warn' | 'error';
 
-export interface Transport {
+export type Transport = {
     log: (formattedMessage: string, extra?: unknown) => void;
     processMessage: (message: string, extra?: unknown) => string;
     dateFormatter: (date: Date) => string;
@@ -16,7 +11,7 @@ export interface Transport {
     levelFormatter: (level: string, index: number) => string;
     nameFormatter: (name: string) => string;
     level: Level;
-}
+};
 
 const defaultTransport: Transport = {
     log: (message: string, extra?: unknown) =>
@@ -30,15 +25,15 @@ const defaultTransport: Transport = {
         return level.substring(0, 4).toUpperCase();
     },
     nameFormatter: (name) => name,
-    level: Level.VERBOSE,
+    level: 'verbose',
 };
 
 export const globalTransports = {
     defaultTransport,
-    transports: [defaultTransport] as Partial<Transport>[],
+    transports: [defaultTransport],
 };
 
-export function setDefaultTransports(transports: Partial<Transport>[]): void {
+export function setDefaultTransports(transports: Transport[]): void {
     globalTransports.transports = transports;
 }
 

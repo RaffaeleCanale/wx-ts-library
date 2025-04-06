@@ -1,14 +1,14 @@
 {
     "name": "@canale/emitter",
-    "version": "7.0.25",
+    "version": "7.1.0",
     "description": "A simple, promise-based, event emitter",
     "author": "Raffaele Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
     "license": "MIT",
-    "main": "lib/index.js",
+    "main": "dist/index.js",
     "type": "module",
     "files": [
-        "lib"
+        "dist"
     ],
     "publishConfig": {
         "access": "public"
@@ -18,14 +18,12 @@
         "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
     },
     "scripts": {
-        "clean": "rm -rf lib/",
         "build": "tsc"
     },
     "dependencies": {
         "lodash.isequal": "^4.5.0"
     },
     "devDependencies": {
-        "@canale/eslint-config-wx": "workspace:^",
         "@types/lodash.isequal": "^4.5.6",
         "@types/node": "^22.7.7"
     }

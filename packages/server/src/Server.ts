@@ -8,16 +8,16 @@ import { Request } from './Request.js';
 import type { Method, Route, Routes } from './Route.js';
 import type { Response } from './response/Response.js';
 
-export interface ServerOptions {
+export type ServerOptions = {
     port: number;
     bodyLimit: string;
     prefix: string;
-}
+};
 
-interface Logger {
+type Logger = {
     info(message: string): void;
     error(message: string): void;
-}
+};
 
 function doSend(res: express.Response, response: Response): express.Response {
     switch (response.type) {
@@ -39,12 +39,10 @@ export class Server {
     private readonly app: express.Express;
     private readonly server: http.Server;
     private readonly port: number;
+    private readonly logger?: Logger;
 
-    constructor(
-        options: ServerOptions,
-        routes: Routes,
-        private readonly logger?: Logger,
-    ) {
+    constructor(options: ServerOptions, routes: Routes, logger?: Logger) {
+        this.logger = logger;
         this.port = options.port;
         this.app = express();
         this.server = http.createServer(this.app);
@@ -65,7 +63,7 @@ export class Server {
 
     start(): void {
         this.server.listen(this.port, (): void => {
-            const address = this.server.address() as AddressInfo | null;
+            const address = this.server.address() as AddressInfo | undefined;
             this.logger?.info(
                 `Started on port ${address ? String(address.port) : ''}`,
             );
