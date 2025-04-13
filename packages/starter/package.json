@@ -1,6 +1,6 @@
 {
     "name": "@canale/starter",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "bin": {
         "wx-lint": "./bin/check.sh",
         "wx-lint-fix": "./bin/fix.sh"
@@ -15,6 +15,9 @@
         "bin",
         "tsconfig"
     ],
+    "publishConfig": {
+        "access": "public"
+    },
     "exports": {
         "./eslint": "./dist/eslint/WxEslintConfig.js",
         "./prettier": "./dist/prettier/WxPrettierConfig.js",

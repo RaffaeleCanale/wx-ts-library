@@ -12,15 +12,6 @@ type WxEslintConfigOptions = {
      * List of globs to ignore when linting.
      */
     ignores?: string[];
-    /**
-     * When using '@tanstack/react-router', specify the folder where the routes are located.
-     *
-     * This will enable the correct file-naming convention for routes which are different
-     * than for regular files.
-     *
-     * @default 'src/routes'
-     */
-    routesFolder?: string;
 };
 
 export function wxEslintConfig({
@@ -42,7 +33,7 @@ export function wxEslintConfig({
             rules: mergeRules(ruleSets, 'globalRules'),
         },
         {
-            files: ['src/**/*'],
+            files: ['**/src/**/*'],
             rules: mergeRules(ruleSets, 'srcRules'),
         },
         {
