@@ -1,5 +1,6 @@
 import { EventEmitter } from '@canale/emitter';
 import { ReusableTimeout } from '@canale/timer';
+
 import { asError } from './utils/Utils.js';
 import type WebSocketAdapter from './WebSocketAdapter.js';
 import type { SocketEvents, WebSocketImpl } from './WebSocketAdapter.js';
@@ -50,11 +51,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
      * @param address Host address where this socket will try to connect to.
      * @param WebSocketImpl Base implementation of WebSocket (node or browser).
      */
-    constructor(
-        address: string,
-        webSocketImpl: WebSocketImpl,
-        options: ReconnectWebSocketOptions,
-    ) {
+    constructor(address: string, webSocketImpl: WebSocketImpl, options: ReconnectWebSocketOptions) {
         super();
         this.address = address;
         this.WebSocketImpl = webSocketImpl;
@@ -78,10 +75,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
         }
 
         try {
-            const ws = await WebSocketWrapper.connect(
-                this.address,
-                this.WebSocketImpl,
-            );
+            const ws = await WebSocketWrapper.connect(this.address, this.WebSocketImpl);
             ws.on('message', (message) => this.emit('message', message));
             ws.on('error', (error) => this.emit('error', error));
             ws.on('close', (error) => this.onClosed(error));
@@ -144,10 +138,7 @@ export default class ReconnectWebSocket extends EventEmitter<SocketEvents> {
             this.state = { state: 'disconnected' };
             this.emit(
                 'close',
-                new WebSocketClosedError(
-                    WsErrorCodes.CLOSE_ABNORMAL,
-                    'Max retries reached',
-                ),
+                new WebSocketClosedError(WsErrorCodes.CLOSE_ABNORMAL, 'Max retries reached'),
             );
             return;
         }

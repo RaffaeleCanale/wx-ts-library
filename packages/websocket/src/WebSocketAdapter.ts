@@ -1,11 +1,11 @@
 import { EventEmitter } from '@canale/emitter';
 import type NpmWebSocket from 'ws';
-import { WebSocketClosedError } from './WebSocketClosedError.js';
+
 import { asError } from './utils/Utils.js';
+import { WebSocketClosedError } from './WebSocketClosedError.js';
 
 export type SocketEvents = {
     message: unknown;
-    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     connect: void;
     error: Error;
     close: WebSocketClosedError;
@@ -29,10 +29,7 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
         return new WebSocketAdapter(ws);
     }
 
-    static connect(
-        address: string,
-        WebSocketImpl: WebSocketImpl,
-    ): Promise<WebSocketAdapter> {
+    static connect(address: string, WebSocketImpl: WebSocketImpl): Promise<WebSocketAdapter> {
         const ws = new WebSocketImpl(address);
         return new Promise((resolve, reject) => {
             if (isNpmWebSocket(ws)) {
@@ -47,11 +44,11 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
                 ws.onerror = reject;
                 ws.onclose = reject;
                 ws.onopen = (): void => {
-                    // eslint-disable-next-line no-restricted-syntax
+                    // oxlint-disable-next-line unicorn/no-null
                     ws.onerror = null;
-                    // eslint-disable-next-line no-restricted-syntax
+                    // oxlint-disable-next-line unicorn/no-null
                     ws.onclose = null;
-                    // eslint-disable-next-line no-restricted-syntax
+                    // oxlint-disable-next-line unicorn/no-null
                     ws.onopen = null;
                     resolve(new WebSocketAdapter(ws));
                 };
@@ -68,11 +65,8 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
         if (isNpmWebSocket(this.ws)) {
             this.ws.on('message', (data: string) => this.receive(data));
             this.ws.on('error', (error) => this.fail(error));
-            this.ws.on('close', (code, reason) =>
-                this.onClose(code, reason.toString()),
-            );
+            this.ws.on('close', (code, reason) => this.onClose(code, reason.toString()));
         } else {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.ws.onmessage = (event) => this.receive(event.data);
             this.ws.onerror = (event) => this.fail(new Error(event.message));
             this.ws.onclose = (event) => this.onClose(event.code, event.reason);
@@ -113,9 +107,7 @@ export default class WebSocketAdapter extends EventEmitter<SocketEvents> {
     }
 
     getAddress(): string {
-        // eslint-disable-next-line
         const { _socket } = this.ws as any;
-        // eslint-disable-next-line
         return `${_socket.remoteAddress}:${_socket.remotePort}`;
     }
 

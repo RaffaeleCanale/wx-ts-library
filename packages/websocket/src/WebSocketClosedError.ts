@@ -20,13 +20,8 @@ export class WebSocketClosedError extends Error {
     public readonly code: (typeof WsErrorCodes)[keyof typeof WsErrorCodes];
     public readonly reason: string;
 
-    constructor(
-        code: (typeof WsErrorCodes)[keyof typeof WsErrorCodes],
-        reason: string,
-    ) {
-        super(
-            `WebSocket closed with code ${String(code)} and reason: ${reason}`,
-        );
+    constructor(code: (typeof WsErrorCodes)[keyof typeof WsErrorCodes], reason: string) {
+        super(`WebSocket closed with code ${String(code)} and reason: ${reason}`);
         this.code = code;
         this.reason = reason;
     }

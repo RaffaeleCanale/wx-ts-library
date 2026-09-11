@@ -1,9 +1,7 @@
 import { WebSocketServer } from 'ws';
 
 import WebSocketWrapper from '../../WebSocketAdapter.js';
-import ProtocolSocket, {
-    type ProtocolSocketHandler,
-} from '../ProtocolSocket.js';
+import ProtocolSocket, { type ProtocolSocketHandler } from '../ProtocolSocket.js';
 
 export type ProtocolSocketServerOptions = {
     port: number;
@@ -19,10 +17,7 @@ export default class ProtocolSocketServer {
     private readonly handler: ProtocolServerHandler;
     private readonly options: ProtocolSocketServerOptions;
 
-    constructor(
-        handler: ProtocolServerHandler,
-        options: ProtocolSocketServerOptions,
-    ) {
+    constructor(handler: ProtocolServerHandler, options: ProtocolSocketServerOptions) {
         this.handler = handler;
         this.options = options;
     }
@@ -33,17 +28,11 @@ export default class ProtocolSocketServer {
             port,
         });
         // eslint-disable-next-line no-console
-        console.info(
-            `WebSocket server is running ws://localhost:${String(port)}`,
-        );
+        console.info(`WebSocket server is running ws://localhost:${String(port)}`);
         this.wss.on('connection', (ws) => {
             try {
                 const socket = WebSocketWrapper.fromWebSocket(ws);
-                const ps = new ProtocolSocket(
-                    socket,
-                    this.handler,
-                    this.options,
-                );
+                const ps = new ProtocolSocket(socket, this.handler, this.options);
                 this.handler.onSocketConnected(ps);
             } catch (error) {
                 // eslint-disable-next-line no-console

@@ -1,4 +1,5 @@
 import isEqual from 'lodash.isequal';
+
 import type { Listener, ListenerCallback, ListenerReference } from './Types.js';
 
 export default class EventEmitter<E> {
@@ -34,14 +35,10 @@ export default class EventEmitter<E> {
     emit<K extends keyof E>(key: K, parameter: E[K]): void {
         this.listeners
             .filter((listener) => isEqual(key, listener.key))
-            .forEach((listener) =>
-                listener.callback.call(listener.context, parameter),
-            );
+            .forEach((listener) => listener.callback.call(listener.context, parameter));
     }
 
     private removeListener(id: number): void {
-        this.listeners = this.listeners.filter(
-            (listener) => listener.id !== id,
-        );
+        this.listeners = this.listeners.filter((listener) => listener.id !== id);
     }
 }

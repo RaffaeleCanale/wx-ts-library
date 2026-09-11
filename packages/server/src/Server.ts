@@ -1,12 +1,14 @@
+import http from 'node:http';
+import type { AddressInfo } from 'node:net';
+
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
-import http from 'http';
-import type { AddressInfo } from 'net';
+
 import { ApiError } from './ApiError.js';
 import { Request } from './Request.js';
-import type { Method, Route, Routes } from './Route.js';
 import type { Response } from './response/Response.js';
+import type { Method, Route, Routes } from './Route.js';
 
 export type ServerOptions = {
     port: number;
@@ -64,9 +66,7 @@ export class Server {
     start(): void {
         this.server.listen(this.port, (): void => {
             const address = this.server.address() as AddressInfo | undefined;
-            this.logger?.info(
-                `Started on port ${address ? String(address.port) : ''}`,
-            );
+            this.logger?.info(`Started on port ${address ? String(address.port) : ''}`);
         });
     }
 
@@ -84,20 +84,13 @@ export class Server {
         return router;
     }
 
-    private async handle(
-        route: Route,
-        req: express.Request,
-        res: express.Response,
-    ): Promise<void> {
+    private async handle(route: Route, req: express.Request, res: express.Response): Promise<void> {
         try {
             const request = Request.fromExpress(req);
 
             const response = await route(request);
 
-            doSend(
-                res.status(response.status).header(response.headers),
-                response,
-            );
+            doSend(res.status(response.status).header(response.headers), response);
         } catch (error) {
             const apiError = ApiError.from(error);
 

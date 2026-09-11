@@ -1,8 +1,4 @@
-import type {
-    Dependencies,
-    ValueOrFactory,
-    ValueOrFactoryObj,
-} from './types.js';
+import type { Dependencies, ValueOrFactory, ValueOrFactoryObj } from './types.js';
 import { getValueOf } from './utils.js';
 
 const dependenciesSingleton: Partial<ValueOrFactoryObj<Dependencies>> = {};
@@ -12,7 +8,6 @@ const dependenciesSingleton: Partial<ValueOrFactoryObj<Dependencies>> = {};
  */
 export function clear(): void {
     for (const dep of Object.getOwnPropertyNames(dependenciesSingleton)) {
-        // eslint-disable-next-line
         delete (dependenciesSingleton as any)[dep];
     }
 }
@@ -35,9 +30,7 @@ export function register<K extends keyof Dependencies>(
  *
  * @param dependencies Map of dependencies
  */
-export function registerAll(
-    dependencies: Partial<ValueOrFactoryObj<Dependencies>>,
-): void {
+export function registerAll(dependencies: Partial<ValueOrFactoryObj<Dependencies>>): void {
     Object.assign(dependenciesSingleton, dependencies);
 }
 
@@ -46,12 +39,8 @@ export function registerAll(
  *
  * @param key Key of the dependency
  */
-export function getDependency<K extends keyof Dependencies>(
-    key: K,
-): Dependencies[K] {
-    const currentValue = dependenciesSingleton[key] as
-        | ValueOrFactory<Dependencies[K]>
-        | undefined;
+export function getDependency<K extends keyof Dependencies>(key: K): Dependencies[K] {
+    const currentValue = dependenciesSingleton[key] as ValueOrFactory<Dependencies[K]> | undefined;
     if (!currentValue) {
         throw new Error(`Dependency ${key as string} not found`);
     }

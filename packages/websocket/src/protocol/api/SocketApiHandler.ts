@@ -1,5 +1,6 @@
 import type { Method, Route, Routes } from '@canale/server';
 import { ApiError, Request } from '@canale/server';
+
 import type { ProtocolSocketHandler } from '../ProtocolSocket.js';
 import { ApiMessageParse } from './ApiMessage.js';
 import type { ApiResponse } from './ApiResponse.js';
@@ -17,9 +18,7 @@ function parsePathParams(
 
     const params: Record<string, string> = {};
     for (let i = 0; i < defSplit.length; i += 1) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const definition = defSplit[i]!;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const actual = actualSplit[i]!;
 
         if (definition.startsWith(':')) {
@@ -43,8 +42,7 @@ export class SocketApiHandler implements ProtocolSocketHandler {
     }
 
     async fulfillRequest(messageObj: unknown): Promise<ApiResponse> {
-        const { path, method, body, headers, query } =
-            ApiMessageParse.parse(messageObj);
+        const { path, method, body, headers, query } = ApiMessageParse.parse(messageObj);
 
         const { route, params } = this.findRouteFor(path, method);
 

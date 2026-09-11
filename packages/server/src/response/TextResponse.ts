@@ -1,4 +1,5 @@
-import type { OutgoingHttpHeaders } from 'http';
+import type { OutgoingHttpHeaders } from 'node:http';
+
 import type { BaseOptions } from './Response.js';
 
 export type Text = {
@@ -15,7 +16,7 @@ export function text(data: string, options?: BaseOptions): Text {
         status: options?.status ?? 200,
         headers: {
             'Content-Type': 'text/plain',
-            ...(options?.headers ?? {}),
+            ...options?.headers,
         },
     };
 }

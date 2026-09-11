@@ -1,4 +1,5 @@
-import type { OutgoingHttpHeaders } from 'http';
+import type { OutgoingHttpHeaders } from 'node:http';
+
 import type { Data } from './DataResponse.js';
 import type { File } from './FileResponse.js';
 import type { Json } from './JsonResponse.js';

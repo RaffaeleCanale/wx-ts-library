@@ -1,8 +1,4 @@
-import {
-    type Level,
-    type Transport,
-    fillTransportWithDefaults,
-} from './transport.js';
+import { type Level, type Transport, fillTransportWithDefaults } from './transport.js';
 
 export type LogContainer = {
     timestamp: string;

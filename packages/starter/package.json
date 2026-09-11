@@ -1,51 +1,42 @@
 {
     "name": "@canale/starter",
-    "version": "1.0.1",
-    "bin": {
-        "wx-lint": "./bin/check.sh",
-        "wx-lint-fix": "./bin/fix.sh"
-    },
-    "type": "module",
-    "scripts": {
-        "inspect": "eslint --inspect-config",
-        "build": "tsc -b"
-    },
+    "version": "2.0.0",
     "files": [
         "dist",
-        "bin",
         "tsconfig"
     ],
-    "publishConfig": {
-        "access": "public"
-    },
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "exports": {
-        "./eslint": "./dist/eslint/WxEslintConfig.js",
-        "./prettier": "./dist/prettier/WxPrettierConfig.js",
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
         "./tsconfig/web": "./tsconfig/tsconfig.web.json",
         "./tsconfig/node": "./tsconfig/tsconfig.node.json",
         "./tsconfig/lib-web": "./tsconfig/tsconfig.lib-web.json",
         "./tsconfig/lib-node": "./tsconfig/tsconfig.lib-node.json"
     },
-    "dependencies": {
-        "@eslint/js": "^9.24.0",
-        "@typescript-eslint/parser": "^8.29.0",
-        "eslint": "^9.24.0",
-        "eslint-config-prettier": "^10.1.1",
-        "eslint-import-resolver-typescript": "^4.3.1",
-        "eslint-plugin-check-file": "^3.1.0",
-        "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-only-warn": "^1.1.0",
-        "globals": "^16.0.0",
-        "jiti": "^2.4.2",
-        "knip": "^5.46.5",
-        "prettier": "^3.5.3",
-        "typescript-eslint": "^8.29.0"
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "build": "tsc -b",
+        "test": "vitest run"
     },
     "devDependencies": {
-        "@eslint/config-inspector": "^1.0.2",
-        "@types/node": "^22.14.0"
+        "@types/node": "^22.20.2",
+        "typescript": "^7.0.2",
+        "vite-plus": "^0.3.1",
+        "vitest": "^5.0.0"
     },
     "peerDependencies": {
-        "typescript": "^5.8.2"
+        "vite-plus": ">=0.1.0"
+    },
+    "peerDependenciesMeta": {
+        "vite-plus": {
+            "optional": true
+        }
     }
 }

@@ -3,12 +3,14 @@
     "type": "module",
     "scripts": {
         "build": "pnpm -r run build",
-        "lint": "wx-lint --skip-knip",
+        "lint": "vp check",
         "publish": "pnpm build && pnpm publish --no-git-checks -r"
     },
     "devDependencies": {
         "@canale/starter": "workspace:*",
-        "typescript": "^5.8.3",
-        "vitest": "^3.1.1"
+        "@types/node": "^22.20.2",
+        "typescript": "^7.0.2",
+        "vite-plus": "^0.3.1",
+        "vitest": "^5.0.0"
     }
 }

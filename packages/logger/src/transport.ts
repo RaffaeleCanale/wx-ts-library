@@ -19,8 +19,7 @@ const defaultTransport: Transport = {
         console.log(message, prettyPrint(extra)),
     processMessage: (message: string) => message,
     dateFormatter: formatDate,
-    messageFormatter: (info) =>
-        `${info.timestamp} ${info.level} [${info.name}] - ${info.message}`,
+    messageFormatter: (info) => `${info.timestamp} ${info.level} [${info.name}] - ${info.message}`,
     levelFormatter: (level) => {
         return level.substring(0, 4).toUpperCase();
     },
@@ -37,9 +36,7 @@ export function setDefaultTransports(transports: Transport[]): void {
     globalTransports.transports = transports;
 }
 
-export function fillTransportWithDefaults(
-    transport: Partial<Transport>,
-): Transport {
+export function fillTransportWithDefaults(transport: Partial<Transport>): Transport {
     return {
         ...defaultTransport,
         ...transport,

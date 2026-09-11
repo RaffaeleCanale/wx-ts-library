@@ -7,14 +7,11 @@ export function wrapError(err: unknown, errorMessage: string): Error {
 
     e.original = error;
     if (e.stack) {
-        e.stack = `${e.stack.split('\n').slice(0, 2).join('\n')}\n${
-            error.stack ?? ''
-        }`;
+        e.stack = `${e.stack.split('\n').slice(0, 2).join('\n')}\n${error.stack ?? ''}`;
     }
     return e;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 function isConstructor<T>(arg: unknown): arg is new () => T {
     return typeof arg === 'function' && Boolean(arg.prototype);
 }

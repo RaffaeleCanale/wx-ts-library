@@ -10,7 +10,7 @@ export const ApiMessageParse = z.object({
         z.literal('delete'),
     ]),
     body: z.unknown(),
-    query: z.record(z.array(z.string())),
-    headers: z.record(z.string()),
+    query: z.record(z.string(), z.array(z.string())),
+    headers: z.record(z.string(), z.string()),
 });
 export type ApiMessage = z.infer<typeof ApiMessageParse>;

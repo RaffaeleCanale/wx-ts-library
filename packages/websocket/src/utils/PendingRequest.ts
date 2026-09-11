@@ -40,9 +40,7 @@ export default class PendingRequest<T = unknown> {
 
     private settle(): void {
         if (this.isRejected || this.isResolved) {
-            throw new Error(
-                'Request cannot be rejected, it was already settled',
-            );
+            throw new Error('Request cannot be rejected, it was already settled');
         }
         if (this.timeout) {
             clearTimeout(this.timeout);

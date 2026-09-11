@@ -2,40 +2,40 @@
     "name": "@canale/websocket",
     "version": "7.1.0",
     "description": "> TODO: description",
-    "author": "Canale <raffaelecanale@gmail.com>",
     "homepage": "https://github.com/RaffaeleCanale/wx-ts-library#readme",
-    "license": "MIT",
-    "main": "dist/index.js",
-    "type": "module",
-    "files": [
-        "dist"
-    ],
-    "publishConfig": {
-        "access": "public"
+    "bugs": {
+        "url": "https://github.com/RaffaeleCanale/wx-ts-library/issues"
     },
+    "license": "MIT",
+    "author": "Canale <raffaelecanale@gmail.com>",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
     },
+    "files": [
+        "dist"
+    ],
+    "type": "module",
+    "main": "dist/index.js",
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "build": "tsc",
-        "test": "vitest"
-    },
-    "bugs": {
-        "url": "https://github.com/RaffaeleCanale/wx-ts-library/issues"
+        "test": "vitest run"
     },
     "dependencies": {
         "@canale/emitter": "workspace:*",
         "@canale/timer": "workspace:*",
-        "uuid": "^9.0.0",
-        "zod": "^3.21.4"
+        "uuid": "^14.0.2",
+        "zod": "^4.6.2"
     },
     "devDependencies": {
-        "@types/express": "^4.17.17",
-        "@types/node": "^22.7.7",
-        "@types/uuid": "^9.0.0",
-        "@types/websocket": "^1.0.5",
-        "@types/ws": "^8.5.3"
+        "@types/express": "^5.0.6",
+        "@types/node": "^22.20.2",
+        "@types/uuid": "^11.0.0",
+        "@types/websocket": "^1.0.10",
+        "@types/ws": "^8.18.1"
     },
     "peerDependencies": {
         "@canale/server": "^5.0.8",

@@ -1,4 +1,5 @@
-import type { OutgoingHttpHeaders } from 'http';
+import type { OutgoingHttpHeaders } from 'node:http';
+
 import type { BaseOptions } from './Response.js';
 
 export type Json<T> = {
@@ -15,7 +16,7 @@ export function json<T>(data: T, options?: BaseOptions): Json<T> {
         status: options?.status ?? 200,
         headers: {
             'Content-Type': 'application/json',
-            ...(options?.headers ?? {}),
+            ...options?.headers,
         },
     };
 }

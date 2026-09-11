@@ -1,4 +1,5 @@
 import isEqual from 'lodash.isequal';
+
 import type { Listener, ListenerCallback, ListenerReference } from './Types.js';
 
 export default class PromiseEventEmitter<E> {
@@ -31,21 +32,14 @@ export default class PromiseEventEmitter<E> {
         }
     }
 
-    emit<K extends keyof E>(
-        key: K,
-        parameter: E[K],
-    ): Promise<PromiseSettledResult<unknown>[]> {
+    emit<K extends keyof E>(key: K, parameter: E[K]): Promise<PromiseSettledResult<unknown>[]> {
         const promises = this.listeners
             .filter((listener) => isEqual(key, listener.key))
-            .map((listener) =>
-                listener.callback.call(listener.context, parameter),
-            );
+            .map((listener) => listener.callback.call(listener.context, parameter));
         return Promise.allSettled(promises);
     }
 
     private removeListener(id: number): void {
-        this.listeners = this.listeners.filter(
-            (listener) => listener.id !== id,
-        );
+        this.listeners = this.listeners.filter((listener) => listener.id !== id);
     }
 }

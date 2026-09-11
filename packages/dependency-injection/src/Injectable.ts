@@ -11,7 +11,6 @@ function apply(obj: Injectable): void {
                 },
             });
         } else {
-            // eslint-disable-next-line
             (obj as any)[property] = getDependency(dep.key);
         }
     });
@@ -22,23 +21,17 @@ function apply(obj: Injectable): void {
  *
  * Adds a constructor hook that allows to initialize all the `@inject` dependencies.
  */
-// eslint-disable-next-line
 export function injectable(target: { new (...args: any[]): any }): any {
     // save a reference to the original constructor
     const original = target;
 
     return class InjectableClass extends original {
-        // eslint-disable-next-line
         constructor(...args: any[]) {
-            // eslint-disable-next-line
             super(...args);
             try {
                 apply(this);
             } catch (error) {
-                throw wrapError(
-                    error,
-                    `Failed to init dependencies for ${target.name}`,
-                );
+                throw wrapError(error, `Failed to init dependencies for ${target.name}`);
             }
         }
     };

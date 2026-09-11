@@ -1,5 +1,6 @@
 import { seconds } from '@canale/timer';
 import { beforeEach, describe, expect, test, vi, type Mock } from 'vitest';
+
 import ReconnectWebSocket from './ReconnectWebSocket.js';
 import { WebSocketClosedError } from './WebSocketClosedError.js';
 
@@ -33,7 +34,6 @@ describe('ReconnectWebSocket', () => {
         onConnect = vi.fn();
         onMessage = vi.fn();
 
-        // eslint-disable-next-line
         socket = new ReconnectWebSocket('', FakeWs as any, {
             reconnectDelay: seconds(10),
             maxRetries: 3,
@@ -99,7 +99,7 @@ describe('ReconnectWebSocket', () => {
         // GIVEN
         const promise = socket.connect();
         wsInstance().onerror?.(new Error('Something went wrong'));
-        await promise;
+        await expect(promise).rejects.toThrow('Something went wrong');
 
         expect(socket.getState()).toEqual('reconnecting');
         FakeWs.instances = [];
@@ -125,9 +125,7 @@ describe('ReconnectWebSocket', () => {
         // THEN
         expect(onClose).toHaveBeenCalledTimes(0);
         expect(onError).toHaveBeenCalledTimes(1);
-        expect(onError).toHaveBeenCalledWith(
-            new WebSocketClosedError(1001, 'closure'),
-        );
+        expect(onError).toHaveBeenCalledWith(new WebSocketClosedError(1001, 'closure'));
         expect(socket.getState()).toEqual('reconnecting');
         FakeWs.instances = [];
 

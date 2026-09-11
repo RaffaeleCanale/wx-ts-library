@@ -22,9 +22,11 @@
 
         // ENVIRONMENT
         "lib": ["ES2024"],
+        "types": ["node"],
         "resolveJsonModule": true,
 
         // OUTPUT
+        "rootDir": "${configDir}/src",
         "outDir": "${configDir}/dist",
         "module": "NodeNext",
         "moduleResolution": "NodeNext",

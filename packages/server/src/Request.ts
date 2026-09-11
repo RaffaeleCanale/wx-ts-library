@@ -1,8 +1,9 @@
+import type { IncomingHttpHeaders } from 'node:http';
+
 import type { Request as ExpressRequest } from 'express';
-import type { IncomingHttpHeaders } from 'http';
 import type { z } from 'zod';
 
-export class Request<Params = Record<string, string>> {
+export class Request<Params = Record<string, string | string[]>> {
     static fromExpress(req: ExpressRequest): Request {
         function normalizedQuery(): Record<string, string[]> {
             const query: Record<string, string[]> = {};
@@ -20,12 +21,7 @@ export class Request<Params = Record<string, string>> {
             return query;
         }
 
-        return new Request(
-            req.body,
-            normalizedQuery(),
-            req.params,
-            req.headers,
-        );
+        return new Request(req.body, normalizedQuery(), req.params, req.headers);
     }
 
     private readonly bodyValue: unknown;

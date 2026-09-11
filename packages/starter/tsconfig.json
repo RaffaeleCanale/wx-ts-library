@@ -1,8 +1,9 @@
 {
     "extends": "./tsconfig/tsconfig.lib-node.json",
     "compilerOptions": {
+        "rootDir": "${configDir}/src",
         "sourceMap": false,
         "declarationMap": false
     },
-    "exclude": ["**/*.test.ts", "src/eslint/example-files/**/*"]
+    "exclude": ["**/*.test.ts"]
 }

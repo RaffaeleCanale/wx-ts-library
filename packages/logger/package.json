@@ -2,13 +2,13 @@
     "name": "@canale/logger",
     "version": "7.1.0",
     "description": "A simple, minimalistic logger",
-    "author": "Canale <raffaelecanale@gmail.com>",
     "license": "MIT",
-    "main": "dist/index.js",
-    "type": "module",
+    "author": "Canale <raffaelecanale@gmail.com>",
     "files": [
         "dist"
     ],
+    "type": "module",
+    "main": "dist/index.js",
     "publishConfig": {
         "access": "public"
     },
@@ -16,6 +16,6 @@
         "build": "tsc"
     },
     "devDependencies": {
-        "@types/node": "^22.7.7"
+        "@types/node": "^22.20.2"
     }
 }

@@ -5,10 +5,7 @@ export function asError(error: unknown): Error {
     return new Error(String(error));
 }
 
-export function hasStrProperty<K extends string>(
-    obj: unknown,
-    key: K,
-): obj is Record<K, string> {
+export function hasStrProperty<K extends string>(obj: unknown, key: K): obj is Record<K, string> {
     const value = (obj as Record<string, unknown>)[key];
     return Boolean(value) && typeof value === 'string';
 }

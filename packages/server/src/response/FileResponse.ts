@@ -1,4 +1,5 @@
-import type { OutgoingHttpHeaders } from 'http';
+import type { OutgoingHttpHeaders } from 'node:http';
+
 import type { BaseOptions } from './Response.js';
 
 export type File = {
@@ -14,17 +15,14 @@ export type SendFileOptions = {
     root?: string;
 };
 
-export function file(
-    path: string,
-    options?: BaseOptions & SendFileOptions,
-): File {
+export function file(path: string, options?: BaseOptions & SendFileOptions): File {
     return {
         type: 'file',
         path,
         status: options?.status ?? 200,
         headers: {
             'Content-Type': 'application/octet-stream',
-            ...(options?.headers ?? {}),
+            ...options?.headers,
         },
         fileOptions: {
             dotfiles: options?.dotfiles,

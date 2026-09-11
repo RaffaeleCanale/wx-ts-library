@@ -1,4 +1,5 @@
-import type { OutgoingHttpHeaders } from 'http';
+import type { OutgoingHttpHeaders } from 'node:http';
+
 import type { BaseOptions } from './Response.js';
 
 export type Data = {
@@ -15,7 +16,7 @@ export function data(data: unknown, options?: BaseOptions): Data {
         status: options?.status ?? 200,
         headers: {
             'content-type': 'application/octet-stream',
-            ...(options?.headers ?? {}),
+            ...options?.headers,
         },
     };
 }

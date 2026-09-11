@@ -25,6 +25,7 @@
         "jsx": "react-jsx",
 
         // OUTPUT
+        "rootDir": "${configDir}/src",
         "outDir": "${configDir}/dist",
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
