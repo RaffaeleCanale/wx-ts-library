@@ -2,7 +2,11 @@ import { wxStarter } from '@canale/starter';
 import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
-    plugins: [wxStarter()],
+    plugins: [
+        wxStarter({
+            lint: { applicationType: 'workspace', packagesFolder: 'packages', packages: {} },
+        }),
+    ],
     test: {
         exclude: ['**/backup/**', '**/node_modules/**', '**/dist/**'],
     },

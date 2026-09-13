@@ -1,181 +1,124 @@
 import type { OxlintConfig, OxlintOverride } from 'vite-plus/lint';
 
-export type WxLintOptions = {
-    /**
-     * Additional globs to ignore when linting.
-     */
-    ignores?: string[];
-    /**
-     * Oxlint ignorePatterns alias.
-     */
-    ignorePatterns?: string[];
-    /**
-     * Additional rules or rule overrides.
-     */
-    rules?: OxlintConfig['rules'];
-    /**
-     * Additional file-specific overrides.
-     */
-    overrides?: OxlintOverride[];
-    /**
-     * Additional Oxlint options.
-     */
-    options?: OxlintConfig['options'];
-};
+import { RulesBase } from './RulesBase.js';
+import { RulesNode } from './RulesNode.js';
+import { RulesVitest } from './RulesVitest.js';
+import { RulesVue } from './RulesVue.js';
 
-export const defaultWxLintRules: NonNullable<OxlintConfig['rules']> = {
-    // TypeScript & Logic Rules
-    'typescript/strict-boolean-expressions': [
-        'error',
-        {
-            allowString: true,
-            allowNullableString: true,
-            allowNumber: false,
-            allowNullableNumber: false,
-            allowNullableEnum: false,
-            allowAny: false,
-            allowNullableObject: true,
-            allowNullableBoolean: true,
-        },
-    ],
-    'typescript/no-confusing-void-expression': ['error', { ignoreArrowShorthand: true }],
-    'typescript/unbound-method': 'off',
-    'typescript/no-deprecated': 'off',
-    'typescript/no-misused-promises': [
-        'error',
-        {
-            checksVoidReturn: {
-                attributes: false,
+export type WxLintOptions =
+    | {
+          applicationType: 'node' | 'vue';
+      }
+    | {
+          applicationType: 'workspace';
+          packagesFolder: string;
+          packages: Record<string, { applicationType: 'node' | 'vue' }>;
+      };
+
+function getOverrides(options: WxLintOptions): OxlintOverride[] {
+    if (options.applicationType === 'workspace') {
+        return [
+            {
+                // Workspace-root
+                files: ['**/*'],
+                excludeFiles: [`${options.packagesFolder}/**/*`],
+                ...RulesNode,
             },
-            checksConditionals: true,
-            checksSpreads: true,
-        },
-    ],
-    'typescript/no-unused-vars': [
-        'error',
+            ...Object.entries(options.packages).flatMap(([packageName, packageConfig]) =>
+                getProjectOverrides(
+                    packageConfig.applicationType,
+                    `${options.packagesFolder}/${packageName}/`,
+                ),
+            ),
+        ];
+    }
+
+    return getProjectOverrides(options.applicationType);
+}
+
+function getProjectOverrides(applicationType: 'node' | 'vue', prefix = ''): OxlintOverride[] {
+    return [
         {
-            argsIgnorePattern: '^_$',
-            caughtErrorsIgnorePattern: '^_$',
-            destructuredArrayIgnorePattern: '^_$',
-            varsIgnorePattern: '^_$',
+            // SRC
+            files: [`${prefix}src/**/*`],
+            ...(applicationType === 'vue' ? RulesVue : RulesNode),
         },
-    ],
-    'typescript/consistent-type-definitions': ['error', 'type'],
-    'typescript/no-empty-function': 'off',
-    'typescript/consistent-type-assertions': [
-        'error',
         {
-            assertionStyle: 'as',
-            objectLiteralTypeAssertions: 'never',
-            arrayLiteralTypeAssertions: 'never',
+            // Non-src
+            files: [`${prefix}**/*`],
+            excludeFiles: [`${prefix}src/**/*`],
+            ...RulesNode,
         },
-    ],
-    'typescript/no-unnecessary-condition': 'error',
-    'typescript/await-thenable': 'error',
-    'typescript/no-floating-promises': 'error',
-    'typescript/no-for-in-array': 'error',
-
-    // Stylistic & Quality Rules
-    curly: 'error',
-    eqeqeq: 'error',
-    'no-console': 'error',
-    'func-style': ['error', 'declaration', { allowArrowFunctions: false }],
-    'no-implicit-coercion': 'error',
-
-    // Null safety - ban null in favor of undefined
-    'unicorn/no-null': 'error',
-    'typescript/no-restricted-types': [
-        'error',
         {
-            types: {
-                null: {
-                    message: 'Use undefined instead',
-                    fixWith: 'undefined',
-                },
-            },
+            // Tests
+            files: [`${prefix}**/*.test.{ts,tsx}`, `${prefix}/**/test-utils/*.{ts,tsx}`],
+            ...RulesVitest,
         },
-    ],
-
-    // File naming conventions
-    'unicorn/filename-case': [
-        'error',
-        {
-            case: 'pascalCase',
-            ignore: ['index\\..*', '.*\\.config\\..*', '.*\\.d\\.ts$'],
-        },
-    ],
-
-    // Modern JS & Unicorn recommendations
-    'unicorn/prefer-node-protocol': 'error',
-    'unicorn/no-await-in-promise-methods': 'error',
-    'unicorn/prefer-array-find': 'error',
-    'unicorn/prefer-array-flat': 'error',
-    'unicorn/prefer-array-flat-map': 'error',
-    'unicorn/prefer-string-starts-ends-with': 'error',
-    'oxc/no-accumulating-spread': 'error',
-    'oxc/only-used-in-recursion': 'error',
-};
-
-export const defaultWxLintOverrides: OxlintOverride[] = [
-    {
-        files: ['**/src/**/*'],
-        rules: {
-            'import/no-default-export': 'error',
-        },
-    },
-    {
-        files: ['**/*.d.ts'],
-        rules: {
-            'import/no-default-export': 'off',
-            'typescript/consistent-type-definitions': 'off',
-            'unicorn/filename-case': ['error', { case: 'kebabCase' }],
-        },
-    },
-    {
-        files: ['**/*.test.{ts,tsx}', '**/test-utils/*.{ts,tsx}'],
-        rules: {
-            'typescript/no-explicit-any': 'off',
-            'typescript/no-non-null-assertion': 'off',
-            'typescript/no-unsafe-assignment': 'off',
-            'typescript/no-unsafe-call': 'off',
-            'typescript/no-unsafe-member-access': 'off',
-            'typescript/consistent-type-assertions': 'off',
-            'typescript/restrict-template-expressions': 'off',
-            'no-console': 'off',
-            'vitest/consistent-test-it': ['error', { fn: 'test', withinDescribe: 'test' }],
-        },
-    },
-];
+    ];
+}
 
 /**
  * Default Oxlint configuration for wx projects in Vite+.
  */
-export function wxLintConfig(options: WxLintOptions = {}): OxlintConfig {
+export function wxLintConfig(userConfig: OxlintConfig, options: WxLintOptions): OxlintConfig {
     return {
-        plugins: ['typescript', 'unicorn', 'oxc', 'import', 'vitest'],
+        ...userConfig,
+
+        plugins: [...(RulesBase.plugins ?? []), ...(userConfig.plugins ?? [])],
+
         env: {
-            browser: true,
-            node: true,
-            es2024: true,
+            ...RulesBase.env,
+            ...userConfig.env,
         },
+
+        categories: {
+            correctness: 'error',
+            // style: 'error',
+            nursery: 'error',
+            // pedantic: 'error',
+            // perf: 'error',
+            // restriction: 'error',
+            suspicious: 'error',
+            ...userConfig.categories,
+        },
+
         options: {
             typeAware: true,
             typeCheck: true,
             reportUnusedDisableDirectives: 'error',
-            respectEslintDisableDirectives: true,
-            ...options.options,
+            ...userConfig.options,
         },
+
         ignorePatterns: [
             '**/dist/**',
             '**/node_modules/**',
             '**/*.gen.ts',
-            ...(options.ignores ?? []),
-            ...(options.ignorePatterns ?? []),
+            ...(userConfig.ignorePatterns ?? []),
         ],
+
         rules: {
-            ...defaultWxLintRules,
-            ...options.rules,
+            ...RulesBase.rules,
+            ...userConfig.rules,
         },
-        overrides: [...defaultWxLintOverrides, ...(options.overrides ?? [])],
+
+        overrides: [
+            ...getOverrides(options),
+            {
+                // Config files
+                files: ['**/*.config.{ts,js,json}'],
+                excludeFiles: ['**/src/**'],
+                rules: {
+                    'import/no-default-export': 'off',
+                },
+            },
+            {
+                // Ambient declaration files
+                files: ['**/*.d.ts'],
+                rules: {
+                    'typescript/consistent-type-definitions': 'off',
+                },
+            },
+            ...(userConfig.overrides ?? []),
+        ],
     };
 }

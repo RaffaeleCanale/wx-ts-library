@@ -1,18 +1,22 @@
 import type { Plugin, UserConfig } from 'vite-plus';
 
 import { wxFmtConfig } from '../fmt/WxFmtConfig.js';
-import { wxLintConfig } from '../lint/WxLintConfig.js';
+import { wxLintConfig, type WxLintOptions } from '../lint/WxLintConfig.js';
+
+type WxStarterOptions = {
+    lint: WxLintOptions;
+};
 
 /**
  * Vite+ plugin that configures Oxlint and Oxfmt according to wx standards.
  * Supports auto-merging with consumer-provided `lint` and `fmt` blocks.
  */
-export function wxStarter(): Plugin {
+export function wxStarter(options: WxStarterOptions): Plugin {
     return {
         name: '@canale/starter',
         config(userConfig: UserConfig = {}): UserConfig {
             return {
-                lint: wxLintConfig(userConfig.lint),
+                lint: wxLintConfig(userConfig.lint ?? {}, options.lint),
                 fmt: wxFmtConfig(userConfig.fmt),
             };
         },
