@@ -13,7 +13,7 @@ type WxStarterOptions = {
  */
 export function wxStarter(options: WxStarterOptions): Plugin {
     return {
-        name: '@canale/starter',
+        name: '@RaffaeleCanale/starter',
         config(userConfig: UserConfig = {}): UserConfig {
             return {
                 lint: wxLintConfig(userConfig.lint ?? {}, options.lint),

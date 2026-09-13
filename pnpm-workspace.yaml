@@ -2,3 +2,6 @@ packages:
     - 'packages/*'
 allowBuilds:
     esbuild: false
+registries:
+    default: https://registry.npmjs.org/
+    '@RaffaeleCanale': https://npm.pkg.github.com/

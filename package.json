@@ -4,10 +4,10 @@
     "scripts": {
         "build": "pnpm -r run build",
         "lint": "vp check",
-        "publish": "pnpm build && pnpm publish --no-git-checks -r"
+        "publish": "pnpm build && pnpm publish -r --no-git-checks"
     },
     "devDependencies": {
-        "@canale/starter": "workspace:*",
+        "@RaffaeleCanale/starter": "workspace:*",
         "@types/node": "^22.20.2",
         "typescript": "^7.0.2",
         "vite-plus": "^0.3.1",

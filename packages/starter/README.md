@@ -1,4 +1,4 @@
-# @canale/starter
+# @RaffaeleCanale/starter
 
 Shared Vite+ tooling configuration providing linting (Oxlint) and formatting (Oxfmt) configurations for wx projects.
 
@@ -7,7 +7,7 @@ Shared Vite+ tooling configuration providing linting (Oxlint) and formatting (Ox
 The consumer project should have `vite-plus` installed:
 
 ```bash
-pnpm add -D vite-plus @canale/starter
+pnpm add -D vite-plus @RaffaeleCanale/starter
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ In your `vite.config.ts`:
 
 ```ts
 import { defineConfig } from 'vite-plus';
-import wxStarter from '@canale/starter';
+import wxStarter from '@RaffaeleCanale/starter';
 
 export default defineConfig({
     plugins: [wxStarter()],
@@ -29,7 +29,7 @@ You can pass options to customize linting or formatting:
 
 ```ts
 import { defineConfig } from 'vite-plus';
-import wxStarter from '@canale/starter';
+import wxStarter from '@RaffaeleCanale/starter';
 
 export default defineConfig({
     plugins: [
@@ -52,7 +52,7 @@ export default defineConfig({
 
 ```ts
 import { defineConfig } from 'vite-plus';
-import { wxConfig } from '@canale/starter';
+import { wxConfig } from '@RaffaeleCanale/starter';
 
 export default defineConfig(
     wxConfig({
@@ -66,8 +66,8 @@ export default defineConfig(
 You can also import individual configs:
 
 ```ts
-import { wxLintConfig } from '@canale/starter/lint';
-import { wxFmtConfig } from '@canale/starter/fmt';
+import { wxLintConfig } from '@RaffaeleCanale/starter/lint';
+import { wxFmtConfig } from '@RaffaeleCanale/starter/fmt';
 import { defineConfig } from 'vite-plus';
 
 export default defineConfig({

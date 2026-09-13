@@ -1,4 +1,4 @@
-import { wxStarter } from '@canale/starter';
+import { wxStarter } from '@RaffaeleCanale/starter';
 import { defineConfig } from 'vite-plus';
 
 export default defineConfig({

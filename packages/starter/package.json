@@ -1,6 +1,10 @@
 {
-    "name": "@canale/starter",
+    "name": "@RaffaeleCanale/starter",
     "version": "3.0.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/RaffaeleCanale/wx-ts-library.git"
+    },
     "files": [
         "dist",
         "tsconfig"
@@ -19,11 +23,12 @@
         "./tsconfig/lib-node": "./tsconfig/tsconfig.lib-node.json"
     },
     "publishConfig": {
-        "access": "public"
+        "access": "public",
+        "registry": "https://npm.pkg.github.com"
     },
     "scripts": {
         "build": "tsc -b",
-        "test": "vitest run"
+        "test": "vitest run --passWithNoTests"
     },
     "devDependencies": {
         "@types/node": "^22.20.2",

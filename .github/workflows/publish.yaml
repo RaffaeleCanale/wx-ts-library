@@ -1,23 +1,38 @@
-name: Publish Package to npmjs
+name: Publish Library
+
 on:
     push:
-        tags:
-            - '*'
+        branches:
+            - main
+        paths:
+            - 'packages/**'
+
 jobs:
-    build:
+    build-and-publish:
         runs-on: ubuntu-latest
         permissions:
             contents: read
-            id-token: write
+            packages: write
         steps:
-            - uses: actions/checkout@v4
-            # Setup .npmrc file to publish to npm
-            - uses: actions/setup-node@v4
+            - uses: actions/checkout@v5
+
+            - name: Use Node.js
+              uses: actions/setup-node@v4
               with:
-                  node-version: '20.x'
-                  registry-url: 'https://registry.npmjs.org'
-            - run: npm install -g pnpm
-            - run: pnpm install --frozen-lockfile
-            - run: pnpm run publish
+                  node-version: '24'
+                  registry-url: 'https://npm.pkg.github.com'
+                  scope: '@RaffaeleCanale'
+
+            - name: Install pnpm
+              run: npm install -g pnpm
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Build
+              run: pnpm build
+
+            - name: Publish
+              run: pnpm publish -r --no-git-checks
               env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

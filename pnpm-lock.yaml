@@ -8,7 +8,7 @@ importers:
 
   .:
     devDependencies:
-      '@canale/starter':
+      '@RaffaeleCanale/starter':
         specifier: workspace:*
         version: link:packages/starter
       '@types/node':
